@@ -229,6 +229,192 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-05-28-【ML踩坑实录】python3中的zip函数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/2018-05-28-【ML踩坑实录】python3中的zip函数/" itemprop="url">【ML踩坑实录】python3中的zip函数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T12:11:54+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>今天开始探索“如何在数据集上跑baseline”，一大早就找到了一个很好的<a href="https://github.com/junyuseu/fine-tuning" target="_blank" rel="noopener">项目</a>，本以为可以速战速决，结果一开始就踩了个zip的坑。</p>
+<p>源代码片段如下：</p>
+<pre><code>labels = np.array(zip(files, image_labels))
+
+～～～（中间部分）～～～
+
+def write_set_file(fout, labels):
+    with open(fout, &apos;w+&apos;) as f:
+        for label in labels:
+            f.write(&apos;{}/{} {}\n&apos;.format(cwd,label[0],label[1]))
+
+write_set_file(&apos;train.txt&apos;, labels[idx_train,:])
+write_set_file(&apos;test.txt&apos;, labels[idx_test,:])
+write_set_file(&apos;valid.txt&apos;, labels[idx_valid,:])       
+</code></pre><p>总体来看，就是根据图片名称，对其分类标签进行数字化，然后对数据集切分为train、test、valid三大部分。结果run之后，提示：</p>
+<pre><code>IndexError: too many indices for array
+</code></pre><p>找到错误位置，打印labels.shape，结果是空；又打印labels，结果显示;</p>
+<pre><code>ndarray &lt;zip object at 0x7fa11be482c8&gt;
+</code></pre><p>为此专门在python在线工具测试了一小段代码：</p>
+<pre><code>x = [1, 2, 3]
+y = [4, 5, 6]
+z = [7, 8, 9]
+xyz = zip(x, y, z)
+print(xyz)
+array = np.array(xyz)
+print(array)
+</code></pre><p>结果输出一切正常：</p>
+<pre><code>[(1, 4, 7), (2, 5, 8), (3, 6, 9)]
+[[1 4 7]
+ [2 5 8]
+ [3 6 9]]
+</code></pre><p>这就开始了自我怀疑的入坑之路。后来无意中Google了一下：</p>
+<pre><code>ndarray &lt;zip object at 0x7fa11be482c8&gt;
+</code></pre><p>然后才发现问题所在：</p>
+<p>由于<strong>版本问题</strong>，python3中zip返回的是一个迭代器，这跟之前不一样，所以打印时看不到具体的内容。只有通过list(zip(object))才能将其内容呈现出来。而array，好像跟list没有直接关系 (我找的所有资料都是将zip转换为list)。至于之间的种种原因，还没来得及细究，迭代器之类的隐形坑以后补上，现在先专注于实现baseline。总之，通过list过渡，解决了这个问题：</p>
+<pre><code>labels = list(zip(files, image_labels))
+labels = np.array(labels)
+print(labels)
+</code></pre><p>回头想想这个锅应该分给python在线工具，结果仔细一搜才发现，这个在线工具也是分版本的，我之前一直用的碰巧是python2。</p>
+<p>不甘心，为了identify两个环境下的结果，又找了python3的在线工具，同样执行上面的小段代码，结果显示：</p>
+<pre><code>&lt;zip object at 0x7fa67deba808&gt;
+&lt;zip object at 0x7fa67deba808&gt;
+</code></pre><p>完美。</p>
+<h3 id="教训"><a href="#教训" class="headerlink" title="教训"></a>教训</h3><ul>
+<li><p>不能只盯着初始的、显化的debug信息，应该进行思考分析，追根溯源，若发现过程中有哪些不正常的现象，就去Google，这样才能真正找到问题根源。</p>
+</li>
+<li><p>调试代码的过程中(科研应该也是)，如果怀疑地很是地方、很犀利，那么问题很容易解决，并且产生好的idea，即“好的问题”能为你打开一个世界的大门。</p>
+</li>
+</ul>
+<h3 id="reference："><a href="#reference：" class="headerlink" title="reference："></a>reference：</h3><ol>
+<li><p><a href="http://www.cnblogs.com/antflow/p/7299112.html" target="_blank" rel="noopener">http://www.cnblogs.com/antflow/p/7299112.html</a></p>
+</li>
+<li><p><a href="https://stackoverflow.com/questions/31683959/the-zip-function-in-python-3?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa" target="_blank" rel="noopener">https://stackoverflow.com/questions/31683959/the-zip-function-in-python-3?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/weixin_37226516/article/details/60881763" target="_blank" rel="noopener">https://blog.csdn.net/weixin_37226516/article/details/60881763</a></p>
+</li>
+</ol>
+<hr>
+<h3 id="拾穗"><a href="#拾穗" class="headerlink" title="拾穗"></a>拾穗</h3><p>来自底层科研人员的疑问：为什么同样的方法，大神很容易发文章而我却被拒？</p>
+<p>A：</p>
+<blockquote>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0001.png" alt="image0001"></p>
+</blockquote>
+<p>Q：</p>
+<blockquote>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0002.png" alt="image0002"> </p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-08-01-重装系统/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -517,192 +703,6 @@ snapshot_prefix: &quot;examples/mnist/lenet&quot;
 </ul>
 <p>测试的accuracy在99%以上，训练非常理想。这样就实现了<strong>下载数据——准备数据（转换为lmdb/leveldb格式）——训练模型——测试模型</strong>深度学习的完整流程。</p>
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p><a href="https://blog.csdn.net/xhhjin/article/details/78512913" target="_blank" rel="noopener">https://blog.csdn.net/xhhjin/article/details/78512913</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-05-28-【ML踩坑实录】python3中的zip函数/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-05-28-【ML踩坑实录】python3中的zip函数/" itemprop="url">【ML踩坑实录】python3中的zip函数</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T12:09:14+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>今天开始探索“如何在数据集上跑baseline”，一大早就找到了一个很好的<a href="https://github.com/junyuseu/fine-tuning" target="_blank" rel="noopener">项目</a>，本以为可以速战速决，结果一开始就踩了个zip的坑。</p>
-<p>源代码片段如下：</p>
-<pre><code>labels = np.array(zip(files, image_labels))
-
-～～～（中间部分）～～～
-
-def write_set_file(fout, labels):
-    with open(fout, &apos;w+&apos;) as f:
-        for label in labels:
-            f.write(&apos;{}/{} {}\n&apos;.format(cwd,label[0],label[1]))
-
-write_set_file(&apos;train.txt&apos;, labels[idx_train,:])
-write_set_file(&apos;test.txt&apos;, labels[idx_test,:])
-write_set_file(&apos;valid.txt&apos;, labels[idx_valid,:])       
-</code></pre><p>总体来看，就是根据图片名称，对其分类标签进行数字化，然后对数据集切分为train、test、valid三大部分。结果run之后，提示：</p>
-<pre><code>IndexError: too many indices for array
-</code></pre><p>找到错误位置，打印labels.shape，结果是空；又打印labels，结果显示;</p>
-<pre><code>ndarray &lt;zip object at 0x7fa11be482c8&gt;
-</code></pre><p>为此专门在python在线工具测试了一小段代码：</p>
-<pre><code>x = [1, 2, 3]
-y = [4, 5, 6]
-z = [7, 8, 9]
-xyz = zip(x, y, z)
-print(xyz)
-array = np.array(xyz)
-print(array)
-</code></pre><p>结果输出一切正常：</p>
-<pre><code>[(1, 4, 7), (2, 5, 8), (3, 6, 9)]
-[[1 4 7]
- [2 5 8]
- [3 6 9]]
-</code></pre><p>这就开始了自我怀疑的入坑之路。后来无意中Google了一下：</p>
-<pre><code>ndarray &lt;zip object at 0x7fa11be482c8&gt;
-</code></pre><p>然后才发现问题所在：</p>
-<p>由于<strong>版本问题</strong>，python3中zip返回的是一个迭代器，这跟之前不一样，所以打印时看不到具体的内容。只有通过list(zip(object))才能将其内容呈现出来。而array，好像跟list没有直接关系 (我找的所有资料都是将zip转换为list)。至于之间的种种原因，还没来得及细究，迭代器之类的隐形坑以后补上，现在先专注于实现baseline。总之，通过list过渡，解决了这个问题：</p>
-<pre><code>labels = list(zip(files, image_labels))
-labels = np.array(labels)
-print(labels)
-</code></pre><p>回头想想这个锅应该分给python在线工具，结果仔细一搜才发现，这个在线工具也是分版本的，我之前一直用的碰巧是python2。</p>
-<p>不甘心，为了identify两个环境下的结果，又找了python3的在线工具，同样执行上面的小段代码，结果显示：</p>
-<pre><code>&lt;zip object at 0x7fa67deba808&gt;
-&lt;zip object at 0x7fa67deba808&gt;
-</code></pre><p>完美。</p>
-<h3 id="教训"><a href="#教训" class="headerlink" title="教训"></a>教训</h3><ul>
-<li><p>不能只盯着初始的、显化的debug信息，应该进行思考分析，追根溯源，若发现过程中有哪些不正常的现象，就去Google，这样才能真正找到问题根源。</p>
-</li>
-<li><p>调试代码的过程中(科研应该也是)，如果怀疑地很是地方、很犀利，那么问题很容易解决，并且产生好的idea，即“好的问题”能为你打开一个世界的大门。</p>
-</li>
-</ul>
-<h3 id="reference："><a href="#reference：" class="headerlink" title="reference："></a>reference：</h3><ol>
-<li><p><a href="http://www.cnblogs.com/antflow/p/7299112.html" target="_blank" rel="noopener">http://www.cnblogs.com/antflow/p/7299112.html</a></p>
-</li>
-<li><p><a href="https://stackoverflow.com/questions/31683959/the-zip-function-in-python-3?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa" target="_blank" rel="noopener">https://stackoverflow.com/questions/31683959/the-zip-function-in-python-3?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/weixin_37226516/article/details/60881763" target="_blank" rel="noopener">https://blog.csdn.net/weixin_37226516/article/details/60881763</a></p>
-</li>
-</ol>
-<hr>
-<h3 id="拾穗"><a href="#拾穗" class="headerlink" title="拾穗"></a>拾穗</h3><p>来自底层科研人员的疑问：为什么同样的方法，大神很容易发文章而我却被拒？</p>
-<p>A：</p>
-<blockquote>
-<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0001.png" alt="image0001"></p>
-</blockquote>
-<p>Q：</p>
-<blockquote>
-<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0002.png" alt="image0002"> </p>
-</blockquote>
 
           
         
