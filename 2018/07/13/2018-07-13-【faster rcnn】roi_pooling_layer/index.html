@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="之前说过，caffe中的layer层，主要有以下几个函数：  setup reshape forward backward  在roi_pooling_layer.cpp中，主要是前三个函数，在分别对其进行解析之前，先看一下该层的使用： layer {   name: &amp;quot;roi_pool_conv5&amp;quot;   type: &amp;quot;ROIPooling&amp;quot;   botto">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【faster rcnn】roi_pooling_layer">
+<meta property="og:url" content="http://yoursite.com/2018/07/13/2018-07-13-【faster rcnn】roi_pooling_layer/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="之前说过，caffe中的layer层，主要有以下几个函数：  setup reshape forward backward  在roi_pooling_layer.cpp中，主要是前三个函数，在分别对其进行解析之前，先看一下该层的使用： layer {   name: &amp;quot;roi_pool_conv5&amp;quot;   type: &amp;quot;ROIPooling&amp;quot;   botto">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-08-06T10:09:30.044Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【faster rcnn】roi_pooling_layer">
+<meta name="twitter:description" content="之前说过，caffe中的layer层，主要有以下几个函数：  setup reshape forward backward  在roi_pooling_layer.cpp中，主要是前三个函数，在分别对其进行解析之前，先看一下该层的使用： layer {   name: &amp;quot;roi_pool_conv5&amp;quot;   type: &amp;quot;ROIPooling&amp;quot;   botto">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/13/2018-07-13-【faster rcnn】roi_pooling_layer/"/>
+
+
+
+
+
+  <title>【faster rcnn】roi_pooling_layer | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/13/2018-07-13-【faster rcnn】roi_pooling_layer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Sky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【faster rcnn】roi_pooling_layer</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-13T00:00:00+08:00">
+                2018-07-13
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:09:30+08:00">
+                2018-08-06
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/13/2018-07-13-【faster rcnn】roi_pooling_layer/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/07/13/2018-07-13-【faster rcnn】roi_pooling_layer/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前说过，caffe中的layer层，主要有以下几个函数：</p>
+<ul>
+<li>setup</li>
+<li>reshape</li>
+<li>forward</li>
+<li>backward</li>
+</ul>
+<p>在roi_pooling_layer.cpp中，主要是前三个函数，在分别对其进行解析之前，先看一下该层的使用：</p>
+<pre><code>layer {
+  name: &quot;roi_pool_conv5&quot;
+  type: &quot;ROIPooling&quot;
+  bottom: &quot;conv5&quot;
+  bottom: &quot;rois&quot;
+  top: &quot;roi_pool_conv5&quot;
+  roi_pooling_param {
+    pooled_w: 6
+    pooled_h: 6
+    spatial_scale: 0.0625 # 1/16
+  }
+}
+</code></pre><p>即该层的输入为<code>conv5</code>的特征图和<code>rois</code>，最后输出<code>roi_pool_conv5</code>。</p>
+<p>下面看以下初始化函数<code>LayerSetUp()</code>：</p>
+<hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Dtype&gt;</span><br><span class="line"><span class="keyword">void</span> ROIPoolingLayer&lt;Dtype&gt;::LayerSetUp(<span class="keyword">const</span> <span class="built_in">vector</span>&lt;Blob&lt;Dtype&gt;*&gt;&amp; bottom,</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">vector</span>&lt;Blob&lt;Dtype&gt;*&gt;&amp; top) &#123;</span><br><span class="line">  ROIPoolingParameter roi_pool_param = <span class="keyword">this</span>-&gt;layer_param_.roi_pooling_param();</span><br><span class="line">  CHECK_GT(roi_pool_param.pooled_h(), <span class="number">0</span>)</span><br><span class="line">      &lt;&lt; <span class="string">"pooled_h must be &gt; 0"</span>;</span><br><span class="line">  CHECK_GT(roi_pool_param.pooled_w(), <span class="number">0</span>)</span><br><span class="line">      &lt;&lt; <span class="string">"pooled_w must be &gt; 0"</span>;</span><br><span class="line">  pooled_height_ = roi_pool_param.pooled_h();   <span class="comment">// pooling后的特征图的height_</span></span><br><span class="line">  pooled_width_ = roi_pool_param.pooled_w();    <span class="comment">// pooling后的特征图的width_</span></span><br><span class="line">  spatial_scale_ = roi_pool_param.spatial_scale(); <span class="comment">// 空间缩放尺度，在ZF中为1/16 = 0.0625</span></span><br><span class="line">  LOG(INFO) &lt;&lt; <span class="string">"Spatial scale: "</span> &lt;&lt; spatial_scale_;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面函数的作用是设置pooling后的特征图的尺寸<code>height_</code>和<code>width_</code>，以及pooling后的特征图相对于原图1的缩放比例scale。看一下<code>reshape</code>部分：</p>
+<hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Dtype&gt;</span><br><span class="line"><span class="keyword">void</span> ROIPoolingLayer&lt;Dtype&gt;::Reshape(<span class="keyword">const</span> <span class="built_in">vector</span>&lt;Blob&lt;Dtype&gt;*&gt;&amp; bottom,</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">vector</span>&lt;Blob&lt;Dtype&gt;*&gt;&amp; top) &#123;</span><br><span class="line">  channels_ = bottom[<span class="number">0</span>]-&gt;channels();</span><br><span class="line">  height_ = bottom[<span class="number">0</span>]-&gt;height();</span><br><span class="line">  width_ = bottom[<span class="number">0</span>]-&gt;width();</span><br><span class="line">  top[<span class="number">0</span>]-&gt;Reshape(bottom[<span class="number">1</span>]-&gt;num(), channels_, pooled_height_,</span><br><span class="line">      pooled_width_);</span><br><span class="line">  max_idx_.Reshape(bottom[<span class="number">1</span>]-&gt;num(), channels_, pooled_height_,</span><br><span class="line">      pooled_width_);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过这段代码，可以看出:<br>输出的<code>top</code>个数等于<code>rois</code>的个数，<code>channels</code>等于特征图<code>conv5</code>的channels。</p>
+<p>另外，注意<code>top_data</code>作为<code>top[0]</code>的指针，在每个channel上更新一次（通过下面的循环可以看出）；大小一共<code>pooled_height_*pooled_width_</code>个。这些都可以通过<code>forward()</code>中的循环得到。</p>
+<hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Dtype&gt;</span><br><span class="line"><span class="keyword">void</span> ROIPoolingLayer&lt;Dtype&gt;::Forward_cpu(<span class="keyword">const</span> <span class="built_in">vector</span>&lt;Blob&lt;Dtype&gt;*&gt;&amp; bottom,</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">vector</span>&lt;Blob&lt;Dtype&gt;*&gt;&amp; top) &#123;</span><br><span class="line">  <span class="keyword">const</span> Dtype* bottom_data = bottom[<span class="number">0</span>]-&gt;cpu_data();</span><br><span class="line">  <span class="keyword">const</span> Dtype* bottom_rois = bottom[<span class="number">1</span>]-&gt;cpu_data();</span><br><span class="line">  <span class="comment">// Number of ROIs</span></span><br><span class="line">  <span class="keyword">int</span> num_rois = bottom[<span class="number">1</span>]-&gt;num();</span><br><span class="line">  <span class="keyword">int</span> batch_size = bottom[<span class="number">0</span>]-&gt;num();</span><br><span class="line">  <span class="keyword">int</span> top_count = top[<span class="number">0</span>]-&gt;count();</span><br><span class="line">  Dtype* top_data = top[<span class="number">0</span>]-&gt;mutable_cpu_data();</span><br><span class="line">  caffe_set(top_count, Dtype(-FLT_MAX), top_data);</span><br><span class="line">  <span class="keyword">int</span>* argmax_data = max_idx_.mutable_cpu_data();</span><br><span class="line">  caffe_set(top_count, <span class="number">-1</span>, argmax_data);</span><br><span class="line">	</span><br><span class="line">  <span class="comment">// For each ROI R = [batch_index x1 y1 x2 y2]: max pool over R</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> n = <span class="number">0</span>; n &lt; num_rois; ++n) &#123;</span><br><span class="line">    <span class="keyword">int</span> roi_batch_ind = bottom_rois[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">int</span> roi_start_w = round(bottom_rois[<span class="number">1</span>] * spatial_scale_);</span><br><span class="line">    <span class="keyword">int</span> roi_start_h = round(bottom_rois[<span class="number">2</span>] * spatial_scale_);</span><br><span class="line">    <span class="keyword">int</span> roi_end_w = round(bottom_rois[<span class="number">3</span>] * spatial_scale_);</span><br><span class="line">    <span class="keyword">int</span> roi_end_h = round(bottom_rois[<span class="number">4</span>] * spatial_scale_);</span><br><span class="line">    CHECK_GE(roi_batch_ind, <span class="number">0</span>);</span><br><span class="line">    CHECK_LT(roi_batch_ind, batch_size);</span><br><span class="line">    <span class="keyword">int</span> roi_height = max(roi_end_h - roi_start_h + <span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">int</span> roi_width = max(roi_end_w - roi_start_w + <span class="number">1</span>, <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<hr>
+<p>由于<code>rois</code>是在原图1的尺寸下，而此处的特征图<code>conv5</code>是经过前面convolution和Pooling后被缩小的，因此需要将<code>rois</code>投影到该尺寸下。</p>
+<hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">	<span class="comment">// 此处是求roi在每个pooling单元占据的面积，但是分height和width来计算。</span></span><br><span class="line">	<span class="comment">// pooling对‘经过scale变换，映射到特征图上的真实的roi‘的划分</span></span><br><span class="line">    <span class="keyword">const</span> Dtype bin_size_h = <span class="keyword">static_cast</span>&lt;Dtype&gt;(roi_height)</span><br><span class="line">                             / <span class="keyword">static_cast</span>&lt;Dtype&gt;(pooled_height_);</span><br><span class="line">    <span class="keyword">const</span> Dtype bin_size_w = <span class="keyword">static_cast</span>&lt;Dtype&gt;(roi_width)</span><br><span class="line">                             / <span class="keyword">static_cast</span>&lt;Dtype&gt;(pooled_width_);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">const</span> Dtype* batch_data = bottom_data + bottom[<span class="number">0</span>]-&gt;offset(roi_batch_ind);</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> c = <span class="number">0</span>; c &lt; channels_; ++c) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> ph = <span class="number">0</span>; ph &lt; pooled_height_; ++ph) &#123;                  <span class="comment">//标称值，如果pooling结果为6*6,，那么这里就是0~5的循环。</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> pw = <span class="number">0</span>; pw &lt; pooled_width_; ++pw) &#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 此处的循环以pooling中的ceil（标称值）为单位。</span></span><br><span class="line">          <span class="comment">// Compute pooling region for this output unit:</span></span><br><span class="line">          <span class="comment">//  start (included) = floor(ph * roi_height / pooled_height_)</span></span><br><span class="line">          <span class="comment">//  end (excluded) = ceil((ph + 1) * roi_height / pooled_height_)</span></span><br><span class="line">        <span class="comment">// 特征图上每个单元格，通过标称值遍历，定位在真实的特征图conv_5上</span></span><br><span class="line">          <span class="keyword">int</span> hstart = <span class="keyword">static_cast</span>&lt;<span class="keyword">int</span>&gt;(<span class="built_in">floor</span>(<span class="keyword">static_cast</span>&lt;Dtype&gt;(ph)</span><br><span class="line">                                              * bin_size_h));</span><br><span class="line">          <span class="keyword">int</span> wstart = <span class="keyword">static_cast</span>&lt;<span class="keyword">int</span>&gt;(<span class="built_in">floor</span>(<span class="keyword">static_cast</span>&lt;Dtype&gt;(pw)</span><br><span class="line">                                              * bin_size_w));</span><br><span class="line">          <span class="keyword">int</span> hend = <span class="keyword">static_cast</span>&lt;<span class="keyword">int</span>&gt;(<span class="built_in">ceil</span>(<span class="keyword">static_cast</span>&lt;Dtype&gt;(ph + <span class="number">1</span>)</span><br><span class="line">                                           * bin_size_h));</span><br><span class="line">          <span class="keyword">int</span> wend = <span class="keyword">static_cast</span>&lt;<span class="keyword">int</span>&gt;(<span class="built_in">ceil</span>(<span class="keyword">static_cast</span>&lt;Dtype&gt;(pw + <span class="number">1</span>)</span><br><span class="line">                                           * bin_size_w));</span><br><span class="line">	<span class="comment">// 此处的hstart、hend、wstart、wend是以ceil为前后界，以roi为基准的绝对的坐标</span></span><br><span class="line">          hstart = min(max(hstart + roi_start_h, <span class="number">0</span>), height_);</span><br><span class="line">          hend = min(max(hend + roi_start_h, <span class="number">0</span>), height_);</span><br><span class="line">          wstart = min(max(wstart + roi_start_w, <span class="number">0</span>), width_);</span><br><span class="line">          wend = min(max(wend + roi_start_w, <span class="number">0</span>), width_);</span><br><span class="line">	</span><br><span class="line">          <span class="keyword">bool</span> is_empty = (hend &lt;= hstart) || (wend &lt;= wstart);</span><br><span class="line">	</span><br><span class="line">          <span class="keyword">const</span> <span class="keyword">int</span> pool_index = ph * pooled_width_ + pw;</span><br><span class="line">          <span class="keyword">if</span> (is_empty) &#123;</span><br><span class="line">            top_data[pool_index] = <span class="number">0</span>;</span><br><span class="line">            argmax_data[pool_index] = <span class="number">-1</span>;</span><br><span class="line">          &#125;</span><br><span class="line">	<span class="comment">// 此处的循环以roi在ceil中的每个特征点为单位</span></span><br><span class="line">          <span class="keyword">for</span> (<span class="keyword">int</span> h = hstart; h &lt; hend; ++h) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> w = wstart; w &lt; wend; ++w) &#123;</span><br><span class="line">              <span class="keyword">const</span> <span class="keyword">int</span> index = h * width_ + w;</span><br><span class="line">        <span class="comment">//每个单元格只取其对应特征图区域中的一个值，这里取最大值。</span></span><br><span class="line">              <span class="keyword">if</span> (batch_data[index] &gt; top_data[pool_index]) &#123;</span><br><span class="line">                top_data[pool_index] = batch_data[index];</span><br><span class="line">                argmax_data[pool_index] = index;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="comment">//指针指向的地址需要增加1，因为每个channel是独立进行roi_pooling的。  </span></span><br><span class="line">      <span class="comment">// Increment all data pointers by one channel</span></span><br><span class="line">      batch_data += bottom[<span class="number">0</span>]-&gt;offset(<span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">      top_data += top[<span class="number">0</span>]-&gt;offset(<span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">      argmax_data += max_idx_.offset(<span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Increment ROI data pointer</span></span><br><span class="line">    bottom_rois += bottom[<span class="number">1</span>]-&gt;offset(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
+<p>该网络 <strong>A：</strong> 在原图0的基础上， <strong>B：</strong> 根据前面的网络（rpn）生成的roi，在conv_5上进行pooling，相应地尺寸要通过<code>* spatial_scale_</code>调整， <strong>C：</strong> 最后得到具有固定尺寸的，在conv_5的特征图上进行pooling之后的‘pooled feature map’（输出的尺寸是作为参数设定好的）。</p>
+<h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><hr>
+<p><a href="https://blog.csdn.net/iamzhangzhuping/article/details/51500162" target="_blank" rel="noopener">https://blog.csdn.net/iamzhangzhuping/article/details/51500162</a></p>
+<p><a href="https://blog.csdn.net/Charel_CHEN/article/details/78669654" target="_blank" rel="noopener">https://blog.csdn.net/Charel_CHEN/article/details/78669654</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/img/webwxgetmsgimg.jpg" alt="John Sky wechat" style="width: 200px; max-width: 100%;"/>
+    <div>scanning my wechat for further communication</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/img/alipay.jpg" alt="John Sky Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/11/2018-07-11-【faster-rcnn】anchortargetlayer/" rel="next" title="【faster-rcnn】anchortargetlayer">
+                <i class="fa fa-chevron-left"></i> 【faster-rcnn】anchortargetlayer
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/01/2018-08-01-重装系统/" rel="prev" title="重装系统">
+                重装系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Sky</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/goldentimecoolk" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:jsktt01@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reference"><span class="nav-number">2.</span> <span class="nav-text">reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Sky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: decodeURI(window.location.pathname), 
+            owner: 'goldentimecoolk',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'a221e3a05eedb33f9a4dd3f49da9bc58ff692a70',
+            
+                client_id: '920e0d6623cd15e1ed42'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

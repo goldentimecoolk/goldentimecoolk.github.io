@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="今天开始写faster rcnn的源码解析。从主函数开始，如果中间的一些细节需要展开，会单独写成一篇文章，主要的流程还是在这篇文章。 首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。1234567891011121314151617181920212223if __name__ == &apos;__main__&apos;:    args = parse_args()">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【faster rcnn】主函数">
+<meta property="og:url" content="http://yoursite.com/2018/07/08/2018-07-08-【faster rcnn】主函数/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="今天开始写faster rcnn的源码解析。从主函数开始，如果中间的一些细节需要展开，会单独写成一篇文章，主要的流程还是在这篇文章。 首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。1234567891011121314151617181920212223if __name__ == &apos;__main__&apos;:    args = parse_args()">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0083.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0084.png">
+<meta property="og:updated_time" content="2018-08-06T10:08:58.089Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【faster rcnn】主函数">
+<meta name="twitter:description" content="今天开始写faster rcnn的源码解析。从主函数开始，如果中间的一些细节需要展开，会单独写成一篇文章，主要的流程还是在这篇文章。 首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。1234567891011121314151617181920212223if __name__ == &apos;__main__&apos;:    args = parse_args()">
+<meta name="twitter:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0083.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/08/2018-07-08-【faster rcnn】主函数/"/>
+
+
+
+
+
+  <title>【faster rcnn】主函数 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/08/2018-07-08-【faster rcnn】主函数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Sky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【faster rcnn】主函数</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-08T00:00:00+08:00">
+                2018-07-08
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:08:58+08:00">
+                2018-08-06
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/08/2018-07-08-【faster rcnn】主函数/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/07/08/2018-07-08-【faster rcnn】主函数/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天开始写faster rcnn的源码解析。从主函数开始，如果中间的一些细节需要展开，会单独写成一篇文章，主要的流程还是在这篇文章。</p>
+<h5 id="首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。"><a href="#首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。" class="headerlink" title="首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。"></a>首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    args = parse_args()</span><br><span class="line">	</span><br><span class="line">    print(<span class="string">'Called with args:'</span>)</span><br><span class="line">    print(args)</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">if</span> args.cfg_file <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">        cfg_from_file(args.cfg_file)</span><br><span class="line">    <span class="keyword">if</span> args.set_cfgs <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">        cfg_from_list(args.set_cfgs)</span><br><span class="line">    cfg.GPU_ID = args.gpu_id</span><br><span class="line">	</span><br><span class="line">    <span class="comment"># --------------------------------------------------------------------------</span></span><br><span class="line">    <span class="comment"># Pycaffe doesn't reliably free GPU memory when instantiated nets are</span></span><br><span class="line">    <span class="comment"># discarded (e.g. "del net" in Python code). To work around this issue, each</span></span><br><span class="line">    <span class="comment"># training stage is executed in a separate process using</span></span><br><span class="line">    <span class="comment"># multiprocessing.Process.</span></span><br><span class="line">    <span class="comment"># --------------------------------------------------------------------------</span></span><br><span class="line">	</span><br><span class="line">    <span class="comment"># queue for communicated results between processes</span></span><br><span class="line">    mp_queue = mp.Queue()</span><br><span class="line">    <span class="comment"># solves, iters, etc. for each training stage</span></span><br><span class="line">    solvers, max_iters, rpn_test_prototxt = get_solvers(args.net_name)</span><br></pre></td></tr></table></figure>
+<hr>
+<hr>
+<p>看一下函数<code>get_solvers(net_name)</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_solvers</span><span class="params">(net_name)</span>:</span></span><br><span class="line">    <span class="comment"># Faster R-CNN Alternating Optimization</span></span><br><span class="line">    n = <span class="string">'faster_rcnn_alt_opt'</span></span><br><span class="line">    <span class="comment"># Solver for each training stage</span></span><br><span class="line">    solvers = [[net_name, n, <span class="string">'stage1_rpn_solver60k80k.pt'</span>],</span><br><span class="line">               [net_name, n, <span class="string">'stage1_fast_rcnn_solver30k40k.pt'</span>],</span><br><span class="line">               [net_name, n, <span class="string">'stage2_rpn_solver60k80k.pt'</span>],</span><br><span class="line">               [net_name, n, <span class="string">'stage2_fast_rcnn_solver30k40k.pt'</span>]]</span><br><span class="line">    solvers = [os.path.join(cfg.MODELS_DIR, *s) <span class="keyword">for</span> s <span class="keyword">in</span> solvers]</span><br><span class="line">    <span class="comment"># Iterations for each training stage</span></span><br><span class="line">    max_iters = [<span class="number">80000</span>, <span class="number">40000</span>, <span class="number">80000</span>, <span class="number">40000</span>]</span><br><span class="line">    <span class="comment"># max_iters = [100, 100, 100, 100]</span></span><br><span class="line">    <span class="comment"># Test prototxt for the RPN</span></span><br><span class="line">    rpn_test_prototxt = os.path.join(</span><br><span class="line">        cfg.MODELS_DIR, net_name, n, <span class="string">'rpn_test.pt'</span>)</span><br><span class="line">    <span class="keyword">return</span> solvers, max_iters, rpn_test_prototxt</span><br></pre></td></tr></table></figure>
+<p>该函数针对faster-rcnn训练的四个阶段，将每个阶段用到的solver、训练参数<code>max_iters</code>、以及用于测试的网络模型等信息进行相应地提取。回到<code>main</code>函数：</p>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'Stage 1 RPN, init from ImageNet model'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line">	</span><br><span class="line">cfg.TRAIN.SNAPSHOT_INFIX = <span class="string">'stage1'</span></span><br><span class="line">mp_kwargs = dict(</span><br><span class="line">        queue=mp_queue,</span><br><span class="line">        imdb_name=args.imdb_name,</span><br><span class="line">        init_model=args.pretrained_model,</span><br><span class="line">        solver=solvers[<span class="number">0</span>],</span><br><span class="line">        max_iters=max_iters[<span class="number">0</span>],</span><br><span class="line">        cfg=cfg)</span><br><span class="line">p = mp.Process(target=train_rpn, kwargs=mp_kwargs)</span><br><span class="line">p.start()</span><br><span class="line">rpn_stage1_out = mp_queue.get()</span><br><span class="line">p.join()</span><br></pre></td></tr></table></figure>
+<hr>
+<hr>
+<p>上述代码段的作用是：根据原始的<code>gt_roidb</code>训练<code>rpn</code>。该部分主要是设置参数，如给定网络结构信息、参数信息、训练信息等，然后通过<code>mp.Process</code>执行函数。进入<code>train_rpn()</code>函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_rpn</span><span class="params">(queue=None, imdb_name=None, init_model=None, solver=None,</span></span></span><br><span class="line"><span class="function"><span class="params">              max_iters=None, cfg=None)</span>:</span></span><br><span class="line">    <span class="string">"""Train a Region Proposal Network in a separate training process.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">	</span><br><span class="line">    <span class="comment"># Not using any proposals, just ground-truth boxes</span></span><br><span class="line">    cfg.TRAIN.HAS_RPN = <span class="keyword">True</span></span><br><span class="line">    cfg.TRAIN.BBOX_REG = <span class="keyword">False</span>  <span class="comment"># applies only to Fast R-CNN bbox regression</span></span><br><span class="line">    cfg.TRAIN.PROPOSAL_METHOD = <span class="string">'gt'</span></span><br><span class="line">    cfg.TRAIN.IMS_PER_BATCH = <span class="number">1</span></span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Init model: &#123;&#125;'</span>.format(init_model))</span><br><span class="line">    print(<span class="string">'Using config:'</span>)</span><br><span class="line">    pprint.pprint(cfg)</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">import</span> caffe</span><br><span class="line">    _init_caffe(cfg)</span><br><span class="line">	</span><br><span class="line">    roidb, imdb = get_roidb(imdb_name)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'roidb len: &#123;&#125;'</span>.format(len(roidb)))</span><br><span class="line">    output_dir = get_output_dir(imdb)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Output will be saved to `&#123;:s&#125;`'</span>.format(output_dir))</span><br><span class="line">	</span><br><span class="line">    model_paths = train_net(solver, roidb, output_dir,</span><br><span class="line">                            pretrained_model=init_model,</span><br><span class="line">                            max_iters=max_iters)</span><br><span class="line">    <span class="comment"># Cleanup all but the final model</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> model_paths[:<span class="number">-1</span>]:</span><br><span class="line">        os.remove(i)</span><br><span class="line">    rpn_model_path = model_paths[<span class="number">-1</span>]</span><br><span class="line">    <span class="comment"># Send final model path through the multiprocessing queue</span></span><br><span class="line">    queue.put(&#123;<span class="string">'model_path'</span>: rpn_model_path&#125;)</span><br></pre></td></tr></table></figure>
+<p>该函数的前面部分是仍然是设置参数，然后得到训练数据<code>roidb</code>和原始数据的class<code>imdb</code>，具体可以看<a href="https://goldentimecoolk.github.io/2018/08/06/2018-07-07-%E3%80%90faster%20rcnn%E3%80%91get_roidb/" target="_blank" rel="noopener">get_roidb</a>的解析。接下来利用数据<code>roidb</code>训练网络，<code>roidb</code>的格式如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">roidb = [dic]</span><br><span class="line">dic_i = &#123;<span class="string">'boxes'</span> : boxes,</span><br><span class="line">		<span class="string">'gt_classes'</span>: gt_classes,</span><br><span class="line">		<span class="string">'gt_overlaps'</span> : overlaps,</span><br><span class="line">		<span class="string">'flipped'</span> : <span class="keyword">False</span>,</span><br><span class="line">		<span class="string">'seg_areas'</span> : seg_areas</span><br><span class="line">		<span class="string">'image'</span> : imdb.image_path_at(i)</span><br><span class="line">		<span class="string">'width'</span> : sizes[i][<span class="number">0</span>]</span><br><span class="line">		<span class="string">'height'</span> : sizes[i][<span class="number">1</span>]</span><br><span class="line">		<span class="string">'max_classes'</span> : max_classes</span><br><span class="line">		<span class="string">'max_overlaps'</span> : max_overlaps&#125;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<hr>
+<hr>
+<p>进入函数<code>train_net()</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_net</span><span class="params">(solver_prototxt, roidb, output_dir,</span></span></span><br><span class="line"><span class="function"><span class="params">              pretrained_model=None, max_iters=<span class="number">40000</span>)</span>:</span></span><br><span class="line">    <span class="string">"""Train a Fast R-CNN network."""</span></span><br><span class="line">	</span><br><span class="line">    roidb = filter_roidb(roidb)</span><br><span class="line">    sw = SolverWrapper(solver_prototxt, roidb, output_dir,</span><br><span class="line">                       pretrained_model=pretrained_model)</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Solving...'</span>)</span><br><span class="line">    model_paths = sw.train_model(max_iters)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'done solving'</span>)</span><br><span class="line">    <span class="keyword">return</span> model_paths</span><br><span class="line">	</span><br><span class="line"><span class="comment">##-----------------------------------------------------------------</span></span><br><span class="line"><span class="comment">##-----------------------------------------------------------------</span></span><br><span class="line">	</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">filter_roidb</span><span class="params">(roidb)</span>:</span></span><br><span class="line">    <span class="string">"""Remove roidb entries that have no usable RoIs."""</span></span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">is_valid</span><span class="params">(entry)</span>:</span></span><br><span class="line">        <span class="comment"># Valid images have:</span></span><br><span class="line">        <span class="comment">#   (1) At least one foreground RoI OR</span></span><br><span class="line">        <span class="comment">#   (2) At least one background RoI</span></span><br><span class="line">        overlaps = entry[<span class="string">'max_overlaps'</span>]</span><br><span class="line">        <span class="comment"># find boxes with sufficient overlap</span></span><br><span class="line">        fg_inds = np.where(overlaps &gt;= cfg.TRAIN.FG_THRESH)[<span class="number">0</span>]</span><br><span class="line">        <span class="comment"># Select background RoIs as those within [BG_THRESH_LO, BG_THRESH_HI)</span></span><br><span class="line">        bg_inds = np.where((overlaps &lt; cfg.TRAIN.BG_THRESH_HI) &amp;</span><br><span class="line">                           (overlaps &gt;= cfg.TRAIN.BG_THRESH_LO))[<span class="number">0</span>]</span><br><span class="line">        <span class="comment"># image is only valid if such boxes exist</span></span><br><span class="line">        valid = len(fg_inds) &gt; <span class="number">0</span> <span class="keyword">or</span> len(bg_inds) &gt; <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> valid</span><br><span class="line">	</span><br><span class="line">    num = len(roidb)</span><br><span class="line">    filtered_roidb = [entry <span class="keyword">for</span> entry <span class="keyword">in</span> roidb <span class="keyword">if</span> is_valid(entry)]</span><br><span class="line">    num_after = len(filtered_roidb)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Filtered &#123;&#125; roidb entries: &#123;&#125; -&gt; &#123;&#125;'</span>.format(num - num_after,</span><br><span class="line">                                                       num, num_after))</span><br><span class="line">    <span class="keyword">return</span> filtered_roidb</span><br></pre></td></tr></table></figure></p>
+<p>再说<code>roidb</code>的数据结构，其中的<code>max_overlaps</code>是（一张）图片中每个obj对应的最大<code>overlaps</code>，维度是<code>(num_objs,)</code>，在这里先粗略判断图片是否有效，仅加载有效的图片用于训练。‘有效’的定义是：至少有一个前景或者一个背景box。具体看一下<code>SolverWrapper</code>这个类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SolverWrapper</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""A simple wrapper around Caffe's solver.</span></span><br><span class="line"><span class="string">    This wrapper gives us control over he snapshotting process, which we</span></span><br><span class="line"><span class="string">    use to unnormalize the learned bounding-box regression weights.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, solver_prototxt, roidb, output_dir,</span></span></span><br><span class="line"><span class="function"><span class="params">                 pretrained_model=None)</span>:</span></span><br><span class="line">        <span class="string">"""Initialize the SolverWrapper."""</span></span><br><span class="line">        self.output_dir = output_dir</span><br><span class="line">	</span><br><span class="line">        <span class="keyword">if</span> (cfg.TRAIN.HAS_RPN <span class="keyword">and</span> cfg.TRAIN.BBOX_REG <span class="keyword">and</span></span><br><span class="line">            cfg.TRAIN.BBOX_NORMALIZE_TARGETS):</span><br><span class="line">            <span class="comment"># RPN can only use precomputed normalization because there are no</span></span><br><span class="line">            <span class="comment"># fixed statistics to compute a priori</span></span><br><span class="line">            <span class="keyword">assert</span> cfg.TRAIN.BBOX_NORMALIZE_TARGETS_PRECOMPUTED</span><br><span class="line">	</span><br><span class="line">        <span class="keyword">if</span> cfg.TRAIN.BBOX_REG:</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">'Computing bounding-box regression targets...'</span>)</span><br><span class="line">            self.bbox_means, self.bbox_stds = \</span><br><span class="line">                    rdl_roidb.add_bbox_regression_targets(roidb)</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">'done'</span>)</span><br><span class="line">	</span><br><span class="line">        self.solver = caffe.SGDSolver(solver_prototxt)</span><br><span class="line">        <span class="keyword">if</span> pretrained_model <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">'Loading pretrained model '</span></span><br><span class="line">                   <span class="string">'weights from &#123;:s&#125;'</span>).format(pretrained_model)</span><br><span class="line">            self.solver.net.copy_from(pretrained_model)</span><br><span class="line">	</span><br><span class="line">        self.solver_param = caffe_pb2.SolverParameter()</span><br><span class="line">        <span class="keyword">with</span> open(solver_prototxt, <span class="string">'rt'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            pb2.text_format.Merge(f.read(), self.solver_param)</span><br><span class="line">	    <span class="comment"># 根据roi_data_layer.layer文件中的set_roidb函数来对roidb进行随机打乱</span></span><br><span class="line">        self.solver.net.layers[<span class="number">0</span>].set_roidb(roidb)</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">snapshot</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""Take a snapshot of the network after unnormalizing the learned</span></span><br><span class="line"><span class="string">        bounding-box regression weights. This enables easy use at test-time.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        net = self.solver.net</span><br><span class="line">	</span><br><span class="line">        scale_bbox_params = (cfg.TRAIN.BBOX_REG <span class="keyword">and</span></span><br><span class="line">                             cfg.TRAIN.BBOX_NORMALIZE_TARGETS <span class="keyword">and</span></span><br><span class="line">                             net.params.has_key(<span class="string">'bbox_pred'</span>))</span><br><span class="line">	</span><br><span class="line">        <span class="keyword">if</span> scale_bbox_params:</span><br><span class="line">            <span class="comment"># save original values</span></span><br><span class="line">            orig_0 = net.params[<span class="string">'bbox_pred'</span>][<span class="number">0</span>].data.copy()</span><br><span class="line">            orig_1 = net.params[<span class="string">'bbox_pred'</span>][<span class="number">1</span>].data.copy()</span><br><span class="line">	</span><br><span class="line">            <span class="comment"># scale and shift with bbox reg unnormalization; then save snapshot</span></span><br><span class="line">            net.params[<span class="string">'bbox_pred'</span>][<span class="number">0</span>].data[...] = \</span><br><span class="line">                    (net.params[<span class="string">'bbox_pred'</span>][<span class="number">0</span>].data *</span><br><span class="line">                     self.bbox_stds[:, np.newaxis])</span><br><span class="line">            net.params[<span class="string">'bbox_pred'</span>][<span class="number">1</span>].data[...] = \</span><br><span class="line">                    (net.params[<span class="string">'bbox_pred'</span>][<span class="number">1</span>].data *</span><br><span class="line">                     self.bbox_stds + self.bbox_means)</span><br><span class="line">	</span><br><span class="line">        infix = (<span class="string">'_'</span> + cfg.TRAIN.SNAPSHOT_INFIX</span><br><span class="line">                 <span class="keyword">if</span> cfg.TRAIN.SNAPSHOT_INFIX != <span class="string">''</span> <span class="keyword">else</span> <span class="string">''</span>)</span><br><span class="line">        filename = (self.solver_param.snapshot_prefix + infix +</span><br><span class="line">                    <span class="string">'_iter_&#123;:d&#125;'</span>.format(self.solver.iter) + <span class="string">'.caffemodel'</span>)</span><br><span class="line">        filename = os.path.join(self.output_dir, filename)</span><br><span class="line">	</span><br><span class="line">        net.save(str(filename))</span><br><span class="line">        <span class="keyword">print</span> (<span class="string">'Wrote snapshot to: &#123;:s&#125;'</span>.format(filename))</span><br><span class="line">	</span><br><span class="line">        <span class="keyword">if</span> scale_bbox_params:</span><br><span class="line">            <span class="comment"># restore net to original state</span></span><br><span class="line">            net.params[<span class="string">'bbox_pred'</span>][<span class="number">0</span>].data[...] = orig_0</span><br><span class="line">            net.params[<span class="string">'bbox_pred'</span>][<span class="number">1</span>].data[...] = orig_1</span><br><span class="line">        <span class="keyword">return</span> filename</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">train_model</span><span class="params">(self, max_iters)</span>:</span></span><br><span class="line">        <span class="string">"""Network training loop."""</span></span><br><span class="line">        last_snapshot_iter = <span class="number">-1</span></span><br><span class="line">        timer = Timer()</span><br><span class="line">        model_paths = []</span><br><span class="line">        <span class="keyword">while</span> self.solver.iter &lt; max_iters:</span><br><span class="line">            <span class="comment"># Make one SGD update</span></span><br><span class="line">            timer.tic()</span><br><span class="line">            self.solver.step(<span class="number">1</span>)</span><br><span class="line">            timer.toc()</span><br><span class="line">            <span class="keyword">if</span> self.solver.iter % (<span class="number">10</span> * self.solver_param.display) == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">print</span> (<span class="string">'speed: &#123;:.3f&#125;s / iter'</span>.format(timer.average_time))</span><br><span class="line">	</span><br><span class="line">            <span class="keyword">if</span> self.solver.iter % cfg.TRAIN.SNAPSHOT_ITERS == <span class="number">0</span>:</span><br><span class="line">                last_snapshot_iter = self.solver.iter</span><br><span class="line">                model_paths.append(self.snapshot())</span><br><span class="line">	</span><br><span class="line">        <span class="keyword">if</span> last_snapshot_iter != self.solver.iter:</span><br><span class="line">            model_paths.append(self.snapshot())</span><br><span class="line">        <span class="keyword">return</span> model_paths</span><br></pre></td></tr></table></figure>
+<p>上述代码的主要作用：</p>
+<ol>
+<li>在特定的iterations进行display；</li>
+</ol>
+<ul>
+<li>在特定的iterations提取snapshot的结果，然后加载到<code>model_path</code>。最后返回包含一系列snapshot存储的model参数的路径<code>model_paths</code>。取最后一次存储的model_path作为后续生成proposals的网络参数：<code>rpn_model_path = model_paths[-1]</code>。</li>
+</ul>
+<p>这个函数在后面每个训练阶段都会用到。</p>
+<p><strong>小结：</strong></p>
+<p>上述代码的作用主要是：根据原始数据<code>imdb</code>，训练rpn，其中用到的特殊的自定义网络有<a href="https://goldentimecoolk.github.io/2018/08/06/2018-07-08-%E3%80%90faster-rcnn%E3%80%91%E7%BD%91%E7%BB%9C%E7%9A%84%E6%95%B0%E6%8D%AE%E6%8A%95%E5%96%82%E2%80%94%E2%80%94RoIDataLayer/" target="_blank" rel="noopener">RoIDataLayer</a>（cfg.TRAIN.HAS_RPN = True），<a href="https://goldentimecoolk.github.io/2018/08/06/2018-07-11-%E3%80%90faster-rcnn%E3%80%91anchortargetlayer/" target="_blank" rel="noopener">AnchorTargetLayer</a>。前者是为了更好地加载数据，后者的作用是：</p>
+<blockquote>
+<p>通过标注的gt_boxes，对标准的原图1尺度下的一套anchors进行筛选、标注（fg/bg）和修正（regression），这些信息用于rpn的反馈，以便构成闭环，训练rpn。</p>
+</blockquote>
+<p>该步骤之后，得到一个功能性网络。该网络能够能够自主判断feature map上每个像素点（特征点）为fg还是bg；能够在标准anchor（与shifts框架结合之后）的基础上对其进行修正，生成更加符合实际的boxes，即proposals。接下来用上一步训练的rpn生成proposal：</p>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'Stage 1 RPN, generate proposals'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line">	</span><br><span class="line">mp_kwargs = dict(</span><br><span class="line">        queue=mp_queue,</span><br><span class="line">        imdb_name=args.imdb_name,</span><br><span class="line">        rpn_model_path=str(rpn_stage1_out[<span class="string">'model_path'</span>]),</span><br><span class="line">        cfg=cfg,</span><br><span class="line">        rpn_test_prototxt=rpn_test_prototxt)</span><br><span class="line">p = mp.Process(target=rpn_generate, kwargs=mp_kwargs)</span><br><span class="line">p.start()</span><br><span class="line">rpn_stage1_out[<span class="string">'proposal_path'</span>] = mp_queue.get()[<span class="string">'proposal_path'</span>]</span><br><span class="line">p.join()</span><br></pre></td></tr></table></figure>
+<hr>
+<hr>
+<p>主要看一下函数<code>rpn_generate</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rpn_generate</span><span class="params">(queue=None, imdb_name=None, rpn_model_path=None, cfg=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                 rpn_test_prototxt=None)</span>:</span></span><br><span class="line">    <span class="string">"""Use a trained RPN to generate proposals.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">	</span><br><span class="line">    cfg.TEST.RPN_PRE_NMS_TOP_N = <span class="number">-1</span>     <span class="comment"># no pre NMS filtering</span></span><br><span class="line">    cfg.TEST.RPN_POST_NMS_TOP_N = <span class="number">2000</span>  <span class="comment"># limit top boxes after NMS</span></span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'RPN model: &#123;&#125;'</span>.format(rpn_model_path))</span><br><span class="line">    print(<span class="string">'Using config:'</span>)</span><br><span class="line">    pprint.pprint(cfg)</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">import</span> caffe</span><br><span class="line">    _init_caffe(cfg)</span><br><span class="line">	</span><br><span class="line">    <span class="comment"># <span class="doctag">NOTE:</span> the matlab implementation computes proposals on flipped images, too.</span></span><br><span class="line">    <span class="comment"># We compute them on the image once and then flip the already computed</span></span><br><span class="line">    <span class="comment"># proposals. This might cause a minor loss in mAP (less proposal jittering).</span></span><br><span class="line">    imdb = get_imdb(imdb_name)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Loaded dataset `&#123;:s&#125;` for proposal generation'</span>.format(imdb.name))</span><br><span class="line">	</span><br><span class="line">    <span class="comment"># Load RPN and configure output directory</span></span><br><span class="line">    rpn_net = caffe.Net(rpn_test_prototxt, rpn_model_path, caffe.TEST)</span><br><span class="line">    output_dir = get_output_dir(imdb)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Output will be saved to `&#123;:s&#125;`'</span>.format(output_dir))</span><br><span class="line">    <span class="comment"># Generate proposals on the imdb</span></span><br><span class="line">    rpn_proposals = imdb_proposals(rpn_net, imdb)</span><br><span class="line">    <span class="comment"># Write proposals to disk and send the proposal file path through the</span></span><br><span class="line">    <span class="comment"># multiprocessing queue</span></span><br><span class="line">    rpn_net_name = os.path.splitext(os.path.basename(rpn_model_path))[<span class="number">0</span>]</span><br><span class="line">    rpn_proposals_path = os.path.join(</span><br><span class="line">        output_dir, rpn_net_name + <span class="string">'_proposals.pkl'</span>)</span><br><span class="line">    <span class="keyword">with</span> open(rpn_proposals_path, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        cPickle.dump(rpn_proposals, f, cPickle.HIGHEST_PROTOCOL)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Wrote RPN proposals to &#123;&#125;'</span>.format(rpn_proposals_path))</span><br><span class="line">    queue.put(&#123;<span class="string">'proposal_path'</span>: rpn_proposals_path&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>注意该函数的两个参数：<code>rpn_model_path</code>是网络的参数，即<code>.caffemodel</code>文件，由上一步训练得出；<code>rpn_test_prototxt</code>是网络结构的定义【该网络的主体结构与train_rpn完全相同】。该函数前半部分是得到原始数据集的<code>class</code>imdb（同上一阶段），根据rpn网络的地址加载网络<code>rpn_net</code>。接下来是函数<code>imdb_proposals(rpn_net, imdb)</code>，进入该函数发现其主要作用是加载数据集<code>imdb</code>，并对每张图片通过函数<code>im_proposals(net, im)</code>得到proposals。（该部分具体可以参考<a href="https://goldentimecoolk.github.io/2018/08/06/2018-07-08-%E3%80%90faster%20rcnn%E3%80%91proposal/" target="_blank" rel="noopener">proposals</a>）。</p>
+<blockquote>
+<p>该阶段后，生成fg/bg特征明显的，面积较大的roi。</p>
+</blockquote>
+<hr>
+<hr>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'Stage 1 Fast R-CNN using RPN proposals, init from ImageNet model'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line">	</span><br><span class="line">cfg.TRAIN.SNAPSHOT_INFIX = <span class="string">'stage1'</span></span><br><span class="line">mp_kwargs = dict(</span><br><span class="line">        queue=mp_queue,</span><br><span class="line">        imdb_name=args.imdb_name,</span><br><span class="line">        init_model=args.pretrained_model,</span><br><span class="line">        solver=solvers[<span class="number">1</span>],</span><br><span class="line">        max_iters=max_iters[<span class="number">1</span>],</span><br><span class="line">        cfg=cfg,</span><br><span class="line">        rpn_file=rpn_stage1_out[<span class="string">'proposal_path'</span>])</span><br><span class="line">p = mp.Process(target=train_fast_rcnn, kwargs=mp_kwargs)</span><br><span class="line">p.start()</span><br><span class="line">fast_rcnn_stage1_out = mp_queue.get()</span><br><span class="line">p.join()</span><br></pre></td></tr></table></figure>
+<p>该步骤利用rpn生成的proposals和标注的gt框，对fast rcnn进行训练。（主要看网络的输入、输入以及数据流的分支、汇合部分。）</p>
+<p>在训练阶段，该部分（fast rcnn）的网络结构为：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0083.png" alt="image0083"></p>
+<p>在测试阶段，以及最后的应用的阶段，faster rcnn的网络结构为：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0084.png" alt="image0084"></p>
+<p>可以看到相较于之前，这里新出现了一个<code>roi_pooling_layer</code>，这是caffe官方所没有的、由作者新添加的层，在roi_pooling_layer.cpp中实现（位于~/py-faster-rcnn/caffe-fast-rcnn/src/caffe/layers/roi_pooling_layer.cpp）。关于这个layer的理解，可以参考<a href="https://goldentimecoolk.github.io/2018/08/06/2018-07-13-%E3%80%90faster%20rcnn%E3%80%91roi_pooling_layer/" target="_blank" rel="noopener">roi_pooling_layer</a>。</p>
+<p>看一下函数<code>train_fast_rcnn()</code>：</p>
+<hr>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_fast_rcnn</span><span class="params">(queue=None, imdb_name=None, init_model=None, solver=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                    max_iters=None, cfg=None, rpn_file=None)</span>:</span></span><br><span class="line">    <span class="string">"""Train a Fast R-CNN using proposals generated by an RPN.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">	</span><br><span class="line">    cfg.TRAIN.HAS_RPN = <span class="keyword">False</span>           <span class="comment"># not generating prosals on-the-fly</span></span><br><span class="line">    cfg.TRAIN.PROPOSAL_METHOD = <span class="string">'rpn'</span>   <span class="comment"># use pre-computed RPN proposals instead</span></span><br><span class="line">    cfg.TRAIN.IMS_PER_BATCH = <span class="number">2</span></span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Init model: &#123;&#125;'</span>.format(init_model))</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'RPN proposals: &#123;&#125;'</span>.format(rpn_file))</span><br><span class="line">    print(<span class="string">'Using config:'</span>)</span><br><span class="line">    pprint.pprint(cfg)</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">import</span> caffe</span><br><span class="line">    _init_caffe(cfg)</span><br><span class="line">	</span><br><span class="line">    roidb, imdb = get_roidb(imdb_name, rpn_file=rpn_file)</span><br><span class="line">    output_dir = get_output_dir(imdb)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Output will be saved to `&#123;:s&#125;`'</span>.format(output_dir))</span><br><span class="line">    <span class="comment"># Train Fast R-CNN</span></span><br><span class="line">    model_paths = train_net(solver, roidb, output_dir,</span><br><span class="line">                            pretrained_model=init_model,</span><br><span class="line">                            max_iters=max_iters)</span><br><span class="line">    <span class="comment"># Cleanup all but the final model</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> model_paths[:<span class="number">-1</span>]:</span><br><span class="line">        os.remove(i)</span><br><span class="line">    fast_rcnn_model_path = model_paths[<span class="number">-1</span>]</span><br><span class="line">    <span class="comment"># Send Fast R-CNN model path over the multiprocessing queue</span></span><br><span class="line">    queue.put(&#123;<span class="string">'model_path'</span>: fast_rcnn_model_path&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>小结</strong></p>
+<p>该函数同<code>train_rpn()</code>套路一样，都是先通过特定的方法（此处为rpn_roidb）得到roidb，然后加载网络结构、网络参数、以及roidb进行训练，最终返回最后一次iter保存的<code>.caffemodel</code>文件。该阶段用到的特殊的自定义的网络有<a href="https://github.com/goldentimecoolk/goldentime/blob/master/_posts/2018-07-08-%E3%80%90faster-rcnn%E3%80%91%E7%BD%91%E7%BB%9C%E7%9A%84%E6%95%B0%E6%8D%AE%E6%8A%95%E5%96%82%E2%80%94%E2%80%94RoIDataLayer.md" target="_blank" rel="noopener">RoIDataLayer</a>（cfg.TRAIN.HAS_RPN = False），和<a href="https://goldentimecoolk.github.io/2018/08/06/2018-07-13-%E3%80%90faster%20rcnn%E3%80%91roi_pooling_layer/" target="_blank" rel="noopener">roi_pooling_layer</a>。</p>
+<p>下面是stage2的训练流程：</p>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'Stage 2 RPN, init from stage 1 Fast R-CNN model'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line"></span><br><span class="line">cfg.TRAIN.SNAPSHOT_INFIX = <span class="string">'stage2'</span></span><br><span class="line">mp_kwargs = dict(</span><br><span class="line">        queue=mp_queue,</span><br><span class="line">        imdb_name=args.imdb_name,</span><br><span class="line">        init_model=str(fast_rcnn_stage1_out[<span class="string">'model_path'</span>]),</span><br><span class="line">        solver=solvers[<span class="number">2</span>],</span><br><span class="line">        max_iters=max_iters[<span class="number">2</span>],</span><br><span class="line">        cfg=cfg)</span><br><span class="line">p = mp.Process(target=train_rpn, kwargs=mp_kwargs)</span><br><span class="line">p.start()</span><br><span class="line">rpn_stage2_out = mp_queue.get()</span><br><span class="line">p.join()</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'Stage 2 RPN, generate proposals'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line"></span><br><span class="line">mp_kwargs = dict(</span><br><span class="line">        queue=mp_queue,</span><br><span class="line">        imdb_name=args.imdb_name,</span><br><span class="line">        rpn_model_path=str(rpn_stage2_out[<span class="string">'model_path'</span>]),</span><br><span class="line">        cfg=cfg,</span><br><span class="line">        rpn_test_prototxt=rpn_test_prototxt)</span><br><span class="line">p = mp.Process(target=rpn_generate, kwargs=mp_kwargs)</span><br><span class="line">p.start()</span><br><span class="line">rpn_stage2_out[<span class="string">'proposal_path'</span>] = mp_queue.get()[<span class="string">'proposal_path'</span>]</span><br><span class="line">p.join()</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'Stage 2 Fast R-CNN, init from stage 2 RPN R-CNN model'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line"></span><br><span class="line">cfg.TRAIN.SNAPSHOT_INFIX = <span class="string">'stage2'</span></span><br><span class="line">mp_kwargs = dict(</span><br><span class="line">        queue=mp_queue,</span><br><span class="line">        imdb_name=args.imdb_name,</span><br><span class="line">        init_model=str(rpn_stage2_out[<span class="string">'model_path'</span>]),</span><br><span class="line">        solver=solvers[<span class="number">3</span>],</span><br><span class="line">        max_iters=max_iters[<span class="number">3</span>],</span><br><span class="line">        cfg=cfg,</span><br><span class="line">        rpn_file=rpn_stage2_out[<span class="string">'proposal_path'</span>])</span><br><span class="line">p = mp.Process(target=train_fast_rcnn, kwargs=mp_kwargs)</span><br><span class="line">p.start()</span><br><span class="line">fast_rcnn_stage2_out = mp_queue.get()</span><br><span class="line">p.join()</span><br><span class="line">	</span><br><span class="line"><span class="comment"># Create final model (just a copy of the last stage)</span></span><br><span class="line">final_path = os.path.join(</span><br><span class="line">        os.path.dirname(fast_rcnn_stage2_out[<span class="string">'model_path'</span>]),</span><br><span class="line">        args.net_name + <span class="string">'_faster_rcnn_final.caffemodel'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'cp &#123;&#125; -&gt; &#123;&#125;'</span>.format(</span><br><span class="line">        fast_rcnn_stage2_out[<span class="string">'model_path'</span>], final_path))</span><br><span class="line">shutil.copy(fast_rcnn_stage2_out[<span class="string">'model_path'</span>], final_path)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'Final model: &#123;&#125;'</span>.format(final_path))</span><br></pre></td></tr></table></figure>
+<p>stage2的训练流程与stage1大同小异，不再赘述。只强调一点：</p>
+<p>通过<code>.prototxt</code>文件可以看出，训练流程的控制可以通过lr（learning rate）来实现：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">conv1-2</th>
+<th style="text-align:center">conv3-4-5</th>
+<th style="text-align:center">rpn</th>
+<th style="text-align:center">fc6-7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">stage1-1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">!0</td>
+<td style="text-align:center">!0</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">stage1-2</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">!0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">!0</td>
+</tr>
+<tr>
+<td style="text-align:center">stage2-1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">!0</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">stage2-2</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">!0</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>在训练的全过程，conv1和conv2的参数都采用pretrained获取的参数；</li>
+<li>conv3、4、5的参数在stage1进行调整，stage2保持固定；</li>
+<li>rpn在每个阶段的前半部分进行调整，fc6-7在每个阶段的后半部分进行调整；</li>
+<li>这里的rpn是指其相对于fast rcnn所独有的网络层。</li>
+</ul>
+<p>一定要对数据本身有具体的概念，贯穿整个算法，数据流如何变化，这点很重要。</p>
+<p>算法中常用算子的数据结构；</p>
+<p>每一部分的作用，对数据流的改变。</p>
+<p>对数据结构的理解，可以带动对算法本身的理解。</p>
+<p><strong>小结</strong></p>
+<p>阶段与网络：每个阶段，准备数据，加载网络，训练网络，网络输出，提取有用信息，保存。</p>
+<h3 id="总结与展望"><a href="#总结与展望" class="headerlink" title="总结与展望"></a>总结与展望</h3><hr>
+<ol>
+<li>faster rcnn是我在machine learning和deep learning仔细研读的第一篇文章，其源码规模之大也是我第一次认真研读的。之所以从faster rcnn入手，我觉得有一下几个原因：<ul>
+<li>作为一个two stage的方法，对于新人而言，足够折腾，所以弄清楚这个过程对于后面其他算法的学习有很大帮助；</li>
+<li>detection作为recognition和segmentation的过渡，可以起到承上启下的作用，通过他可以了解那些著名的网络，比如Resnet，是如何脱离recognition问题广泛地应用到ML的其他问题。同时，还有一个用于segmentation的算法，mask-rcnn，作为kaiming出品，这一系列算法本身也具有连续性，Resnet——Faster Rcnn——Mask Rcnn。</li>
+</ul>
+</li>
+<li>有些东西，要想去雕琢，总会有新东西呈现，这个系列的文章也是如此。<br>该文章是我在现有水平下对这篇文章尽力地研读，文章是写完了，但还有一些疑问和不解有待攻克，有些是我现在能够意识到的，比如数据流、数据结构的统一总结，输出层损失函数的对比等，受限于时间和精力只好暂时搁置，等到面对的时候有信心解决。还有一些是因为水平和眼界有限，我没有意识到的，这些需要以后的长久积累，我相信有一天会拿他当艺术品一样去慢慢欣赏。</li>
+<li><p>一点情怀：这个系列的文章是我学习深度学习以来的第一部“巨作”，加上这篇文章一共有七篇。以前没想过会写一个系列，也不相信能写出来，单最后还是写出来了，我觉得有几个原因：</p>
+<ul>
+<li><p>ML这个方向对我的冲击非常强烈，有很多奇妙的思想、算法，以及他们背后的巧妙如工艺品一般的实现，让我有很强的分享欲；</p>
+<ul>
+<li>在学习的过程中，参考了很多前辈总结的教程，有关于论文的、源码的，有关于整体宏观把握的，也有对某个细节详尽分析的，他们就像一个个领路人，让我倍感鼓舞。</li>
+</ul>
+<p>因此最后决定把欲望落地为文章，把文章进行规范，第一部“巨作”由此诞生。</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>PS：本系列文章参考教程巨多，期间由于重装系统，导致浏览器书签丢失，无法一一列出，在此一并表示感谢。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/img/webwxgetmsgimg.jpg" alt="John Sky wechat" style="width: 200px; max-width: 100%;"/>
+    <div>scanning my wechat for further communication</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/img/alipay.jpg" alt="John Sky Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/07/2018-07-07-【faster rcnn】重装caffe——caffe-fast-rcnn/" rel="next" title="【faster rcnn】重装caffe——caffe-fast-rcnn">
+                <i class="fa fa-chevron-left"></i> 【faster rcnn】重装caffe——caffe-fast-rcnn
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/08/2018-07-08-【faster-rcnn】网络的数据投喂——RoIDataLayer/" rel="prev" title="【faster-rcnn】网络的数据投喂——RoIDataLayer">
+                【faster-rcnn】网络的数据投喂——RoIDataLayer <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Sky</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/goldentimecoolk" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:jsktt01@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。"><span class="nav-number">1.</span> <span class="nav-text">首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结与展望"><span class="nav-number"></span> <span class="nav-text">总结与展望</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Sky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: decodeURI(window.location.pathname), 
+            owner: 'goldentimecoolk',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'a221e3a05eedb33f9a4dd3f49da9bc58ff692a70',
+            
+                client_id: '920e0d6623cd15e1ed42'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

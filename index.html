@@ -273,7 +273,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-08-【ML一步一脚印】调试笔记/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/2018-08-01-重装系统/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Sky">
@@ -292,7 +292,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/06/2018-06-08-【ML一步一脚印】调试笔记/" itemprop="url">【ML一步一脚印】调试笔记</a></h1>
+                <a class="post-title-link" href="/2018/08/01/2018-08-01-重装系统/" itemprop="url">重装系统</a></h1>
         
 
         <div class="post-meta">
@@ -304,8 +304,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T17:02:26+08:00">
-                2018-08-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">
+                2018-08-01
               </time>
             
 
@@ -320,7 +320,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T17:02:26+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:09:36+08:00">
                 2018-08-06
               </time>
             
@@ -356,23 +356,15 @@
       
         
           
-          目的：
+          最近三天全都在折腾系统，各种奇葩的问题，比如电脑莫名其妙地连接到别人的路由器上导致无法上网，同样的问题按照别人的解决方法一步步走却把电脑装坏了。导致三天一共重装了三次系统，一把辛酸泪。下面将重装系统的一些步骤列举一下，以后重装时有个参考：
 
-在别人的框架上跑自己的数据，熟悉这个流程
-
-测试数据的质量，看看是否适合作为比赛用的数据
-
-
-
-在别人的基础上修改，原程序是使用jpg直接训练，这里想修改为lmdb。结果提示
-
-后来一查，说是Inputlayer的类型不对，应该改为Data，注意有两处都要改，如下图：
-
-一共205类，tr
+下载nvidia 驱动
+安装anaconda
+安装cuda
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/08/06/2018-06-08-【ML一步一脚印】调试笔记/#more" rel="contents">
+            <a class="btn" href="/2018/08/01/2018-08-01-重装系统/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -423,7 +415,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/13/2018-07-13-【faster rcnn】roi_pooling_layer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Sky">
@@ -442,7 +434,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/" itemprop="url">【ML一步一脚印】批量删除子文件夹和文件名中的空格</a></h1>
+                <a class="post-title-link" href="/2018/07/13/2018-07-13-【faster rcnn】roi_pooling_layer/" itemprop="url">【faster rcnn】roi_pooling_layer</a></h1>
         
 
         <div class="post-meta">
@@ -454,8 +446,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T17:02:11+08:00">
-                2018-08-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-13T00:00:00+08:00">
+                2018-07-13
               </time>
             
 
@@ -470,7 +462,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T17:02:11+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:09:30+08:00">
                 2018-08-06
               </time>
             
@@ -506,14 +498,20 @@
       
         
           
-          目的： 利用create_imagenet在jpg基础上得到lmdb格式的文件；
-问题： create_imagenet中的路径不支持空格，所以需要将文件路径以及文件名中的所有空格删除，由于有200+个子文件夹以及4w+张图片，因此需要批量操作。
+          之前说过，caffe中的layer层，主要有以下几个函数：
 
-使用昨天生成标签文档txt的程序肯定不行，因为那个
+setup
+reshape
+forward
+backward
+
+在roi_pooling_layer.cpp中，主要是前三个函数，在分别对其进行解析之前，先看一下该层的使用：
+layer {
+  name: &quot;roi_pool_
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/#more" rel="contents">
+            <a class="btn" href="/2018/07/13/2018-07-13-【faster rcnn】roi_pooling_layer/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -564,7 +562,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-06-【caffe】interface/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/11/2018-07-11-【faster-rcnn】anchortargetlayer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Sky">
@@ -583,7 +581,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/06/2018-06-06-【caffe】interface/" itemprop="url">【caffe】interface</a></h1>
+                <a class="post-title-link" href="/2018/07/11/2018-07-11-【faster-rcnn】anchortargetlayer/" itemprop="url">【faster-rcnn】anchortargetlayer</a></h1>
         
 
         <div class="post-meta">
@@ -595,8 +593,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T17:01:47+08:00">
-                2018-08-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-11T00:00:00+08:00">
+                2018-07-11
               </time>
             
 
@@ -611,7 +609,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T17:01:47+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:09:16+08:00">
                 2018-08-06
               </time>
             
@@ -647,11 +645,17 @@
       
         
           
-          Caffe has command line, Python, and MATLAB interfaces for day-to-day usage, interfacing with research code, and rapid prototyping. While Caffe is a C+
+          该层用于rpn的训练阶段。
+看一下该层的使用方法：
+layer {
+  name: &apos;rpn-data&apos;
+  type: &apos;Python&apos;
+  bottom: &apos;rpn_cls_score&apos;
+  bottom: &apos;gt_boxes
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/08/06/2018-06-06-【caffe】interface/#more" rel="contents">
+            <a class="btn" href="/2018/07/11/2018-07-11-【faster-rcnn】anchortargetlayer/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -702,7 +706,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-05-【ML一步一脚印】生成标签文件/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/08/2018-07-08-【faster rcnn】proposal/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Sky">
@@ -721,7 +725,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/06/2018-06-05-【ML一步一脚印】生成标签文件/" itemprop="url">【ML一步一脚印】生成标签文件</a></h1>
+                <a class="post-title-link" href="/2018/07/08/2018-07-08-【faster rcnn】proposal/" itemprop="url">【faster rcnn】proposal</a></h1>
         
 
         <div class="post-meta">
@@ -733,8 +737,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T17:01:35+08:00">
-                2018-08-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-08T00:00:00+08:00">
+                2018-07-08
               </time>
             
 
@@ -749,581 +753,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T17:01:35+08:00">
-                2018-08-06
-              </time>
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          预期实现效果
-生成一个标签文本，文本的每一行表示一个样本，格式为：
-  图片地址/名称（空格）标签类别具体如下图：
-
-根据比例，对总数据集进行划分，分为train.txt、val.txt、test.txt。
-分步实现
-
-
-join的作用：
-
-是在拼接路径的时候用的。举个例子：
-
-
-os.path.j
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/08/06/2018-06-05-【ML一步一脚印】生成标签文件/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-04-【ML一步一脚印】linux下安装MATLAB 2017a/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Sky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-06-04-【ML一步一脚印】linux下安装MATLAB 2017a/" itemprop="url">【ML一步一脚印】linux下安装MATLAB 2017a</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T17:01:23+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Post modified&#58;</span>
-              
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T17:01:23+08:00">
-                2018-08-06
-              </time>
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          1.下载文件Matlab R2017a 链接地址：https://pan.baidu.com/s/1hsVnxdE#list/path=%2F（如果失效，可以私信我）
-2.安装MATLAB安装过程全称参考[1]，没有什么问题。有两点需要重复一下：
-####2.1 挂载iso文件的命令
-进入R2017
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/08/06/2018-06-04-【ML一步一脚印】linux下安装MATLAB 2017a/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-02-【ML一步一脚印】在自己的数据集上跑深度学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Sky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-06-02-【ML一步一脚印】在自己的数据集上跑深度学习/" itemprop="url">【ML一步一脚印】在自己的数据集上跑深度学习</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T17:01:11+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Post modified&#58;</span>
-              
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T17:01:11+08:00">
-                2018-08-06
-              </time>
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          今天在比较真实的数据集（Oxford flower dataset）上，第一次，真正地开始跑深度学习框架。
-上一篇文章开头提到，使用深度学习解决问题主要分为四个步骤：
-
-下载图片，并制作分类信息txt，分别在train.txt、valid.txt和test.txt中将图片名称与类别相对应；
-
-根据上
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/08/06/2018-06-02-【ML一步一脚印】在自己的数据集上跑深度学习/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-07-08-【faster rcnn】主函数/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Sky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-07-08-【faster rcnn】主函数/" itemprop="url">【faster rcnn】主函数</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T13:52:52+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Post modified&#58;</span>
-              
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T13:52:52+08:00">
-                2018-08-06
-              </time>
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          今天开始写faster rcnn的源码解析。从主函数开始，如果中间的一些细节需要展开，会单独写成一篇文章，主要的流程还是在这篇文章。
-首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。1234567891011121314151617181920212223if _
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/08/06/2018-07-08-【faster rcnn】主函数/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-07-08-【faster rcnn】proposal/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Sky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-07-08-【faster rcnn】proposal/" itemprop="url">【faster rcnn】proposal</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T12:35:33+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Post modified&#58;</span>
-              
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T12:35:33+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:08:19+08:00">
                 2018-08-06
               </time>
             
@@ -1364,7 +794,7 @@ os.path.j
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/08/06/2018-07-08-【faster rcnn】proposal/#more" rel="contents">
+            <a class="btn" href="/2018/07/08/2018-07-08-【faster rcnn】proposal/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1415,7 +845,7 @@ os.path.j
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-07-07-【faster rcnn】get_roidb/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/08/2018-07-08-【faster-rcnn】网络的数据投喂——RoIDataLayer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Sky">
@@ -1434,7 +864,7 @@ os.path.j
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/06/2018-07-07-【faster rcnn】get_roidb/" itemprop="url">【faster rcnn 】get_roidb</a></h1>
+                <a class="post-title-link" href="/2018/07/08/2018-07-08-【faster-rcnn】网络的数据投喂——RoIDataLayer/" itemprop="url">【faster-rcnn】网络的数据投喂——RoIDataLayer</a></h1>
         
 
         <div class="post-meta">
@@ -1446,8 +876,8 @@ os.path.j
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T12:17:19+08:00">
-                2018-08-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-08T00:00:00+08:00">
+                2018-07-08
               </time>
             
 
@@ -1462,7 +892,434 @@ os.path.j
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T12:00:56+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:08:50+08:00">
+                2018-08-06
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          对于caffe中的layer，主要有以下几个性质：
+
+setup
+forward
+backward
+
+对于所有的data layer而言，主要是前两点，这里也不例外。
+RoIDataLayer
+12345678910111213141516171819202122232425262728293031
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/08/2018-07-08-【faster-rcnn】网络的数据投喂——RoIDataLayer/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/08/2018-07-08-【faster rcnn】主函数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Sky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/08/2018-07-08-【faster rcnn】主函数/" itemprop="url">【faster rcnn】主函数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-08T00:00:00+08:00">
+                2018-07-08
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:08:58+08:00">
+                2018-08-06
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          今天开始写faster rcnn的源码解析。从主函数开始，如果中间的一些细节需要展开，会单独写成一篇文章，主要的流程还是在这篇文章。
+首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。1234567891011121314151617181920212223if _
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/08/2018-07-08-【faster rcnn】主函数/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/07/2018-07-07-【faster rcnn】重装caffe——caffe-fast-rcnn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Sky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/07/2018-07-07-【faster rcnn】重装caffe——caffe-fast-rcnn/" itemprop="url">【faster rcnn】重装caffe——caffe-fast-rcnn</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-07T00:00:00+08:00">
+                2018-07-07
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:08:26+08:00">
+                2018-08-06
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          最近开始上手目标检测的代码，先从别人已经成功运行的例程开始：
+https://github.com/rbgirshick/py-faster-rcnn
+参考了几篇博客：
+深度学习实践经验：用Faster R-CNN训练行人检测数据集Caltech——准备工作
+Faster-RCNN+ZF用自己的数据
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/07/2018-07-07-【faster rcnn】重装caffe——caffe-fast-rcnn/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/07/2018-07-07-【faster rcnn】get_roidb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Sky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/07/2018-07-07-【faster rcnn】get_roidb/" itemprop="url">【faster rcnn 】get_roidb</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-07T00:00:00+08:00">
+                2018-07-07
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:08:32+08:00">
                 2018-08-06
               </time>
             
@@ -1509,7 +1366,7 @@ stage1_rpn_solver60k80k.pt
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/08/06/2018-07-07-【faster rcnn】get_roidb/#more" rel="contents">
+            <a class="btn" href="/2018/07/07/2018-07-07-【faster rcnn】get_roidb/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1560,7 +1417,7 @@ stage1_rpn_solver60k80k.pt
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-08-01-重装系统/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/06/2018-07-06-【pytorch】关于torch.nn的两点/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Sky">
@@ -1579,7 +1436,7 @@ stage1_rpn_solver60k80k.pt
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/06/2018-08-01-重装系统/" itemprop="url">重装系统</a></h1>
+                <a class="post-title-link" href="/2018/07/06/2018-07-06-【pytorch】关于torch.nn的两点/" itemprop="url">【pytorch】关于torch.nn的两点</a></h1>
         
 
         <div class="post-meta">
@@ -1591,8 +1448,8 @@ stage1_rpn_solver60k80k.pt
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T12:09:36+08:00">
-                2018-08-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-06T00:00:00+08:00">
+                2018-07-06
               </time>
             
 
@@ -1607,7 +1464,7 @@ stage1_rpn_solver60k80k.pt
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T12:09:36+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:07:49+08:00">
                 2018-08-06
               </time>
             
@@ -1643,15 +1500,151 @@ stage1_rpn_solver60k80k.pt
       
         
           
-          最近三天全都在折腾系统，各种奇葩的问题，比如电脑莫名其妙地连接到别人的路由器上导致无法上网，同样的问题按照别人的解决方法一步步走却把电脑装坏了。导致三天一共重装了三次系统，一把辛酸泪。下面将重装系统的一些步骤列举一下，以后重装时有个参考：
+          torch.nn中的BatchNorm函数
 
-下载nvidia 驱动
-安装anaconda
-安装cuda
+12345class torch.nn.BatchNorm1d(num_features, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)class torch.nn.Bat
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/08/06/2018-08-01-重装系统/#more" rel="contents">
+            <a class="btn" href="/2018/07/06/2018-07-06-【pytorch】关于torch.nn的两点/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/06/2018-07-06-【pytorch】resnet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Sky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/06/2018-07-06-【pytorch】resnet/" itemprop="url">【pytorch】resnet</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-06T00:00:00+08:00">
+                2018-07-06
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:07:40+08:00">
+                2018-08-06
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061class ResNet(nn.Module):    def __ini
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/06/2018-07-06-【pytorch】resnet/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1693,7 +1686,7 @@ stage1_rpn_solver60k80k.pt
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1739,7 +1732,7 @@ stage1_rpn_solver60k80k.pt
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1747,15 +1740,6 @@ stage1_rpn_solver60k80k.pt
 
             
 
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                
-                  <span class="site-state-item-count">3</span>
-                  <span class="site-state-item-name">tags</span>
-                
-              </div>
             
 
           </nav>
