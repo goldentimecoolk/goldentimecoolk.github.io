@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="目的： 利用create_imagenet在jpg基础上得到lmdb格式的文件； 问题： create_imagenet中的路径不支持空格，所以需要将文件路径以及文件名中的所有空格删除，由于有200+个子文件夹以及4w+张图片，因此需要批量操作。  使用昨天生成标签文档txt的程序肯定不行，因为那个只是读取路径和文件名，然后分配一个类别，生成txt文档；而现在需要做的是对文件路径和文件名进行实际的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【ML一步一脚印】批量删除子文件夹和文件名中的空格">
+<meta property="og:url" content="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="目的： 利用create_imagenet在jpg基础上得到lmdb格式的文件； 问题： create_imagenet中的路径不支持空格，所以需要将文件路径以及文件名中的所有空格删除，由于有200+个子文件夹以及4w+张图片，因此需要批量操作。  使用昨天生成标签文档txt的程序肯定不行，因为那个只是读取路径和文件名，然后分配一个类别，生成txt文档；而现在需要做的是对文件路径和文件名进行实际的">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/img/image0020.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/img/image0026.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/img/image0022.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/img/image0023.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/img/image0027.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/img/image0025.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/img/image0024.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/img/image0021.png">
+<meta property="og:updated_time" content="2018-08-05T14:14:18.702Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【ML一步一脚印】批量删除子文件夹和文件名中的空格">
+<meta name="twitter:description" content="目的： 利用create_imagenet在jpg基础上得到lmdb格式的文件； 问题： create_imagenet中的路径不支持空格，所以需要将文件路径以及文件名中的所有空格删除，由于有200+个子文件夹以及4w+张图片，因此需要批量操作。  使用昨天生成标签文档txt的程序肯定不行，因为那个只是读取路径和文件名，然后分配一个类别，生成txt文档；而现在需要做的是对文件路径和文件名进行实际的">
+<meta name="twitter:image" content="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/img/image0020.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/"/>
+
+
+
+
+
+  <title>【ML一步一脚印】批量删除子文件夹和文件名中的空格 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【ML一步一脚印】批量删除子文件夹和文件名中的空格</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>目的：</strong> 利用create_imagenet在jpg基础上得到lmdb格式的文件；</p>
+<p><strong>问题：</strong> create_imagenet中的路径不支持空格，所以需要将文件路径以及文件名中的所有空格删除，由于有200+个子文件夹以及4w+张图片，因此需要批量操作。</p>
+<p><img src="img/image0020.png" alt="image0020"></p>
+<p>使用昨天生成标签文档txt的程序肯定不行，因为那个只是读取路径和文件名，然后分配一个类别，生成txt文档；而现在需要做的是对文件路径和文件名进行实际的修改。</p>
+<p>Google了一个“如何批量删除文档空格”，给出的95%的例程都是单文件夹下进行操作。而我们的文档组织结构如下：</p>
+<p><img src="img/image0026.png" alt="image0026"></p>
+<p>所以需要先遍历子文件夹，再遍历其中每张图片。</p>
+<h4 id="1-在子文件夹下删除图片名字中的空格——这是最核心的操作"><a href="#1-在子文件夹下删除图片名字中的空格——这是最核心的操作" class="headerlink" title="1. 在子文件夹下删除图片名字中的空格——这是最核心的操作"></a>1. 在子文件夹下删除图片名字中的空格——这是最核心的操作</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for name in *.jpg</span><br><span class="line">do</span><br><span class="line">    na=$(echo $name | tr ' ' '_')          #tr ' ' '_'  将空格替换为下划线。单行执行时，读取屏幕输入，并输出执行后结果</span><br><span class="line">    mv "$name" "$na"</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>其中，| 叫做<a href="http://blog.sina.com.cn/s/blog_6d09b5750100vley.html" target="_blank" rel="noopener">管道符号</a>，<a href="https://blog.csdn.net/zhuying_linux/article/details/6825568" target="_blank" rel="noopener">tr</a>为translate的缩写，主要用于删除文件中的控制字符，或进行字符转换。</p>
+<p><a href="http://www.cnblogs.com/peida/archive/2012/10/27/2743022.html" target="_blank" rel="noopener">mv</a>是move的缩写，用来<u>移动文件</u>或者<u>对文件改名</u>。关于这个命令，我觉得设计地很模糊，对新人不友好，对于移动文件还是对文件改名只是根据第二个参数的类型，而我们要修改的对象包括路径本身，如果这个路径是新的路径（之前的路径中有空格），那么就会产生新路径并将原路径下的文件剪切到新路径下；如果这个路径仍是原路径（原路径中没有空格，无需改动），那么就会提示无法移动文件。</p>
+<p>语法：</p>
+<blockquote>
+<p> mv [选项] 源文件或目录 目标文件或目录</p>
+</blockquote>
+<p>操作说明：</p>
+<blockquote>
+<p> 视mv命令中第二个参数类型的不同（是目标文件还是目标目录），mv命令将文件重命名或将其移至一个新的目录中。当第二个参数类型是文件时，mv命令完成文件重命名，此时，源文件只能有一个（也可以是源目录名），它将所给的源文件或目录重命名为给定的目标文件名。当第二个参数是已存在的目录名称时，源文件或目录参数可以有多个，mv命令将各参数指定的源文件均移至目标目录中。在跨文件系统移动文件时，mv先拷贝，再将原有文件删除，而链至该文件的链接也将丢失。</p>
+</blockquote>
+<p>mv执行结果：</p>
+<p><img src="img/image0022.png" alt="image0022"></p>
+<p>题外话：后来无意发现这里有一个小奇葩，但是也不影响后续生成lmdb的操作：</p>
+<p><img src="img/image0023.png" alt="image0023"></p>
+<hr>
+<h4 id="2-对子文件夹的名称进行操作"><a href="#2-对子文件夹的名称进行操作" class="headerlink" title="2. 对子文件夹的名称进行操作"></a>2. 对子文件夹的名称进行操作</h4><p>如果上来就用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">filelist=`ls /home/sun/Documents/python/PRCV2018/data/project1/image/`</span><br><span class="line">num=0</span><br><span class="line">for file in $filelist</span><br><span class="line">do </span><br><span class="line">newname=$(echo $file | tr ' ' '_')</span><br><span class="line">	mv "$path$file" "$path$newname"</span><br><span class="line">	echo $file</span><br><span class="line">	let num+=1</span><br><span class="line">done</span><br><span class="line">echo $num</span><br></pre></td></tr></table></figure>
+<p>那么系统会将带有空格的文件夹名称分隔开，如“A B.txt”变为A，B.txt。Google了以下解决方案，只需要在for循环的前面加上即可。在上述基础上，对文件名进行处理：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">IFS=$(echo -en "\n\b")</span><br><span class="line">echo -en $IFS</span><br><span class="line"></span><br><span class="line">filelist=`ls /home/sun/Documents/python/PRCV2018/data/project1/image/`</span><br><span class="line">num=0</span><br><span class="line">for file in $filelist</span><br><span class="line">do </span><br><span class="line">newname=$(echo $file | tr ' ' '_')</span><br><span class="line">	mv "$path$file" "$path$newname"</span><br><span class="line">	echo $file</span><br><span class="line">	let num+=1</span><br><span class="line">done</span><br><span class="line">echo $num</span><br></pre></td></tr></table></figure></p>
+<p>此时得到了文件的绝对路径，下一步就是在绝对路径的索引下，和上一部分内容结合，对文件进行处理。这时有个很重要的部分，就是需要结合文档结构进行操作——需要先遍历子文件夹，然后遍历文件。</p>
+<h4 id="3-使用Shell遍历目录及其子目录中的所有文件"><a href="#3-使用Shell遍历目录及其子目录中的所有文件" class="headerlink" title="3. 使用Shell遍历目录及其子目录中的所有文件"></a>3. 使用Shell遍历目录及其子目录中的所有文件</h4><p>该部分主要参考这位<a href="https://blog.csdn.net/Register_man/article/details/53860064" target="_blank" rel="noopener">前辈</a>的教程：</p>
+<p><img src="img/image0027.png" alt="image0027"></p>
+<h4 id="4-结果"><a href="#4-结果" class="headerlink" title="4. 结果"></a>4. 结果</h4><p><img src="img/image0025.png" alt="image0025"></p>
+<p>当然奇葩仍然存在：</p>
+<p><img src="img/image0024.png" alt="image0024"></p>
+<p>删除了文件路径以及文件名中的空格之后，很快就得到了lmdb文件：</p>
+<p><img src="img/image0021.png" alt="image0021"></p>
+<h5 id="除了文章中列出的参考教程，还参考了以下教程，在此罗列出来，对于一个新人，可以让我们从不同角度了解shell的语法和原理"><a href="#除了文章中列出的参考教程，还参考了以下教程，在此罗列出来，对于一个新人，可以让我们从不同角度了解shell的语法和原理" class="headerlink" title="除了文章中列出的参考教程，还参考了以下教程，在此罗列出来，对于一个新人，可以让我们从不同角度了解shell的语法和原理:"></a>除了文章中列出的参考教程，还参考了以下教程，在此罗列出来，对于一个新人，可以让我们从不同角度了解shell的语法和原理:</h5><p>[1] shell遍历目录下所有文件： <a href="https://blog.csdn.net/u012307002/article/details/51308710" target="_blank" rel="noopener">https://blog.csdn.net/u012307002/article/details/51308710</a></p>
+<p>[2] mv无法获取文件状态（根本原因是路径不对，或者文件不存在）： <a href="http://forum.ubuntu.org.cn/viewtopic.php?f=21&amp;t=395842" target="_blank" rel="noopener">http://forum.ubuntu.org.cn/viewtopic.php?f=21&amp;t=395842</a></p>
+<p>[3] shell函数的定义和调用： <a href="http://www.runoob.com/linux/linux-shell-func.html" target="_blank" rel="noopener">http://www.runoob.com/linux/linux-shell-func.html</a> </p>
+<p>[4] let指令： <a href="https://www.cnblogs.com/kaishirenshi/p/7686910.html" target="_blank" rel="noopener">https://www.cnblogs.com/kaishirenshi/p/7686910.html</a></p>
+<p>[5] shell 中的for、while循环及if语句： <a href="https://www.cnblogs.com/wenqiang/p/5352276.html" target="_blank" rel="noopener">https://www.cnblogs.com/wenqiang/p/5352276.html</a></p>
+<p>[6] BASH Shell: For Loop File Names With Spaces： <a href="https://www.cyberciti.biz/tips/handling-filenames-with-spaces-in-bash.html" target="_blank" rel="noopener">https://www.cyberciti.biz/tips/handling-filenames-with-spaces-in-bash.html</a></p>
+<p>[7] SHELL技巧：处理文件名中的那些空格： <a href="http://www.cnblogs.com/cocowool/archive/2013/01/15/2861904.html" target="_blank" rel="noopener">http://www.cnblogs.com/cocowool/archive/2013/01/15/2861904.html</a></p>
+<p>[8] Linux系统下除去文件名称中的空格字符： <a href="http://blog.sina.com.cn/s/blog_7ed5a8080101bh90.html" target="_blank" rel="noopener">http://blog.sina.com.cn/s/blog_7ed5a8080101bh90.html</a></p>
+<p>[9] Shell处理有空格的文件夹： <a href="https://my.oschina.net/yehun/blog/893217" target="_blank" rel="noopener">https://my.oschina.net/yehun/blog/893217</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/06/2018-06-06-【caffe】interface/" rel="next" title="【caffe】interface">
+                <i class="fa fa-chevron-left"></i> 【caffe】interface
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/06/2018-06-08-【ML一步一脚印】调试笔记/" rel="prev" title="【ML一步一脚印】调试笔记">
+                【ML一步一脚印】调试笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-在子文件夹下删除图片名字中的空格——这是最核心的操作"><span class="nav-number">1.</span> <span class="nav-text">1. 在子文件夹下删除图片名字中的空格——这是最核心的操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-对子文件夹的名称进行操作"><span class="nav-number">2.</span> <span class="nav-text">2. 对子文件夹的名称进行操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-使用Shell遍历目录及其子目录中的所有文件"><span class="nav-number">3.</span> <span class="nav-text">3. 使用Shell遍历目录及其子目录中的所有文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-结果"><span class="nav-number">4.</span> <span class="nav-text">4. 结果</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#除了文章中列出的参考教程，还参考了以下教程，在此罗列出来，对于一个新人，可以让我们从不同角度了解shell的语法和原理"><span class="nav-number">4.1.</span> <span class="nav-text">除了文章中列出的参考教程，还参考了以下教程，在此罗列出来，对于一个新人，可以让我们从不同角度了解shell的语法和原理:</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

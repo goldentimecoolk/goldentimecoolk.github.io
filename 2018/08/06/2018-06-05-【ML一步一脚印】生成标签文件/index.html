@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="预期实现效果 生成一个标签文本，文本的每一行表示一个样本，格式为：   图片地址/名称（空格）标签类别具体如下图：  根据比例，对总数据集进行划分，分为train.txt、val.txt、test.txt。 分步实现   join的作用：  是在拼接路径的时候用的。举个例子：   os.path.join(“home”, “me”, “mywork”)   在Linux系统上会返回“home/me">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【ML一步一脚印】生成标签文件">
+<meta property="og:url" content="http://yoursite.com/2018/08/06/2018-06-05-【ML一步一脚印】生成标签文件/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="预期实现效果 生成一个标签文本，文本的每一行表示一个样本，格式为：   图片地址/名称（空格）标签类别具体如下图：  根据比例，对总数据集进行划分，分为train.txt、val.txt、test.txt。 分步实现   join的作用：  是在拼接路径的时候用的。举个例子：   os.path.join(“home”, “me”, “mywork”)   在Linux系统上会返回“home/me">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/08/06/img/20180804-112104.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/06/img/image0018.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/06/img/image0019.png">
+<meta property="og:updated_time" content="2018-08-05T14:43:52.067Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【ML一步一脚印】生成标签文件">
+<meta name="twitter:description" content="预期实现效果 生成一个标签文本，文本的每一行表示一个样本，格式为：   图片地址/名称（空格）标签类别具体如下图：  根据比例，对总数据集进行划分，分为train.txt、val.txt、test.txt。 分步实现   join的作用：  是在拼接路径的时候用的。举个例子：   os.path.join(“home”, “me”, “mywork”)   在Linux系统上会返回“home/me">
+<meta name="twitter:image" content="http://yoursite.com/2018/08/06/img/20180804-112104.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/06/2018-06-05-【ML一步一脚印】生成标签文件/"/>
+
+
+
+
+
+  <title>【ML一步一脚印】生成标签文件 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-05-【ML一步一脚印】生成标签文件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【ML一步一脚印】生成标签文件</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="预期实现效果"><a href="#预期实现效果" class="headerlink" title="预期实现效果"></a>预期实现效果</h3><ul>
+<li><p>生成一个标签文本，文本的每一行表示一个样本，格式为：</p>
+<p>  图片地址/名称（空格）标签类别<br>具体如下图：<br><img src="../img/20180804-112104.png" alt=""></p>
+</li>
+<li><p>根据比例，对总数据集进行划分，分为train.txt、val.txt、test.txt。</p>
+<h3 id="分步实现"><a href="#分步实现" class="headerlink" title="分步实现"></a>分步实现</h3></li>
+</ul>
+<hr>
+<p>join的作用：</p>
+<blockquote>
+<p>是在拼接路径的时候用的。举个例子：</p>
+</blockquote>
+<blockquote>
+<p>os.path.join(“home”, “me”, “mywork”)</p>
+</blockquote>
+<blockquote>
+<p>在Linux系统上会返回“home/me/mywork”</p>
+</blockquote>
+<blockquote>
+<p>在Windows系统上会返回”home\me\mywork”</p>
+</blockquote>
+<blockquote>
+<p>好处是可以根据系统自动选择正确的路径分隔符”/“或”\”</p>
+</blockquote>
+<h4 id="实现两级读取"><a href="#实现两级读取" class="headerlink" title="实现两级读取"></a>实现两级读取</h4><hr>
+<pre><code>folders = GetFileList(&apos;/media/sun/Seagate Expansion Drive/CAS/project1/image&apos;)  # 该路径为图片的存放地址
+
+i=0
+for folder in folders:
+    i+=1
+    print(i,&apos;:&apos;,folder)
+</code></pre><p>通过上述代码，发现folders就是路径，所以后面可以直接将教程的循环作为内循环：</p>
+<pre><code>total_txt = open(&apos;total.txt&apos;, &apos;w&apos;)
+for ind, folder in enumerate(folders):
+    imgfile = GetFileList(folder)
+    for img in imgfile:
+        str1 = img + &apos; &apos; + str(ind) + &apos;\n&apos;
+        total_txt.writelines(str1)
+total_txt.close()
+</code></pre><p>至此，生成total.txt，包含了所有的jpg以及他们对应的类（每个文件夹下的所有图片为一个类，从0开始标注）。<br>下面根据一定比例，将total.txt分割为train.txt、valid.txt、test.txt。</p>
+<h4 id="实现对txt的逐行读取"><a href="#实现对txt的逐行读取" class="headerlink" title="实现对txt的逐行读取"></a>实现对txt的<a href="https://blog.csdn.net/yatere/article/details/6591627" target="_blank" rel="noopener">逐行读取</a></h4><hr>
+<pre><code>specify = [1,3,5]
+for ind in specify:
+    str2 = linecache.getline(&apos;total.txt&apos;,ind)
+    print(str2)
+</code></pre><p><img src="../img/image0018.png" alt="image0018"></p>
+<h4 id="生成txt"><a href="#生成txt" class="headerlink" title="生成txt"></a>生成txt</h4><hr>
+<p><img src="../img/image0019.png" alt="image0019"></p>
+<blockquote>
+<p>参考 <a href="https://blog.csdn.net/qq_15505637/article/details/77687910" target="_blank" rel="noopener">https://blog.csdn.net/qq_15505637/article/details/77687910</a></p>
+</blockquote>
+<h4 id="生成随机数"><a href="#生成随机数" class="headerlink" title="生成随机数"></a>生成随机数</h4><hr>
+<p>生成指定范围内的、无重复的、整数、随机值。</p>
+<p>alternative method：</p>
+<p>利用<a href="http://www.runoob.com/python3/python3-func-number-shuffle.html" target="_blank" rel="noopener">shuffle()</a>先对index打乱，然后直接对index进行整段划分；</p>
+<hr>
+<h4 id="对total-txt按指定行读取，并存储到新的txt文件"><a href="#对total-txt按指定行读取，并存储到新的txt文件" class="headerlink" title="对total.txt按指定行读取，并存储到新的txt文件"></a>对total.txt按指定行读取，并存储到新的txt文件</h4><hr>
+<pre><code>def split_data(p_train = 0.6, p_val = 0.1, p_test = 0.4):
+    t = list(range(num_total))
+    random.shuffle(t)
+
+    num_train = int(p_train*num_total)
+    num_val = int(p_val*num_total)
+    num_test = num_total - num_train - num_val
+    print(num_train,num_val,num_test,num_train+num_val+num_test)
+
+    train_ind = t[0:num_train]
+    val_ind = t[num_train:num_train+num_val]
+    test_ind = t[num_train+num_val:]
+    print(len(train_ind),len(val_ind),len(test_ind))
+#    print(type(train_ind))
+
+    train_txt = open(&apos;train.txt&apos;, &apos;w&apos;)
+    for ind in train_ind:
+        str2 = linecache.getline(&apos;total.txt&apos;, ind)
+        train_txt.writelines(str2)
+ #       print(str2)
+    train_txt.close()
+
+    val_txt = open(&apos;val.txt&apos;, &apos;w&apos;)
+    for ind in val_ind:
+        str2 = linecache.getline(&apos;total.txt&apos;, ind)
+        val_txt.writelines(str2)
+ #       print(str2)
+    val_txt.close()
+
+    test_txt = open(&apos;test.txt&apos;, &apos;w&apos;)
+    for ind in test_ind:
+        str2 = linecache.getline(&apos;total.txt&apos;, ind)
+        test_txt.writelines(str2)
+ #       print(str2)
+    test_txt.close()
+</code></pre><h4 id="最终结果"><a href="#最终结果" class="headerlink" title="最终结果"></a>最终结果</h4><hr>
+<ul>
+<li><p>根据img文件的存放，生成标签文档total.txt；</p>
+</li>
+<li><p>根据给定的比例，对total.txt进行打乱划分，生成三个子标签文档train.txt、val.txt、test.txt。</p>
+</li>
+</ul>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><hr>
+<p><a href="https://blog.csdn.net/u010417185/article/details/52119863" target="_blank" rel="noopener">https://blog.csdn.net/u010417185/article/details/52119863</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/06/2018-06-02-【ML一步一脚印】在自己的数据集上跑深度学习/" rel="next" title="【ML一步一脚印】在自己的数据集上跑深度学习">
+                <i class="fa fa-chevron-left"></i> 【ML一步一脚印】在自己的数据集上跑深度学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/06/2018-06-04-【ML一步一脚印】linux下安装MATLAB 2017a/" rel="prev" title="【ML一步一脚印】linux下安装MATLAB 2017a">
+                【ML一步一脚印】linux下安装MATLAB 2017a <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#预期实现效果"><span class="nav-number">1.</span> <span class="nav-text">预期实现效果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分步实现"><span class="nav-number">2.</span> <span class="nav-text">分步实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实现两级读取"><span class="nav-number">2.1.</span> <span class="nav-text">实现两级读取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现对txt的逐行读取"><span class="nav-number">2.2.</span> <span class="nav-text">实现对txt的逐行读取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成txt"><span class="nav-number">2.3.</span> <span class="nav-text">生成txt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成随机数"><span class="nav-number">2.4.</span> <span class="nav-text">生成随机数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对total-txt按指定行读取，并存储到新的txt文件"><span class="nav-number">2.5.</span> <span class="nav-text">对total.txt按指定行读取，并存储到新的txt文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最终结果"><span class="nav-number">2.6.</span> <span class="nav-text">最终结果</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

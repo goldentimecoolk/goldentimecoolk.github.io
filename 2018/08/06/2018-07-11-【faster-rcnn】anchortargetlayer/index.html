@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="该层用于rpn的训练阶段。 看一下该层的使用方法： layer {   name: &amp;apos;rpn-data&amp;apos;   type: &amp;apos;Python&amp;apos;   bottom: &amp;apos;rpn_cls_score&amp;apos;   bottom: &amp;apos;gt_boxes&amp;apos;   bottom: &amp;apos;im_info&amp;apos;   bottom: &amp;ap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【faster-rcnn】anchortargetlayer">
+<meta property="og:url" content="http://yoursite.com/2018/08/06/2018-07-11-【faster-rcnn】anchortargetlayer/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="该层用于rpn的训练阶段。 看一下该层的使用方法： layer {   name: &amp;apos;rpn-data&amp;apos;   type: &amp;apos;Python&amp;apos;   bottom: &amp;apos;rpn_cls_score&amp;apos;   bottom: &amp;apos;gt_boxes&amp;apos;   bottom: &amp;apos;im_info&amp;apos;   bottom: &amp;ap">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-11-【faster-rcnn】anchortargetlayer/img/image0085.png">
+<meta property="og:updated_time" content="2018-08-05T14:21:27.947Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【faster-rcnn】anchortargetlayer">
+<meta name="twitter:description" content="该层用于rpn的训练阶段。 看一下该层的使用方法： layer {   name: &amp;apos;rpn-data&amp;apos;   type: &amp;apos;Python&amp;apos;   bottom: &amp;apos;rpn_cls_score&amp;apos;   bottom: &amp;apos;gt_boxes&amp;apos;   bottom: &amp;apos;im_info&amp;apos;   bottom: &amp;ap">
+<meta name="twitter:image" content="http://yoursite.com/2018/08/06/2018-07-11-【faster-rcnn】anchortargetlayer/img/image0085.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/06/2018-07-11-【faster-rcnn】anchortargetlayer/"/>
+
+
+
+
+
+  <title>【faster-rcnn】anchortargetlayer | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-07-11-【faster-rcnn】anchortargetlayer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【faster-rcnn】anchortargetlayer</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>该层用于rpn的训练阶段。</p>
+<p>看一下该层的使用方法：</p>
+<pre><code>layer {
+  name: &apos;rpn-data&apos;
+  type: &apos;Python&apos;
+  bottom: &apos;rpn_cls_score&apos;
+  bottom: &apos;gt_boxes&apos;
+  bottom: &apos;im_info&apos;
+  bottom: &apos;data&apos;
+  top: &apos;rpn_labels&apos;
+  top: &apos;rpn_bbox_targets&apos;
+  top: &apos;rpn_bbox_inside_weights&apos;
+  top: &apos;rpn_bbox_outside_weights&apos;
+  python_param {
+    module: &apos;rpn.anchor_target_layer&apos;
+    layer: &apos;AnchorTargetLayer&apos;
+    param_str: &quot;&apos;feat_stride&apos;: 16&quot;
+  }
+}
+</code></pre><p><img src="img/image0085.png" alt="image0085"></p>
+<p>在<code>AnchorTargetLayer</code>的具体实现中，只用到三个输入信息。该层的作用是根据<code>gt_boxes</code>（结构为1 × 4）和原图0到原图1的resize信息<code>im_info</code>，和conv_5特征图的尺寸（1,2*9,H,W）,通过<code>rpn_cls_score</code>获得，得到anchor需要的修正量以及有效anchor的fg/bg的labels。关于原始图片数据<code>data</code>并没有看到有被利用。</p>
+<p>看一下<code>setup()</code>部分：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">setup</span><span class="params">(self, bottom, top)</span>:</span></span><br><span class="line">    layer_params = yaml.load(self.param_str_)</span><br><span class="line">    anchor_scales = layer_params.get(<span class="string">'scales'</span>, (<span class="number">8</span>, <span class="number">16</span>, <span class="number">32</span>))</span><br><span class="line">    self._anchors = generate_anchors(scales=np.array(anchor_scales))</span><br><span class="line">    self._num_anchors = self._anchors.shape[<span class="number">0</span>]</span><br><span class="line">    self._feat_stride = layer_params[<span class="string">'feat_stride'</span>]</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'anchors:'</span></span><br><span class="line">        <span class="keyword">print</span> self._anchors</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'anchor shapes:'</span></span><br><span class="line">        <span class="keyword">print</span> np.hstack((</span><br><span class="line">            self._anchors[:, <span class="number">2</span>::<span class="number">4</span>] - self._anchors[:, <span class="number">0</span>::<span class="number">4</span>],</span><br><span class="line">            self._anchors[:, <span class="number">3</span>::<span class="number">4</span>] - self._anchors[:, <span class="number">1</span>::<span class="number">4</span>],</span><br><span class="line">        ))</span><br><span class="line">        self._counts = cfg.EPS</span><br><span class="line">        self._sums = np.zeros((<span class="number">1</span>, <span class="number">4</span>))</span><br><span class="line">        self._squared_sums = np.zeros((<span class="number">1</span>, <span class="number">4</span>))</span><br><span class="line">        self._fg_sum = <span class="number">0</span></span><br><span class="line">        self._bg_sum = <span class="number">0</span></span><br><span class="line">        self._count = <span class="number">0</span></span><br><span class="line">	</span><br><span class="line">    <span class="comment"># allow boxes to sit over the edge by a small amount</span></span><br><span class="line">    self._allowed_border = layer_params.get(<span class="string">'allowed_border'</span>, <span class="number">0</span>)</span><br><span class="line">	</span><br><span class="line">    height, width = bottom[<span class="number">0</span>].data.shape[<span class="number">-2</span>:]</span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'AnchorTargetLayer: height'</span>, height, <span class="string">'width'</span>, width</span><br><span class="line">	</span><br><span class="line">    A = self._num_anchors</span><br><span class="line">    <span class="comment"># labels</span></span><br><span class="line">    top[<span class="number">0</span>].reshape(<span class="number">1</span>, <span class="number">1</span>, A * height, width)</span><br><span class="line">    <span class="comment"># bbox_targets</span></span><br><span class="line">    top[<span class="number">1</span>].reshape(<span class="number">1</span>, A * <span class="number">4</span>, height, width)</span><br><span class="line">    <span class="comment"># bbox_inside_weights</span></span><br><span class="line">    top[<span class="number">2</span>].reshape(<span class="number">1</span>, A * <span class="number">4</span>, height, width)</span><br><span class="line">    <span class="comment"># bbox_outside_weights</span></span><br><span class="line">    top[<span class="number">3</span>].reshape(<span class="number">1</span>, A * <span class="number">4</span>, height, width)</span><br></pre></td></tr></table></figure></p>
+<p>这里重点是记住<code>top</code>的shape。</p>
+<p>然后看<code>forward()</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, bottom, top)</span>:</span></span><br><span class="line">	</span><br><span class="line">    <span class="comment"># Algorithm:</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># for each (H, W) location i</span></span><br><span class="line">    <span class="comment">#   generate 9 anchor boxes centered on cell i</span></span><br><span class="line">    <span class="comment">#   apply predicted bbox deltas at cell i to each of the 9 anchors</span></span><br><span class="line">    <span class="comment"># filter out-of-image anchors</span></span><br><span class="line">    <span class="comment"># measure GT overlap</span></span><br><span class="line">	</span><br><span class="line">    <span class="keyword">assert</span> bottom[<span class="number">0</span>].data.shape[<span class="number">0</span>] == <span class="number">1</span>, \</span><br><span class="line">        <span class="string">'Only single item batches are supported'</span></span><br><span class="line">	</span><br><span class="line">    <span class="comment"># map of shape (..., H, W)</span></span><br><span class="line">    height, width = bottom[<span class="number">0</span>].data.shape[<span class="number">-2</span>:]</span><br><span class="line">    <span class="comment"># GT boxes (x1, y1, x2, y2, label)</span></span><br><span class="line">    gt_boxes = bottom[<span class="number">1</span>].data</span><br><span class="line">    <span class="comment"># im_info</span></span><br><span class="line">    im_info = bottom[<span class="number">2</span>].data[<span class="number">0</span>, :]</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">''</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'im_size: (&#123;&#125;, &#123;&#125;)'</span>.format(im_info[<span class="number">0</span>], im_info[<span class="number">1</span>])</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'scale: &#123;&#125;'</span>.format(im_info[<span class="number">2</span>])</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'height, width: (&#123;&#125;, &#123;&#125;)'</span>.format(height, width)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'rpn: gt_boxes.shape'</span>, gt_boxes.shape</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'rpn: gt_boxes'</span>, gt_boxes</span><br><span class="line">	</span><br><span class="line">    <span class="comment"># 1. Generate proposals from bbox deltas and shifted anchors</span></span><br><span class="line">    shift_x = np.arange(<span class="number">0</span>, width) * self._feat_stride</span><br><span class="line">    shift_y = np.arange(<span class="number">0</span>, height) * self._feat_stride</span><br><span class="line">    shift_x, shift_y = np.meshgrid(shift_x, shift_y)</span><br><span class="line">    shifts = np.vstack((shift_x.ravel(), shift_y.ravel(),</span><br><span class="line">                        shift_x.ravel(), shift_y.ravel())).transpose()</span><br><span class="line">    <span class="comment"># add A anchors (1, A, 4) to</span></span><br><span class="line">    <span class="comment"># cell K shifts (K, 1, 4) to get</span></span><br><span class="line">    <span class="comment"># shift anchors (K, A, 4)</span></span><br><span class="line">    <span class="comment"># reshape to (K*A, 4) shifted anchors</span></span><br><span class="line">    A = self._num_anchors</span><br><span class="line">    K = shifts.shape[<span class="number">0</span>]</span><br><span class="line">    all_anchors = (self._anchors.reshape((<span class="number">1</span>, A, <span class="number">4</span>)) +</span><br><span class="line">                   shifts.reshape((<span class="number">1</span>, K, <span class="number">4</span>)).transpose((<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>)))</span><br><span class="line">    all_anchors = all_anchors.reshape((K * A, <span class="number">4</span>))</span><br><span class="line">    total_anchors = int(K * A)</span><br></pre></td></tr></table></figure>
+<p>此处同“proposal layer制作基于原图1的框架shifts，以及将框架与一套相对性的anchor相结合”如出一辙。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># only keep anchors inside the image</span></span><br><span class="line">inds_inside = np.where(</span><br><span class="line">    (all_anchors[:, <span class="number">0</span>] &gt;= -self._allowed_border) &amp;</span><br><span class="line">    (all_anchors[:, <span class="number">1</span>] &gt;= -self._allowed_border) &amp;</span><br><span class="line">    (all_anchors[:, <span class="number">2</span>] &lt; im_info[<span class="number">1</span>] + self._allowed_border) &amp;  <span class="comment"># width</span></span><br><span class="line">    (all_anchors[:, <span class="number">3</span>] &lt; im_info[<span class="number">0</span>] + self._allowed_border)    <span class="comment"># height</span></span><br><span class="line">)[<span class="number">0</span>]</span><br><span class="line">	</span><br><span class="line"><span class="keyword">if</span> DEBUG:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'total_anchors'</span>, total_anchors</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'inds_inside'</span>, len(inds_inside)</span><br><span class="line">	</span><br><span class="line"><span class="comment"># keep only inside anchors</span></span><br><span class="line">anchors = all_anchors[inds_inside, :]</span><br><span class="line"><span class="keyword">if</span> DEBUG:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'anchors.shape'</span>, anchors.shape</span><br></pre></td></tr></table></figure></p>
+<p>anchor的shape较all_anchors的shape有所缩小。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># label: 1 is positive, 0 is negative, -1 is dont care</span></span><br><span class="line">labels = np.empty((len(inds_inside), ), dtype=np.float32)</span><br><span class="line">labels.fill(<span class="number">-1</span>)</span><br></pre></td></tr></table></figure></p>
+<p>labels的规模等于剩下的anchor，即在允许范围内的anchor。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># overlaps between the anchors and the gt boxes</span></span><br><span class="line"><span class="comment"># overlaps (ex, gt)</span></span><br><span class="line">overlaps = bbox_overlaps(</span><br><span class="line">    np.ascontiguousarray(anchors, dtype=np.float),</span><br><span class="line">    np.ascontiguousarray(gt_boxes, dtype=np.float))</span><br><span class="line">argmax_overlaps = overlaps.argmax(axis=<span class="number">1</span>)</span><br><span class="line">max_overlaps = overlaps[np.arange(len(inds_inside)), argmax_overlaps]</span><br><span class="line">gt_argmax_overlaps = overlaps.argmax(axis=<span class="number">0</span>)</span><br><span class="line">gt_max_overlaps = overlaps[gt_argmax_overlaps,</span><br><span class="line">                           np.arange(overlaps.shape[<span class="number">1</span>])]</span><br><span class="line">gt_argmax_overlaps = np.where(overlaps == gt_max_overlaps)[<span class="number">0</span>]</span><br></pre></td></tr></table></figure></p>
+<p>此处是anchor与gt_boxes的overlaps，和之前计算boxes与gt_boxes的overlaps如出一辙。最后一句的作用：</p>
+<p>前两句的作用是找到每个gt_box的overlaps最大时的boxes序号以及相应的overlaps；注意这个序号只能是第一个出现的max的序号，以后如果出现等于max的元素，则无法统计（这是<code>argmax</code>在这里的一个弊端），所以需要最后一句，根据overlaps，找到所有值为max的boxes序号。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> cfg.TRAIN.RPN_CLOBBER_POSITIVES:</span><br><span class="line">    <span class="comment"># assign bg labels first so that positive labels can clobber them</span></span><br><span class="line">    labels[max_overlaps &lt; cfg.TRAIN.RPN_NEGATIVE_OVERLAP] = <span class="number">0</span></span><br><span class="line">	</span><br><span class="line"><span class="comment"># fg label: for each gt, anchor with highest overlap</span></span><br><span class="line">labels[gt_argmax_overlaps] = <span class="number">1</span></span><br><span class="line">	</span><br><span class="line"><span class="comment"># fg label: above threshold IOU</span></span><br><span class="line">labels[max_overlaps &gt;= cfg.TRAIN.RPN_POSITIVE_OVERLAP] = <span class="number">1</span></span><br><span class="line">	</span><br><span class="line"><span class="keyword">if</span> cfg.TRAIN.RPN_CLOBBER_POSITIVES:</span><br><span class="line">    <span class="comment"># assign bg labels last so that negative labels can clobber positives</span></span><br><span class="line">    labels[max_overlaps &lt; cfg.TRAIN.RPN_NEGATIVE_OVERLAP] = <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>先将gt对应的最大boxes设置为前景，然后对所有的boxes，如果overlaps&gt;thresh，同样设置为前景。其实只需要后者即可，加上前者更加保险，因为有一种小概率事件是所有boxes的max_overlaps都很小。<strong>注意：</strong>虽然gt_boxes里面background属于一类，但是在xml中标注的boxes并没有标出这一类，也就是说标注的boxes全都属于background之外的具体的类别。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># subsample positive labels if we have too many</span></span><br><span class="line">num_fg = int(cfg.TRAIN.RPN_FG_FRACTION * cfg.TRAIN.RPN_BATCHSIZE)</span><br><span class="line">fg_inds = np.where(labels == <span class="number">1</span>)[<span class="number">0</span>]</span><br><span class="line"><span class="keyword">if</span> len(fg_inds) &gt; num_fg:</span><br><span class="line">    disable_inds = npr.choice(</span><br><span class="line">        fg_inds, size=(len(fg_inds) - num_fg), replace=<span class="keyword">False</span>)</span><br><span class="line">    labels[disable_inds] = <span class="number">-1</span></span><br><span class="line">	</span><br><span class="line"><span class="comment"># subsample negative labels if we have too many</span></span><br><span class="line">num_bg = cfg.TRAIN.RPN_BATCHSIZE - np.sum(labels == <span class="number">1</span>)</span><br><span class="line">bg_inds = np.where(labels == <span class="number">0</span>)[<span class="number">0</span>]</span><br><span class="line"><span class="keyword">if</span> len(bg_inds) &gt; num_bg:</span><br><span class="line">    disable_inds = npr.choice(</span><br><span class="line">        bg_inds, size=(len(bg_inds) - num_bg), replace=<span class="keyword">False</span>)</span><br><span class="line">    labels[disable_inds] = <span class="number">-1</span></span><br><span class="line">    <span class="comment">#print "was %s inds, disabling %s, now %s inds" % (</span></span><br><span class="line">        <span class="comment">#len(bg_inds), len(disable_inds), np.sum(labels == 0))</span></span><br></pre></td></tr></table></figure></p>
+<p>统计fg/bg的数量，将其控制在一定范围内。（这么做是否对训练有影响？不考虑？）<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bbox_targets = np.zeros((len(inds_inside), <span class="number">4</span>), dtype=np.float32)</span><br><span class="line">bbox_targets = _compute_targets(anchors, gt_boxes[argmax_overlaps, :])</span><br><span class="line">	</span><br><span class="line">bbox_inside_weights = np.zeros((len(inds_inside), <span class="number">4</span>), dtype=np.float32)</span><br><span class="line">bbox_inside_weights[labels == <span class="number">1</span>, :] = np.array(cfg.TRAIN.RPN_BBOX_INSIDE_WEIGHTS)</span><br><span class="line">	</span><br><span class="line">bbox_outside_weights = np.zeros((len(inds_inside), <span class="number">4</span>), dtype=np.float32)</span><br></pre></td></tr></table></figure></p>
+<p>bbox_targets：计算gt_boxes相对于anchors的偏移量，以用于后面生成proposals时的校正信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> cfg.TRAIN.RPN_POSITIVE_WEIGHT &lt; <span class="number">0</span>:</span><br><span class="line">    <span class="comment"># uniform weighting of examples (given non-uniform sampling)</span></span><br><span class="line">    num_examples = np.sum(labels &gt;= <span class="number">0</span>)</span><br><span class="line">    positive_weights = np.ones((<span class="number">1</span>, <span class="number">4</span>)) * <span class="number">1.0</span> / num_examples</span><br><span class="line">    negative_weights = np.ones((<span class="number">1</span>, <span class="number">4</span>)) * <span class="number">1.0</span> / num_examples</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">assert</span> ((cfg.TRAIN.RPN_POSITIVE_WEIGHT &gt; <span class="number">0</span>) &amp;</span><br><span class="line">            (cfg.TRAIN.RPN_POSITIVE_WEIGHT &lt; <span class="number">1</span>))</span><br><span class="line">    positive_weights = (cfg.TRAIN.RPN_POSITIVE_WEIGHT /</span><br><span class="line">                        np.sum(labels == <span class="number">1</span>))</span><br><span class="line">    negative_weights = ((<span class="number">1.0</span> - cfg.TRAIN.RPN_POSITIVE_WEIGHT) /</span><br><span class="line">                        np.sum(labels == <span class="number">0</span>))</span><br><span class="line">bbox_outside_weights[labels == <span class="number">1</span>, :] = positive_weights</span><br><span class="line">bbox_outside_weights[labels == <span class="number">0</span>, :] = negative_weights</span><br><span class="line">	</span><br><span class="line"><span class="keyword">if</span> DEBUG:</span><br><span class="line">    self._sums += bbox_targets[labels == <span class="number">1</span>, :].sum(axis=<span class="number">0</span>)</span><br><span class="line">    self._squared_sums += (bbox_targets[labels == <span class="number">1</span>, :] ** <span class="number">2</span>).sum(axis=<span class="number">0</span>)</span><br><span class="line">    self._counts += np.sum(labels == <span class="number">1</span>)</span><br><span class="line">    means = self._sums / self._counts</span><br><span class="line">    stds = np.sqrt(self._squared_sums / self._counts - means ** <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'means:'</span></span><br><span class="line">    <span class="keyword">print</span> means</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'stdevs:'</span></span><br><span class="line">    <span class="keyword">print</span> stds</span><br><span class="line">	</span><br><span class="line"><span class="comment"># map up to original set of anchors</span></span><br><span class="line">labels = _unmap(labels, total_anchors, inds_inside, fill=<span class="number">-1</span>)</span><br><span class="line">bbox_targets = _unmap(bbox_targets, total_anchors, inds_inside, fill=<span class="number">0</span>)</span><br><span class="line">bbox_inside_weights = _unmap(bbox_inside_weights, total_anchors, inds_inside, fill=<span class="number">0</span>)</span><br><span class="line">bbox_outside_weights = _unmap(bbox_outside_weights, total_anchors, inds_inside, fill=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>因为之前对anchor有过筛选，现在需要对应到原来每一个anchor的信息（共K * A个），该过程的原理如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_unmap</span><span class="params">(data, count, inds, fill=<span class="number">0</span>)</span>:</span></span><br><span class="line">    <span class="string">""" Unmap a subset of item (data) back to the original set of items (of</span></span><br><span class="line"><span class="string">    size count) """</span></span><br><span class="line">    <span class="keyword">if</span> len(data.shape) == <span class="number">1</span>:</span><br><span class="line">        ret = np.empty((count, ), dtype=np.float32)</span><br><span class="line">        ret.fill(fill)</span><br><span class="line">        ret[inds] = data</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        ret = np.empty((count, ) + data.shape[<span class="number">1</span>:], dtype=np.float32)</span><br><span class="line">        ret.fill(fill)</span><br><span class="line">        ret[inds, :] = data</span><br><span class="line">    <span class="keyword">return</span> ret</span><br></pre></td></tr></table></figure>
+<p>先生成一共有<code>count</code>的ret（axis=0），然后将data按照<code>inds</code>进行填充，剩下的用<code>fill</code>补充。接下来是对这些结果进行reshape和transpose整理，用于最后输出。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> DEBUG:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'rpn: max max_overlap'</span>, np.max(max_overlaps)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'rpn: num_positive'</span>, np.sum(labels == <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'rpn: num_negative'</span>, np.sum(labels == <span class="number">0</span>)</span><br><span class="line">    self._fg_sum += np.sum(labels == <span class="number">1</span>)</span><br><span class="line">    self._bg_sum += np.sum(labels == <span class="number">0</span>)</span><br><span class="line">    self._count += <span class="number">1</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'rpn: num_positive avg'</span>, self._fg_sum / self._count</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'rpn: num_negative avg'</span>, self._bg_sum / self._count</span><br><span class="line">	</span><br><span class="line"><span class="comment"># labels</span></span><br><span class="line">labels = labels.reshape((<span class="number">1</span>, height, width, A)).transpose(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">labels = labels.reshape((<span class="number">1</span>, <span class="number">1</span>, A * height, width))</span><br><span class="line">top[<span class="number">0</span>].reshape(*labels.shape)</span><br><span class="line">top[<span class="number">0</span>].data[...] = labels</span><br><span class="line">	</span><br><span class="line"><span class="comment"># bbox_targets</span></span><br><span class="line">bbox_targets = bbox_targets \</span><br><span class="line">    .reshape((<span class="number">1</span>, height, width, A * <span class="number">4</span>)).transpose(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">top[<span class="number">1</span>].reshape(*bbox_targets.shape)</span><br><span class="line">top[<span class="number">1</span>].data[...] = bbox_targets</span><br><span class="line">	</span><br><span class="line"><span class="comment"># bbox_inside_weights</span></span><br><span class="line">bbox_inside_weights = bbox_inside_weights \</span><br><span class="line">    .reshape((<span class="number">1</span>, height, width, A * <span class="number">4</span>)).transpose(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">assert</span> bbox_inside_weights.shape[<span class="number">2</span>] == height</span><br><span class="line"><span class="keyword">assert</span> bbox_inside_weights.shape[<span class="number">3</span>] == width</span><br><span class="line">top[<span class="number">2</span>].reshape(*bbox_inside_weights.shape)</span><br><span class="line">top[<span class="number">2</span>].data[...] = bbox_inside_weights</span><br><span class="line">	</span><br><span class="line"><span class="comment"># bbox_outside_weights</span></span><br><span class="line">bbox_outside_weights = bbox_outside_weights \</span><br><span class="line">    .reshape((<span class="number">1</span>, height, width, A * <span class="number">4</span>)).transpose(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">assert</span> bbox_outside_weights.shape[<span class="number">2</span>] == height</span><br><span class="line"><span class="keyword">assert</span> bbox_outside_weights.shape[<span class="number">3</span>] == width</span><br><span class="line">top[<span class="number">3</span>].reshape(*bbox_outside_weights.shape)</span><br><span class="line">top[<span class="number">3</span>].data[...] = bbox_outside_weights</span><br></pre></td></tr></table></figure></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><hr>
+<p>只有在训练的时候，我们可以提前标注好boxes的位置和类别，但是在实际应用时预先不知道这些信息，这也正是我们期望网络能够自动化完成的任务，因此在train_rpn阶段，利用anchortargetlayer，通过标注的gt_boxes和resize信息，对标准的anchor进行操作，生成‘答案’，即得到用于‘生成proposals’时的修正量和labels，用这些信息训练fast rcnn。</p>
+<p>最后的labels等输出，没有用在别的网络，仅仅用在rpn_train阶段，以构成局部闭环，用于反馈rpn的<strong>主体网络</strong>，如conv_1至scores和pred，然后训练这个主体网络，以便后面<strong>更好地</strong>生成proposals。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/06/2018-07-08-【faster rcnn】主函数/" rel="next" title="【faster rcnn】主函数">
+                <i class="fa fa-chevron-left"></i> 【faster rcnn】主函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/06/2018-08-01-重装系统/" rel="prev" title="重装系统">
+                重装系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">1.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
