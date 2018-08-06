@@ -356,9 +356,7 @@
 
 在别人的基础上修改，原程序是使用jpg直接训练，这里想修改为lmdb。结果提示
 
-后来一查，说是Inputlayer的类型不对，应该改为Data，注意有两处都要改，如下图：
-
-一共205类，tr
+后来一查，说
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -496,7 +494,7 @@
       
         
           
-          Caffe has command line, Python, and MATLAB interfaces for day-to-day usage, interfacing with research code, and rapid prototyping. While Caffe is a C+
+          Caffe has command line, Python, and MATLAB interfaces for day-to-day usage, interfacing with researc
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -635,9 +633,7 @@
         
           
           目的： 利用create_imagenet在jpg基础上得到lmdb格式的文件；
-问题： create_imagenet中的路径不支持空格，所以需要将文件路径以及文件名中的所有空格删除，由于有200+个子文件夹以及4w+张图片，因此需要批量操作。
-
-使用昨天生成标签文档txt的程序肯定不行，因为那个
+问题： create_imagenet中的路径不支持空格，所以需要将文件路径以及文件名中的所有空格删除，由于有200+
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -779,16 +775,7 @@
 生成一个标签文本，文本的每一行表示一个样本，格式为：
   图片地址/名称（空格）标签类别具体如下图：
 
-根据比例，对总数据集进行划分，分为train.txt、val.txt、test.txt。
-分步实现
-
-
-join的作用：
-
-是在拼接路径的时候用的。举个例子：
-
-
-os.path.j
+根据比例，对总数据集进行划分，分为train.txt、val.txt、test.t
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -927,9 +914,7 @@ os.path.j
         
           
           1.下载文件Matlab R2017a 链接地址：https://pan.baidu.com/s/1hsVnxdE#list/path=%2F（如果失效，可以私信我）
-2.安装MATLAB安装过程全称参考[1]，没有什么问题。有两点需要重复一下：
-####2.1 挂载iso文件的命令
-进入R2017
+2.安装MATLAB安装过程全称
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1070,9 +1055,7 @@ os.path.j
           今天在比较真实的数据集（Oxford flower dataset）上，第一次，真正地开始跑深度学习框架。
 上一篇文章开头提到，使用深度学习解决问题主要分为四个步骤：
 
-下载图片，并制作分类信息txt，分别在train.txt、valid.txt和test.txt中将图片名称与类别相对应；
-
-根据上
+下载图片，并制作分类信息txt
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1217,8 +1200,7 @@ os.path.j
 加载数据、模型以及参数
 调试参数（反复的训练、验证和测试）
 
-利用compute_image_mean.cpp生成个人数据集的均值文件imagenet_mean.binaryproto
-1.获取compute_image_mean.cpp（安
+利用compute_image_mean.cpp生成个人数据集的均值文件imag
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1358,11 +1340,7 @@ os.path.j
           
           今天开始探索“如何在数据集上跑baseline”，一大早就找到了一个很好的项目，本以为可以速战速决，结果一开始就踩了个zip的坑。
 源代码片段如下：
-labels = np.array(zip(files, image_labels))
-
-～～～（中间部分）～～～
-
-def write_set_fi
+labels = np.array(zip(fil
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1500,8 +1478,7 @@ def write_set_fi
       
         
           
-          之前自己钻研faster rcnn的源码，读到paper中对应的关键地方，总是因为数据结构的一些问题戛然而止，而数据问题追根溯源要看imbd (image database) 的结构。机缘巧合，今天想到了这个问题的关键点。
-12345678910111213141516171819202122232
+          之前自己钻研faster rcnn的源码，读到paper中对应的关键地方，总是因为数据结构的一些问题戛然而止，而数据问题追根溯源要看imbd (image database) 的结构。机缘巧合，今天想
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1642,8 +1619,7 @@ def write_set_fi
           Today is a beautiful day.
 I learn two skills:
 
-replace the back tyre of my bike (with the aid of my senior labmate)
-build my personal blog (based on g
+replace the back tyre of my bike (with the aid of my 
           ...
           <!--noindex-->
           <div class="post-button text-center">

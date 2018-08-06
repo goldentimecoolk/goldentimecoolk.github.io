@@ -348,8 +348,7 @@
           
           Pycharm下同一目录py文件不能相互调用？
 https://blog.csdn.net/candy_gl/article/details/79222115
-caffe debug 1-Pycharm import caffe 报错 no module named caffe
-https://ww
+caffe debug 1-Pychar
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -492,11 +491,7 @@ https://ww
 修改测试代码的接口，使其适应自己的数据格式；
 将自己的数据格式转变为流行数据集，如voc的格式，然后使用标准的测试代码直接测试。
 
-下面针对第二种，分析一下标准数据集VOC的数据结构。
-如下图，共有五个文件夹：
-
-其中：
-Annotations
+下面针对第二
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -637,7 +632,7 @@ Annotations
           查看神经网络中间层的blobs和paramsCaffe主要处理两种形式的数据流： 
 
 图像和标签在网络上的传输，随着网络的传输，它们转化更高层次的表示，最终以得分或者概率值的形式输出。 
-第二种数据流，主要保存各个网络层的参数，比如卷积层的weights和bias. 这些值是随着的网络的训练过程不断
+第二种数据流
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -777,11 +772,6 @@ Annotations
           
           目的：根据之前生成的label.txt，从源图片地址将每张用到的每张图片拷贝到新地址，即提取图片。背景：在制作测试集的过程中，需要根据每张图片的评分，将其从原来的存放位置挑选出来，移动到新的路径下。
 
-逐行读取txt，为保证正确性，在前面加上index，统计总数：
-
-加上路径前缀，构成绝对路径：
-
-
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -920,10 +910,7 @@ Annotations
         
           
           准确率(Accuracy), 精确率(Precision), 召回率(Recall)：
-之前对深度学习的量化指标的认识比较模糊，今天具体地整理一下各个指标的含义。只有明确量化指标，才能够对模型的质量更好地理解。
-单标签图像分类下面形象地上一些概念：
-
-预测的正类个数/被检索到的样本个数为TP+FP，
+之前对深度学习的量化指标的认识比较模糊，今天具体地整理一下各个指标的含义。只有明确量化指标，才能够对模型的质量更
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1063,7 +1050,7 @@ Annotations
           
           训练结果可视化
 获取训练日志常规train或者test时，在命令前面加上GLOG_logtostderr=0 GLOG_log_dir=&#39;your_own_path&#39;,即：
-GLOG_logtostderr=0 GLOG_log_dir=/home/shukun/2018prcv/r
+GLOG_
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1201,7 +1188,7 @@ GLOG_logtostderr=0 GLOG_log_dir=/home/shukun/2018prcv/r
       
         
           
-          I’ve writen the python file, using it to read images’ name, assign the same label to images in the same folder. Before this, I successfully run them i
+          I’ve writen the python file, using it to read images’ name, assign the same label to images in the s
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1339,7 +1326,7 @@ GLOG_logtostderr=0 GLOG_log_dir=/home/shukun/2018prcv/r
       
         
           
-          Today, there is an emergency to deal with. Two folders are given. The first includes pure images and the second includes images with notifications and
+          Today, there is an emergency to deal with. Two folders are given. The first includes pure images and
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1477,7 +1464,7 @@ GLOG_logtostderr=0 GLOG_log_dir=/home/shukun/2018prcv/r
       
         
           
-          This guide is meant to get you ready to train your own model on your own data. If you just want an ImageNet-trained network, then note that since trai
+          This guide is meant to get you ready to train your own model on your own data. If you just want an I
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1615,7 +1602,7 @@ GLOG_logtostderr=0 GLOG_log_dir=/home/shukun/2018prcv/r
       
         
           
-          写在前面：经过几天的琢磨，caffe的使用流程已经基本掌握，但我始终对一些问题感到好奇，比如写的那些文本是如何形成网络的，在命令行输入的参数是怎么调用相应程序的，网路中每个层（module）的那些参数（或说属性）是怎么定义的？等等。这种好奇让我觉得很没谱，万一某一天caffe没有按照想法进行工作，或
+          写在前面：经过几天的琢磨，caffe的使用流程已经基本掌握，但我始终对一些问题感到好奇，比如写的那些文本是如何形成网络的，在命令行输入的参数是怎么调用相应程序的，网路中每个层（module）的那些参数
           ...
           <!--noindex-->
           <div class="post-button text-center">
