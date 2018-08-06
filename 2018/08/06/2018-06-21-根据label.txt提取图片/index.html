@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="caffe," />
+  <meta name="keywords" content="shell," />
 
 
 
@@ -79,18 +79,23 @@
 
 
 
-<meta name="description" content="查看神经网络中间层的blobs和paramsCaffe主要处理两种形式的数据流：   图像和标签在网络上的传输，随着网络的传输，它们转化更高层次的表示，最终以得分或者概率值的形式输出。  第二种数据流，主要保存各个网络层的参数，比如卷积层的weights和bias. 这些值是随着的网络的训练过程不断变化的。  第一种形式的数据流保存在net.blobs中：1net.blobs 它是有序字典，保存了">
-<meta name="keywords" content="caffe">
+<meta name="description" content="目的：根据之前生成的label.txt，从源图片地址将每张用到的每张图片拷贝到新地址，即提取图片。背景：在制作测试集的过程中，需要根据每张图片的评分，将其从原来的存放位置挑选出来，移动到新的路径下。  逐行读取txt，为保证正确性，在前面加上index，统计总数：  加上路径前缀，构成绝对路径：  提取空格前面的名字，和空格后面的数字，即类别：  然后为每个类别创建一个文件夹，存放该类别的图片：">
+<meta name="keywords" content="shell">
 <meta property="og:type" content="article">
-<meta property="og:title" content="python接口获取网络中的数据信息">
-<meta property="og:url" content="http://yoursite.com/2018/08/06/2018-06-30-【caffe】python接口获取网络中的数据信息/index.html">
+<meta property="og:title" content="根据label.txt提取图片">
+<meta property="og:url" content="http://yoursite.com/2018/08/06/2018-06-21-根据label.txt提取图片/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="查看神经网络中间层的blobs和paramsCaffe主要处理两种形式的数据流：   图像和标签在网络上的传输，随着网络的传输，它们转化更高层次的表示，最终以得分或者概率值的形式输出。  第二种数据流，主要保存各个网络层的参数，比如卷积层的weights和bias. 这些值是随着的网络的训练过程不断变化的。  第一种形式的数据流保存在net.blobs中：1net.blobs 它是有序字典，保存了">
+<meta property="og:description" content="目的：根据之前生成的label.txt，从源图片地址将每张用到的每张图片拷贝到新地址，即提取图片。背景：在制作测试集的过程中，需要根据每张图片的评分，将其从原来的存放位置挑选出来，移动到新的路径下。  逐行读取txt，为保证正确性，在前面加上index，统计总数：  加上路径前缀，构成绝对路径：  提取空格前面的名字，和空格后面的数字，即类别：  然后为每个类别创建一个文件夹，存放该类别的图片：">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-08-06T09:04:45.735Z">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0051.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0052.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0053.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0054.png">
+<meta property="og:updated_time" content="2018-08-06T09:03:58.087Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="python接口获取网络中的数据信息">
-<meta name="twitter:description" content="查看神经网络中间层的blobs和paramsCaffe主要处理两种形式的数据流：   图像和标签在网络上的传输，随着网络的传输，它们转化更高层次的表示，最终以得分或者概率值的形式输出。  第二种数据流，主要保存各个网络层的参数，比如卷积层的weights和bias. 这些值是随着的网络的训练过程不断变化的。  第一种形式的数据流保存在net.blobs中：1net.blobs 它是有序字典，保存了">
+<meta name="twitter:title" content="根据label.txt提取图片">
+<meta name="twitter:description" content="目的：根据之前生成的label.txt，从源图片地址将每张用到的每张图片拷贝到新地址，即提取图片。背景：在制作测试集的过程中，需要根据每张图片的评分，将其从原来的存放位置挑选出来，移动到新的路径下。  逐行读取txt，为保证正确性，在前面加上index，统计总数：  加上路径前缀，构成绝对路径：  提取空格前面的名字，和空格后面的数字，即类别：  然后为每个类别创建一个文件夹，存放该类别的图片：">
+<meta name="twitter:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0051.png">
 
 
 
@@ -120,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/06/2018-06-30-【caffe】python接口获取网络中的数据信息/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/06/2018-06-21-根据label.txt提取图片/"/>
 
 
 
 
 
-  <title>python接口获取网络中的数据信息 | Hexo</title>
+  <title>根据label.txt提取图片 | Hexo</title>
   
 
 
@@ -267,7 +272,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-30-【caffe】python接口获取网络中的数据信息/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-21-根据label.txt提取图片/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -284,7 +289,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">python接口获取网络中的数据信息</h1>
+          <h1 class="post-title" itemprop="name headline">根据label.txt提取图片</h1>
         
 
         <div class="post-meta">
@@ -296,7 +301,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T17:04:45+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T17:04:58+08:00">
                 2018-08-06
               </time>
             
@@ -312,7 +317,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T17:04:45+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T17:03:58+08:00">
                 2018-08-06
               </time>
             
@@ -327,8 +332,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/08/06/2018-06-30-【caffe】python接口获取网络中的数据信息/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/08/06/2018-06-30-【caffe】python接口获取网络中的数据信息/" itemprop="commentsCount"></span>
+                <a href="/2018/08/06/2018-06-21-根据label.txt提取图片/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/08/06/2018-06-21-根据label.txt提取图片/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -356,22 +361,27 @@
       
 
       
-        <h3 id="查看神经网络中间层的blobs和params"><a href="#查看神经网络中间层的blobs和params" class="headerlink" title="查看神经网络中间层的blobs和params"></a>查看神经网络中间层的blobs和params</h3><p>Caffe主要处理两种形式的数据流： </p>
-<ol>
-<li>图像和标签在网络上的传输，随着网络的传输，它们转化更高层次的表示，最终以得分或者概率值的形式输出。 </li>
-<li>第二种数据流，主要保存各个网络层的参数，比如卷积层的weights和bias. 这些值是随着的网络的训练过程不断变化的。</li>
-</ol>
-<p><strong>第一种形式的数据流</strong>保存在net.blobs中：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.blobs</span><br></pre></td></tr></table></figure></p>
-<p>它是<strong>有序字典</strong>，保存了每一层前后相应的数据。每个blob保存了data和gradient:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">net.blobs[<span class="string">'data'</span>].data.shape  <span class="comment"># &gt;&gt; (64, 1, 28, 28)</span></span><br><span class="line">net.blobs[<span class="string">'data'</span>].diff.shape  <span class="comment"># &gt;&gt; (64, 1, 28, 28)</span></span><br><span class="line"></span><br><span class="line">net.blobs[<span class="string">'conv1'</span>].data.shape  <span class="comment"># &gt;&gt; (64, 20, 24, 24)</span></span><br><span class="line">net.blobs[<span class="string">'conv1'</span>].diff.shape  <span class="comment"># &gt;&gt; (64, 20, 24, 24)</span></span><br><span class="line"></span><br><span class="line">net.blobs[<span class="string">'ip1'</span>].data.shape  <span class="comment"># &gt;&gt; (64, 500)</span></span><br><span class="line">net.blobs[<span class="string">'ip1'</span>].diff.shape  <span class="comment"># &gt;&gt; (64, 500)</span></span><br></pre></td></tr></table></figure></p>
-<p><strong>第二种形式的数据流</strong>，即网络层的参数，可以通过net.layers来获得：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.layers</span><br></pre></td></tr></table></figure></p>
-<p>它的第一层是data layer:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">len(net.layers[<span class="number">0</span>].blobs)   <span class="comment"># &gt;&gt; 0</span></span><br></pre></td></tr></table></figure></p>
-<p>因为输入层没有权重参数，因此blob的个数是0</p>
-<p>它的第二层是卷积层：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">len(net.layers[<span class="number">1</span>].blobs)  <span class="comment"># &gt;&gt; 2</span></span><br><span class="line"></span><br><span class="line">net.layers[<span class="number">1</span>].blobs[<span class="number">0</span>].data.shape  <span class="comment"># &gt;&gt;  (20, 1, 5, 5)  conv1 weights</span></span><br><span class="line">net.layers[<span class="number">1</span>].blobs[<span class="number">1</span>].data.shape  <span class="comment"># &gt;&gt;  (20,)  bias</span></span><br></pre></td></tr></table></figure></p>
-<p>表示有20个卷积核，每个卷积核的大小是5*5，处理1-channel的输入图像。</p>
-<p>还有一种获得各层参数的方式就是net.params：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> net.params[<span class="string">'conv1'</span>][<span class="number">0</span>].data.shape   <span class="comment"># (20, 1, 5, 5)  conv1 weights</span></span><br><span class="line"><span class="keyword">print</span> net.params[<span class="string">'conv1'</span>][<span class="number">1</span>].data.shape   <span class="comment"># (20,) bias</span></span><br><span class="line">```	</span><br><span class="line">---</span><br><span class="line">	</span><br><span class="line"><span class="comment">#### 实例-查看blobs</span></span><br><span class="line">```python</span><br><span class="line"><span class="comment"># for each layer, show the output shape</span></span><br><span class="line"><span class="keyword">for</span> layer_name, blob <span class="keyword">in</span> net.blobs.iteritems():</span><br><span class="line">    <span class="keyword">print</span> layer_name + <span class="string">'\t'</span> + str(blob.data.shape)</span><br></pre></td></tr></table></figure></p>
-<p>结果大致为：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">data    (<span class="number">50</span>, <span class="number">3</span>, <span class="number">227</span>, <span class="number">227</span>)</span><br><span class="line">conv1   (<span class="number">50</span>, <span class="number">96</span>, <span class="number">55</span>, <span class="number">55</span>)</span><br><span class="line">pool1   (<span class="number">50</span>, <span class="number">96</span>, <span class="number">27</span>, <span class="number">27</span>)</span><br><span class="line">norm1   (<span class="number">50</span>, <span class="number">96</span>, <span class="number">27</span>, <span class="number">27</span>)</span><br><span class="line">conv2   (<span class="number">50</span>, <span class="number">256</span>, <span class="number">27</span>, <span class="number">27</span>)</span><br><span class="line">pool2   (<span class="number">50</span>, <span class="number">256</span>, <span class="number">13</span>, <span class="number">13</span>)</span><br><span class="line">norm2   (<span class="number">50</span>, <span class="number">256</span>, <span class="number">13</span>, <span class="number">13</span>)</span><br><span class="line">conv3   (<span class="number">50</span>, <span class="number">384</span>, <span class="number">13</span>, <span class="number">13</span>)</span><br><span class="line">conv4   (<span class="number">50</span>, <span class="number">384</span>, <span class="number">13</span>, <span class="number">13</span>)</span><br><span class="line">conv5   (<span class="number">50</span>, <span class="number">256</span>, <span class="number">13</span>, <span class="number">13</span>)</span><br><span class="line">pool5   (<span class="number">50</span>, <span class="number">256</span>, <span class="number">6</span>, <span class="number">6</span>)</span><br><span class="line">fc6 (<span class="number">50</span>, <span class="number">4096</span>)</span><br><span class="line">fc7 (<span class="number">50</span>, <span class="number">4096</span>)</span><br><span class="line">fc8 (<span class="number">50</span>, <span class="number">1000</span>)</span><br><span class="line">prob    (<span class="number">50</span>, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure></p>
-<h4 id="实例-查看params"><a href="#实例-查看params" class="headerlink" title="实例-查看params"></a>实例-查看params</h4><p>函数为<code>net.params</code>,其中weight的样子应该是<code>（output_channels,input_channels,filter_height,flier_width）</code>, biases的形状只有一维<code>output_channels,</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> layer_name,parame <span class="keyword">in</span> net.params.iteritems():</span><br><span class="line"><span class="keyword">print</span> layer_name+<span class="string">'\t'</span>+str(param[<span class="number">0</span>].shape),str(param[<span class="number">1</span>].data.shape) <span class="comment">#可以看出param里0为weight，1为biase</span></span><br></pre></td></tr></table></figure></p>
-<p>结果为：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">conv1   (<span class="number">96</span>, <span class="number">3</span>, <span class="number">11</span>, <span class="number">11</span>) (<span class="number">96</span>,)   <span class="comment">#输入3通道，输出96通道</span></span><br><span class="line">conv2   (<span class="number">256</span>, <span class="number">48</span>, <span class="number">5</span>, <span class="number">5</span>) (<span class="number">256</span>,)  <span class="comment">#输入为48，因为分成了两组，group=2</span></span><br><span class="line">conv3   (<span class="number">384</span>, <span class="number">256</span>, <span class="number">3</span>, <span class="number">3</span>) (<span class="number">384</span>,) <span class="comment">#这里的输入没变</span></span><br><span class="line">conv4   (<span class="number">384</span>, <span class="number">192</span>, <span class="number">3</span>, <span class="number">3</span>) (<span class="number">384</span>,)</span><br><span class="line">conv5   (<span class="number">256</span>, <span class="number">192</span>, <span class="number">3</span>, <span class="number">3</span>) (<span class="number">256</span>,)</span><br><span class="line">fc6 (<span class="number">4096</span>, <span class="number">9216</span>) (<span class="number">4096</span>,)        <span class="comment">#9216=256*3*3</span></span><br><span class="line">fc7 (<span class="number">4096</span>, <span class="number">4096</span>) (<span class="number">4096</span>,)</span><br><span class="line">fc8 (<span class="number">1000</span>, <span class="number">4096</span>) (<span class="number">1000</span>,)</span><br></pre></td></tr></table></figure></p>
+        <p><strong>目的：根据之前生成的label.txt，从源图片地址将每张用到的每张图片拷贝到新地址，即提取图片。</strong><br>背景：在制作测试集的过程中，需要根据每张图片的评分，将其从原来的存放位置挑选出来，移动到新的路径下。</p>
+<ul>
+<li><p>逐行读取txt，为保证正确性，在前面加上index，统计总数：<br><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0051.png" alt="image0051"></p>
+</li>
+<li><p>加上路径前缀，构成绝对路径：<br><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0052.png" alt="image0052"></p>
+</li>
+<li><p>提取空格前面的名字，和空格后面的数字，即类别：<br><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0053.png" alt="image0053"></p>
+</li>
+<li><p>然后为每个类别创建一个文件夹，存放该类别的图片：<br><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0054.png" alt="image0054"></p>
+</li>
+</ul>
+<p>代码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if [ ! -d $class ]; then</span><br><span class="line">  mkdir $b_dir/$class</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>最后就是copy了：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp $imgdire $b_dir/$class</span><br></pre></td></tr></table></figure></p>
+<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><hr>
+<p>[1] <strong><a href="http://www.361way.com/readfile/240.html" target="_blank" rel="noopener">shell下读取文件的方法</a></strong></p>
+<p>[2]<strong><a href="http://www.361way.com/shell-string-slice/5245.html" target="_blank" rel="noopener">shell字符串截断、切片与默认值</a></strong></p>
+<p>[3] <strong><a href="https://my.oschina.net/u/1456911/blog/737164" target="_blank" rel="noopener">Linux脚本shell字符串处理（全）</a></strong></p>
+<p>[4]<strong><a href="https://www.cnblogs.com/emanlee/p/3583769.html" target="_blank" rel="noopener">shell bash判断文件或文件夹是否存在</a></strong></p>
+<p>[5]<a href="https://www.cnblogs.com/dwdxdy/archive/2012/07/25/2608816.html" target="_blank" rel="noopener">Shell脚本——逐行处理文本文件</a></p>
+<p>[6]<a href="https://www.jb51.net/article/51348.htm" target="_blank" rel="noopener">Shell脚本中计算字符串长度的5种方法</a></p>
 
       
     </div>
@@ -397,7 +407,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/caffe/" rel="tag"># caffe</a>
+            <a href="/tags/shell/" rel="tag"># shell</a>
           
         </div>
       
@@ -410,8 +420,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/06/2018-06-19-【评价指标】accuracy、precision、recall的来龙去脉/" rel="next" title="【评价指标】accuracy、precision、recall的来龙去脉">
-                <i class="fa fa-chevron-left"></i> 【评价指标】accuracy、precision、recall的来龙去脉
+              <a href="/2018/08/06/2018-06-30-【caffe】python接口获取网络中的数据信息/" rel="next" title="python接口获取网络中的数据信息">
+                <i class="fa fa-chevron-left"></i> python接口获取网络中的数据信息
               </a>
             
           </div>
@@ -419,10 +429,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/06/2018-06-21-根据label.txt提取图片/" rel="prev" title="根据label.txt提取图片">
-                根据label.txt提取图片 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -568,7 +574,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看神经网络中间层的blobs和params"><span class="nav-number">1.</span> <span class="nav-text">查看神经网络中间层的blobs和params</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例-查看params"><span class="nav-number">1.1.</span> <span class="nav-text">实例-查看params</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Reference"><span class="nav-number">1.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
