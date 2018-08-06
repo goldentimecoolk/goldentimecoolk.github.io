@@ -93,7 +93,7 @@
 <meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0082.png">
 <meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0079.png">
 <meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0081.png">
-<meta property="og:updated_time" content="2018-08-06T04:02:04.750Z">
+<meta property="og:updated_time" content="2018-08-06T04:35:33.179Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【faster rcnn】proposal">
 <meta name="twitter:description" content="首先看一下函数imdb_proposals： 1234567891011121314151617def imdb_proposals(net, imdb):    &quot;&quot;&quot;Generate RPN proposals on all images in an imdb.&quot;&quot;&quot;    _t = Timer()    imdb_boxes = [[] for _ in range(imdb.num_ima">
@@ -269,7 +269,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T12:02:04+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T12:35:33+08:00">
                 2018-08-06
               </time>
             
@@ -285,7 +285,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T12:02:04+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T12:35:33+08:00">
                 2018-08-06
               </time>
             
@@ -375,7 +375,7 @@ layer {
     param_str: &quot;&apos;num_classes&apos;: 21&quot;
   }
 }
-</code></pre><p>可以看到它是一个自定义的层，就是<code>layer.py</code>中的<code>class RoIDataLayer(caffe.Layer)</code>，具体细节可以参考<a href="网络数据的投喂">这篇文章</a>。</p>
+</code></pre><p>可以看到它是一个自定义的层，就是<code>layer.py</code>中的<code>class RoIDataLayer(caffe.Layer)</code>，具体细节可以参考<a href="https://goldentimecoolk.github.io/2018/08/06/2018-07-08-%E3%80%90faster-rcnn%E3%80%91%E7%BD%91%E7%BB%9C%E7%9A%84%E6%95%B0%E6%8D%AE%E6%8A%95%E5%96%82%E2%80%94%E2%80%94RoIDataLayer/" target="_blank" rel="noopener">网络数据的投喂</a>。</p>
 <hr>
 <p>回到函数<code>im_proposals(net, im)</code>，通过<code>net.forward()</code>得到blobs_out（blobs_out=self.outputs()，返回的应该是网络输出所有的blob，key和value<a href="https://blog.csdn.net/iamzhangzhuping/article/details/51366322" target="_blank" rel="noopener">解读_caffe.cpp和pycaffe.py</a>）之后，提取我们想要的信息<code>boxes</code>和<code>scores</code>：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">scale = blobs[<span class="string">'im_info'</span>][<span class="number">0</span>, <span class="number">2</span>]</span><br><span class="line">boxes = blobs_out[<span class="string">'rois'</span>][:, <span class="number">1</span>:].copy() / scale</span><br><span class="line">scores = blobs_out[<span class="string">'scores'</span>].copy()</span><br><span class="line"><span class="keyword">return</span> boxes, scores</span><br></pre></td></tr></table></figure>
@@ -513,8 +513,8 @@ layer {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/06/2018-07-06-【pytorch】关于torch.nn的两点/" rel="next" title="【pytorch】关于torch.nn的两点">
-                <i class="fa fa-chevron-left"></i> 【pytorch】关于torch.nn的两点
+              <a href="/2018/08/06/2018-07-08-【faster rcnn】主函数/" rel="next" title="【faster rcnn】主函数">
+                <i class="fa fa-chevron-left"></i> 【faster rcnn】主函数
               </a>
             
           </div>
@@ -522,10 +522,6 @@ layer {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/06/2018-07-11-【faster-rcnn】anchortargetlayer/" rel="prev" title="【faster-rcnn】anchortargetlayer">
-                【faster-rcnn】anchortargetlayer <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
