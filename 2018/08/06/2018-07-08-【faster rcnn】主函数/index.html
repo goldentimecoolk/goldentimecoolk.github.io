@@ -86,13 +86,13 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="今天开始写faster rcnn的源码解析。从主函数开始，如果中间的一些细节需要展开，会单独写成一篇文章，主要的流程还是在这篇文章。 首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。1234567891011121314151617181920212223if __name__ == &apos;__main__&apos;:    args = parse_args()">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-08-【faster%20rcnn】主函数/img/image0083.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-08-【faster%20rcnn】主函数/img/image0084.png">
-<meta property="og:updated_time" content="2018-08-05T14:21:10.290Z">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0083.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0084.png">
+<meta property="og:updated_time" content="2018-08-06T04:02:56.816Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【faster rcnn】主函数">
 <meta name="twitter:description" content="今天开始写faster rcnn的源码解析。从主函数开始，如果中间的一些细节需要展开，会单独写成一篇文章，主要的流程还是在这篇文章。 首先定义：最原始的图像记为原图0，经过resize的、作为网络输入的图像记为原图1。1234567891011121314151617181920212223if __name__ == &apos;__main__&apos;:    args = parse_args()">
-<meta name="twitter:image" content="http://yoursite.com/2018/08/06/2018-07-08-【faster%20rcnn】主函数/img/image0083.png">
+<meta name="twitter:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0083.png">
 
 
 
@@ -264,7 +264,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T12:02:56+08:00">
                 2018-08-06
               </time>
             
@@ -351,9 +351,9 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'Stage 1 Fast R-CNN using RPN proposals, init from ImageNet model'</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'</span>)</span><br><span class="line">	</span><br><span class="line">cfg.TRAIN.SNAPSHOT_INFIX = <span class="string">'stage1'</span></span><br><span class="line">mp_kwargs = dict(</span><br><span class="line">        queue=mp_queue,</span><br><span class="line">        imdb_name=args.imdb_name,</span><br><span class="line">        init_model=args.pretrained_model,</span><br><span class="line">        solver=solvers[<span class="number">1</span>],</span><br><span class="line">        max_iters=max_iters[<span class="number">1</span>],</span><br><span class="line">        cfg=cfg,</span><br><span class="line">        rpn_file=rpn_stage1_out[<span class="string">'proposal_path'</span>])</span><br><span class="line">p = mp.Process(target=train_fast_rcnn, kwargs=mp_kwargs)</span><br><span class="line">p.start()</span><br><span class="line">fast_rcnn_stage1_out = mp_queue.get()</span><br><span class="line">p.join()</span><br></pre></td></tr></table></figure>
 <p>该步骤利用rpn生成的proposals和标注的gt框，对fast rcnn进行训练。（主要看网络的输入、输入以及数据流的分支、汇合部分。）</p>
 <p>在训练阶段，该部分（fast rcnn）的网络结构为：</p>
-<p><img src="img/image0083.png" alt="image0083"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0083.png" alt="image0083"></p>
 <p>在测试阶段，以及最后的应用的阶段，faster rcnn的网络结构为：</p>
-<p><img src="img/image0084.png" alt="image0084"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0084.png" alt="image0084"></p>
 <p>可以看到相较于之前，这里新出现了一个<code>roi_pooling_layer</code>，这是caffe官方所没有的、由作者新添加的层，在roi_pooling_layer.cpp中实现（位于~/py-faster-rcnn/caffe-fast-rcnn/src/caffe/layers/roi_pooling_layer.cpp）。关于这个layer的理解，可以参考<a href="https://github.com/goldentimecoolk/goldentime/blob/master/_posts/2018-07-13-%E3%80%90faster%20rcnn%E3%80%91roi_pooling_layer.md" target="_blank" rel="noopener">roi_pooling_layer</a>。</p>
 <p>看一下函数<code>train_fast_rcnn()</code>：</p>
 <hr>
@@ -463,8 +463,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/06/2018-07-08-【faster-rcnn】网络的数据投喂——RoIDataLayer/" rel="next" title="【faster-rcnn】网络的数据投喂——RoIDataLayer">
-                <i class="fa fa-chevron-left"></i> 【faster-rcnn】网络的数据投喂——RoIDataLayer
+              <a href="/2018/08/06/2018-07-08-【faster rcnn】proposal/" rel="next" title="【faster rcnn】proposal">
+                <i class="fa fa-chevron-left"></i> 【faster rcnn】proposal
               </a>
             
           </div>

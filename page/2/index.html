@@ -229,7 +229,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-07-07-【faster rcnn】重装caffe——caffe-fast-rcnn/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-21-【shell】根据label.txt提取图片/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -248,7 +248,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/06/2018-07-07-【faster rcnn】重装caffe——caffe-fast-rcnn/" itemprop="url">【faster rcnn】重装caffe——caffe-fast-rcnn</a></h1>
+                <a class="post-title-link" href="/2018/08/06/2018-06-21-【shell】根据label.txt提取图片/" itemprop="url">【shell】根据label.txt提取图片</a></h1>
         
 
         <div class="post-meta">
@@ -260,7 +260,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:58:25+08:00">
                 2018-08-06
               </time>
             
@@ -300,923 +300,27 @@
       
         
           
-            <p>最近开始上手目标检测的代码，先从别人已经成功运行的例程开始：</p>
-<p><a href="https://github.com/rbgirshick/py-faster-rcnn" target="_blank" rel="noopener">https://github.com/rbgirshick/py-faster-rcnn</a></p>
-<p>参考了几篇博客：</p>
-<p><a href="http://jacobkong.github.io/posts/2093106769/" target="_blank" rel="noopener">深度学习实践经验：用Faster R-CNN训练行人检测数据集Caltech——准备工作</a></p>
-<p><a href="https://blog.csdn.net/sinat_30071459/article/details/51332084" target="_blank" rel="noopener">Faster-RCNN+ZF用自己的数据集训练模型(Python版本)</a></p>
-<p>刚开始说需要重新编译caffe，那么之前花费功夫编译好的caffe要删掉吗？我觉得可以不用删除，甚至可以不用重新编译。后来按照教程开始运行demo.py，结果提示：</p>
-<p><code>ImportError: No module named _caffe</code></p>
-<p>搜了一下，需要<code>make pycaffe</code>，可是我明明编译了python的接口，并且在/tools的路径下用终端进入python，<code>import caffe</code>都没有问题。所以只好在py-faster-rcnn的路径下重新编译caffe。我很害怕折腾，刚开始很保守地尝试了几种方案：</p>
+            <p><strong>目的：根据之前生成的label.txt，从源图片地址将每张用到的每张图片拷贝到新地址，即提取图片。</strong><br>背景：在制作测试集的过程中，需要根据每张图片的评分，将其从原来的存放位置挑选出来，移动到新的路径下。</p>
 <ul>
-<li>把caffe的原始包拷贝到py-faster-rcnn，按照教程配置MakeFile.Config，不行；</li>
-<li>把caffe的原始包拷贝到py-faster-rcnn，把之前的MakeFile.Config替换一下，不行；</li>
-<li>把自己编译好的caffe整个文件夹拷贝到py-faster-rcnn，提示<code>350:21: Message type &quot;caffe.LayerParameter&quot; has no field named &quot;roi_pooling_param&quot;.</code>；</li>
-<li>后来又查找解决方案，说是最好用作者给出的caffe-fast-rcnn进行编译，因为作者可能对官方caffe进行了一些修改，比如加入自定义的layer。同时我注意到一点，这对后来成功运行代码起到决定性作用：很多教程包括作者的原始教程，都给出了MakeFile.Config，并且<strong>注明用于参考</strong>。这说明配置文件可以不一样，需要根据自己的电脑状况个性化处理，与别的修改都没关系。然后我就想用之前编译好的caffe的MakeFile.Config，放在作者给的caffe文件夹里，然后进行编译，一切OK！</li>
+<li><p>逐行读取txt，为保证正确性，在前面加上index，统计总数：<br><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0051.png" alt="image0051"></p>
+</li>
+<li><p>加上路径前缀，构成绝对路径：<br><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0052.png" alt="image0052"></p>
+</li>
+<li><p>提取空格前面的名字，和空格后面的数字，即类别：<br><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0053.png" alt="image0053"></p>
+</li>
+<li><p>然后为每个类别创建一个文件夹，存放该类别的图片：<br><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0054.png" alt="image0054"></p>
+</li>
 </ul>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p><a href="https://github.com/rbgirshick/py-faster-rcnn/issues/129" target="_blank" rel="noopener">https://github.com/rbgirshick/py-faster-rcnn/issues/129</a></p>
-<p><a href="https://github.com/rbgirshick/py-faster-rcnn/issues/8" target="_blank" rel="noopener">https://github.com/rbgirshick/py-faster-rcnn/issues/8</a></p>
-<p><a href="https://github.com/rbgirshick/fast-rcnn/issues/2" target="_blank" rel="noopener">https://github.com/rbgirshick/fast-rcnn/issues/2</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-07-07-【faster rcnn 】get_roidb/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-07-07-【faster rcnn 】get_roidb/" itemprop="url">【faster rcnn 】get_roidb</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在faster-rcnn训练的第一个阶段：</p>
-<ul>
-<li>stage 1</li>
-<li>train_rpn()</li>
-<li>stage1_rpn_solver60k80k.pt</li>
-</ul>
-<p>在<code>train_rpn()</code>中，首先需要加载数据——得到<code>roidb</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">roidb, imdb = get_roidb(imdb_name)</span><br></pre></td></tr></table></figure></p>
-<p>函数<code>get_roidb()</code>的定义：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_roidb</span><span class="params">(imdb_name, rpn_file=None)</span>:</span></span><br><span class="line">    imdb = get_imdb(imdb_name)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Loaded dataset `&#123;:s&#125;` for training'</span>.format(imdb.name))</span><br><span class="line">    imdb.set_proposal_method(cfg.TRAIN.PROPOSAL_METHOD)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Set proposal method: &#123;:s&#125;'</span>.format(cfg.TRAIN.PROPOSAL_METHOD))</span><br><span class="line">    <span class="keyword">if</span> rpn_file <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">        imdb.config[<span class="string">'rpn_file'</span>] = rpn_file</span><br><span class="line">    roidb = get_training_roidb(imdb)</span><br><span class="line">    <span class="keyword">return</span> roidb, imdb</span><br></pre></td></tr></table></figure></p>
-<p>可以看到该函数主要干了三件事：</p>
-<ul>
-<li>根据imdb_name初始化变量imdb（这里的imdb_name可以确定后面不同数据集的加载方式），此时的imdb只是一个class；</li>
-<li>设置产生proposal的方法：<code>imdb.set_proposal_method(cfg.TRAIN.PROPOSAL_METHOD)</code>，此时只是配置一下<code>class imdb</code>的参数</li>
-<li>根据上述配置，运行先关函数，加载数据集，得到roidb</li>
-</ul>
-<p>看一下函数<code>get_imdb()</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_imdb</span><span class="params">(name)</span>:</span></span><br><span class="line">    <span class="string">"""Get an imdb (image database) by name."""</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> __sets.has_key(name):</span><br><span class="line">        <span class="keyword">raise</span> KeyError(<span class="string">'Unknown dataset: &#123;&#125;'</span>.format(name))</span><br><span class="line">    <span class="keyword">return</span> __sets[name]()</span><br></pre></td></tr></table></figure></p>
-<p>当然这之前有铺垫，即写好_sets这个dictionary：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set up voc_&lt;year&gt;_&lt;split&gt; using selective search "fast" mode</span></span><br><span class="line"><span class="keyword">for</span> year <span class="keyword">in</span> [<span class="string">'2007'</span>, <span class="string">'2012'</span>]:</span><br><span class="line">    <span class="keyword">for</span> split <span class="keyword">in</span> [<span class="string">'train'</span>, <span class="string">'val'</span>, <span class="string">'trainval'</span>, <span class="string">'test'</span>]:</span><br><span class="line">        name = <span class="string">'voc_&#123;&#125;_&#123;&#125;'</span>.format(year, split)</span><br><span class="line">        __sets[name] = (<span class="keyword">lambda</span> split=split, year=year: pascal_voc(split, year))</span><br><span class="line">	</span><br><span class="line"><span class="comment"># Set up coco_2014_&lt;split&gt;</span></span><br><span class="line"><span class="keyword">for</span> year <span class="keyword">in</span> [<span class="string">'2014'</span>]:</span><br><span class="line">    <span class="keyword">for</span> split <span class="keyword">in</span> [<span class="string">'train'</span>, <span class="string">'val'</span>, <span class="string">'minival'</span>, <span class="string">'valminusminival'</span>]:</span><br><span class="line">        name = <span class="string">'coco_&#123;&#125;_&#123;&#125;'</span>.format(year, split)</span><br><span class="line">        __sets[name] = (<span class="keyword">lambda</span> split=split, year=year: coco(split, year))</span><br><span class="line">	</span><br><span class="line"><span class="comment"># Set up coco_2015_&lt;split&gt;</span></span><br><span class="line"><span class="keyword">for</span> year <span class="keyword">in</span> [<span class="string">'2015'</span>]:</span><br><span class="line">    <span class="keyword">for</span> split <span class="keyword">in</span> [<span class="string">'test'</span>, <span class="string">'test-dev'</span>]:</span><br><span class="line">        name = <span class="string">'coco_&#123;&#125;_&#123;&#125;'</span>.format(year, split)</span><br><span class="line">        __sets[name] = (<span class="keyword">lambda</span> split=split, year=year: coco(split, year))</span><br></pre></td></tr></table></figure></p>
-<p>在调用函数<code>get_imdb()</code>时，根据不同的name调用不同的数据集对应的class，对应各自的解析方式，以<code>pascal_voc()</code>为例，进入这个文件，看一下初始化部分：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">pascal_voc</span><span class="params">(imdb)</span>:</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, image_set, year, devkit_path=None)</span>:</span></span><br><span class="line">    imdb.__init__(self, <span class="string">'voc_'</span> + year + <span class="string">'_'</span> + image_set)</span><br><span class="line">    self._year = year</span><br><span class="line">    self._image_set = image_set</span><br><span class="line">    self._devkit_path = self._get_default_path() <span class="keyword">if</span> devkit_path <span class="keyword">is</span> <span class="keyword">None</span> \</span><br><span class="line">                        <span class="keyword">else</span> devkit_path</span><br><span class="line">    self._data_path = os.path.join(self._devkit_path, <span class="string">'VOC'</span> + self._year)</span><br><span class="line">    self._classes = (<span class="string">'__background__'</span>, <span class="comment"># always index 0</span></span><br><span class="line">                     <span class="string">'aeroplane'</span>, <span class="string">'bicycle'</span>, <span class="string">'bird'</span>, <span class="string">'boat'</span>,</span><br><span class="line">                     <span class="string">'bottle'</span>, <span class="string">'bus'</span>, <span class="string">'car'</span>, <span class="string">'cat'</span>, <span class="string">'chair'</span>,</span><br><span class="line">                     <span class="string">'cow'</span>, <span class="string">'diningtable'</span>, <span class="string">'dog'</span>, <span class="string">'horse'</span>,</span><br><span class="line">                     <span class="string">'motorbike'</span>, <span class="string">'person'</span>, <span class="string">'pottedplant'</span>,</span><br><span class="line">                     <span class="string">'sheep'</span>, <span class="string">'sofa'</span>, <span class="string">'train'</span>, <span class="string">'tvmonitor'</span>)</span><br><span class="line">    self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))</span><br><span class="line">    self._image_ext = <span class="string">'.jpg'</span></span><br><span class="line">    self._image_index = self._load_image_set_index()</span><br><span class="line">    <span class="comment"># Default to roidb handler</span></span><br><span class="line">    self._roidb_handler = self.selective_search_roidb</span><br><span class="line">    self._salt = str(uuid.uuid4())</span><br><span class="line">    self._comp_id = <span class="string">'comp4'</span></span><br><span class="line">	</span><br><span class="line">    <span class="comment"># PASCAL specific config options</span></span><br><span class="line">    self.config = &#123;<span class="string">'cleanup'</span>     : <span class="keyword">True</span>,</span><br><span class="line">                   <span class="string">'use_salt'</span>    : <span class="keyword">True</span>,</span><br><span class="line">                   <span class="string">'use_diff'</span>    : <span class="keyword">False</span>,</span><br><span class="line">                   <span class="string">'matlab_eval'</span> : <span class="keyword">False</span>,</span><br><span class="line">                   <span class="string">'rpn_file'</span>    : <span class="keyword">None</span>,</span><br><span class="line">                   <span class="string">'min_size'</span>    : <span class="number">2</span>&#125;</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">assert</span> os.path.exists(self._devkit_path), \</span><br><span class="line">            <span class="string">'VOCdevkit path does not exist: &#123;&#125;'</span>.format(self._devkit_path)</span><br><span class="line">    <span class="keyword">assert</span> os.path.exists(self._data_path), \</span><br><span class="line">            <span class="string">'Path does not exist: &#123;&#125;'</span>.format(self._data_path)</span><br></pre></td></tr></table></figure></p>
-<p>可以看出<code>pascal_voc</code>是<code>imdb</code>的子类，同时上面只是根据imdb_name调用对应的<code>split=split, year=year</code>，然后初始化<code>class pascal_voc</code>。再看执行部分（在这里应该没有执行?）：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">from</span> datasets.pascal_voc <span class="keyword">import</span> pascal_voc</span><br><span class="line">    d = pascal_voc(<span class="string">'trainval'</span>, <span class="string">'2007'</span>)</span><br><span class="line">    res = d.roidb</span><br><span class="line">    <span class="keyword">from</span> IPython <span class="keyword">import</span> embed; embed()</span><br></pre></td></tr></table></figure></p>
-<p>接下来是第二部分，设置得到roi的方法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">imdb.set_proposal_method(cfg.TRAIN.PROPOSAL_METHOD)</span><br></pre></td></tr></table></figure></p>
-<p>此处METHOD为gt，对应着函数<code>gt_roidb</code>（在文件<code>pascal_voc.py</code>中）：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gt_roidb</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Return the database of ground-truth regions of interest.</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">    This function loads/saves from/to a cache file to speed up future calls.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    cache_file = os.path.join(self.cache_path, self.name + <span class="string">'_gt_roidb.pkl'</span>)</span><br><span class="line">    <span class="keyword">if</span> os.path.exists(cache_file):</span><br><span class="line">        <span class="keyword">with</span> open(cache_file, <span class="string">'rb'</span>) <span class="keyword">as</span> fid:</span><br><span class="line">            roidb = cPickle.load(fid)</span><br><span class="line">        <span class="keyword">print</span> (<span class="string">'&#123;&#125; gt roidb loaded from &#123;&#125;'</span>.format(self.name, cache_file))</span><br><span class="line">        <span class="keyword">return</span> roidb</span><br><span class="line">	</span><br><span class="line">    gt_roidb = [self._load_pascal_annotation(index)</span><br><span class="line">                <span class="keyword">for</span> index <span class="keyword">in</span> self.image_index]</span><br><span class="line">    <span class="keyword">with</span> open(cache_file, <span class="string">'wb'</span>) <span class="keyword">as</span> fid:</span><br><span class="line">        cPickle.dump(gt_roidb, fid, cPickle.HIGHEST_PROTOCOL)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'wrote gt roidb to &#123;&#125;'</span>.format(cache_file))</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">return</span> gt_roidb</span><br></pre></td></tr></table></figure></p>
-<p>这里面的函数<code>_load_pascal_annotation()</code>是解析xml文件的，可以<strong>收藏</strong>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_load_pascal_annotation</span><span class="params">(self, index)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Load image and bounding boxes info from XML file in the PASCAL VOC</span></span><br><span class="line"><span class="string">    format.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    filename = os.path.join(self._data_path, <span class="string">'Annotations'</span>, index + <span class="string">'.xml'</span>)</span><br><span class="line">    tree = ET.parse(filename)</span><br><span class="line">    objs = tree.findall(<span class="string">'object'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> self.config[<span class="string">'use_diff'</span>]:</span><br><span class="line">        <span class="comment"># Exclude the samples labeled as difficult</span></span><br><span class="line">        non_diff_objs = [</span><br><span class="line">            obj <span class="keyword">for</span> obj <span class="keyword">in</span> objs <span class="keyword">if</span> int(obj.find(<span class="string">'difficult'</span>).text) == <span class="number">0</span>]</span><br><span class="line">        <span class="comment"># if len(non_diff_objs) != len(objs):</span></span><br><span class="line">        <span class="comment">#     print 'Removed &#123;&#125; difficult objects'.format(</span></span><br><span class="line">        <span class="comment">#         len(objs) - len(non_diff_objs))</span></span><br><span class="line">        objs = non_diff_objs</span><br><span class="line">    num_objs = len(objs)</span><br><span class="line">	</span><br><span class="line">    boxes = np.zeros((num_objs, <span class="number">4</span>), dtype=np.uint16)</span><br><span class="line">    gt_classes = np.zeros((num_objs), dtype=np.int32)</span><br><span class="line">    overlaps = np.zeros((num_objs, self.num_classes), dtype=np.float32)</span><br><span class="line">    <span class="comment"># "Seg" area for pascal is just the box area</span></span><br><span class="line">    seg_areas = np.zeros((num_objs), dtype=np.float32)</span><br><span class="line">	</span><br><span class="line">    <span class="comment"># Load object bounding boxes into a data frame.</span></span><br><span class="line">    <span class="keyword">for</span> ix, obj <span class="keyword">in</span> enumerate(objs):</span><br><span class="line">        bbox = obj.find(<span class="string">'bndbox'</span>)</span><br><span class="line">        <span class="comment"># Make pixel indexes 0-based</span></span><br><span class="line">        x1 = float(bbox.find(<span class="string">'xmin'</span>).text) - <span class="number">1</span></span><br><span class="line">        y1 = float(bbox.find(<span class="string">'ymin'</span>).text) - <span class="number">1</span></span><br><span class="line">        x2 = float(bbox.find(<span class="string">'xmax'</span>).text) - <span class="number">1</span></span><br><span class="line">        y2 = float(bbox.find(<span class="string">'ymax'</span>).text) - <span class="number">1</span></span><br><span class="line">        cls = self._class_to_ind[obj.find(<span class="string">'name'</span>).text.lower().strip()]</span><br><span class="line">        boxes[ix, :] = [x1, y1, x2, y2]</span><br><span class="line">        gt_classes[ix] = cls</span><br><span class="line">        overlaps[ix, cls] = <span class="number">1.0</span></span><br><span class="line">        seg_areas[ix] = (x2 - x1 + <span class="number">1</span>) * (y2 - y1 + <span class="number">1</span>)</span><br><span class="line">	</span><br><span class="line">    overlaps = scipy.sparse.csr_matrix(overlaps)</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">'boxes'</span> : boxes,</span><br><span class="line">            <span class="string">'gt_classes'</span>: gt_classes,</span><br><span class="line">            <span class="string">'gt_overlaps'</span> : overlaps,</span><br><span class="line">            <span class="string">'flipped'</span> : <span class="keyword">False</span>,</span><br><span class="line">            <span class="string">'seg_areas'</span> : seg_areas&#125;</span><br></pre></td></tr></table></figure></p>
-<p><strong>注意</strong>该函数的输入为index，单位为每个image，也就是说每次加载一个图像的xml，解析出里面所有的boxes（boxes个数为objects的个数）。该函数的作用是将xml中的有用信息包装为字典，然后return。</p>
-<p><strong><code>roidb</code>字典里的key值对应的数据结构：</strong></p>
-<ul>
-<li><code>boxes</code>: num_objs × 4</li>
-<li><code>gt_classes</code>: num_objs</li>
-<li><code>gt_overlaps</code>: num_objs × num_classes （存储时进行压缩，用到的时候再解压）</li>
-<li><code>seg_areas</code>: num_objs</li>
-</ul>
-<p><strong>有具体的数据，对数据集的结构有一定概念，程序中的一些地方就很好落地，否则只是空中楼阁。</strong></p>
-<hr>
-<hr>
-<p>顺便说一下，还有一种与<code>gt</code>方法相对应的是通过<code>rpn</code>方法得到roidb：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rpn_roidb</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> int(self._year) == <span class="number">2007</span> <span class="keyword">or</span> self._image_set != <span class="string">'test'</span>:</span><br><span class="line">        gt_roidb = self.gt_roidb()</span><br><span class="line">        rpn_roidb = self._load_rpn_roidb(gt_roidb)</span><br><span class="line">        roidb = imdb.merge_roidbs(gt_roidb, rpn_roidb)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        roidb = self._load_rpn_roidb(<span class="keyword">None</span>)</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">return</span> roidb</span><br></pre></td></tr></table></figure></p>
-<p>可以看出在该方法中，gt_roidb仍然用原来的方法——即从xml中解析得到ground truth roi，rpn_roidb由之前生成的rpn得到。进入函数<code>_load_rpn_roidb()</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_load_rpn_roidb</span><span class="params">(self, gt_roidb)</span>:</span></span><br><span class="line">    filename = self.config[<span class="string">'rpn_file'</span>]</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'loading &#123;&#125;'</span>.format(filename))</span><br><span class="line">    <span class="keyword">assert</span> os.path.exists(filename), \</span><br><span class="line">           <span class="string">'rpn data not found at: &#123;&#125;'</span>.format(filename)</span><br><span class="line">    <span class="keyword">with</span> open(filename, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        box_list = cPickle.load(f)</span><br><span class="line">    <span class="keyword">return</span> self.create_roidb_from_box_list(box_list, gt_roidb)</span><br></pre></td></tr></table></figure></p>
-<p>其中<code>create_roidb_from_box_list()</code>函数在<code>Imdb.py</code>中（该函数在<code>pascal_voc.py</code>没有定义，也找不到相关的<code>import</code>命令，因为在<code>pascal_voc.py</code>的开头有一句话：<code>from datasets.imdb import imdb</code>，所以可以直接通过self调用）：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_roidb_from_box_list</span><span class="params">(self, box_list, gt_roidb)</span>:</span></span><br><span class="line">    <span class="keyword">assert</span> len(box_list) == self.num_images, \</span><br><span class="line">            <span class="string">'Number of boxes must match number of ground-truth images'</span></span><br><span class="line">    roidb = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(self.num_images):</span><br><span class="line">        boxes = box_list[i]</span><br><span class="line">        num_boxes = boxes.shape[<span class="number">0</span>]</span><br><span class="line">        overlaps = np.zeros((num_boxes, self.num_classes), dtype=np.float32)</span><br><span class="line">	</span><br><span class="line">        <span class="keyword">if</span> gt_roidb <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">and</span> gt_roidb[i][<span class="string">'boxes'</span>].size &gt; <span class="number">0</span>:</span><br><span class="line">            gt_boxes = gt_roidb[i][<span class="string">'boxes'</span>]</span><br><span class="line">            gt_classes = gt_roidb[i][<span class="string">'gt_classes'</span>]</span><br><span class="line">            gt_overlaps = bbox_overlaps(boxes.astype(np.float),</span><br><span class="line">                                        gt_boxes.astype(np.float))</span><br><span class="line">            argmaxes = gt_overlaps.argmax(axis=<span class="number">1</span>)</span><br><span class="line">            maxes = gt_overlaps.max(axis=<span class="number">1</span>)</span><br><span class="line">            I = np.where(maxes &gt; <span class="number">0</span>)[<span class="number">0</span>]</span><br><span class="line">            overlaps[I, gt_classes[argmaxes[I]]] = maxes[I]</span><br><span class="line">	</span><br><span class="line">        overlaps = scipy.sparse.csr_matrix(overlaps)</span><br><span class="line">        roidb.append(&#123;</span><br><span class="line">            <span class="string">'boxes'</span> : boxes,</span><br><span class="line">            <span class="string">'gt_classes'</span> : np.zeros((num_boxes,), dtype=np.int32),</span><br><span class="line">            <span class="string">'gt_overlaps'</span> : overlaps,</span><br><span class="line">            <span class="string">'flipped'</span> : <span class="keyword">False</span>,</span><br><span class="line">            <span class="string">'seg_areas'</span> : np.zeros((num_boxes,), dtype=np.float32),</span><br><span class="line">        &#125;)</span><br><span class="line">    <span class="keyword">return</span> roidb</span><br></pre></td></tr></table></figure>
-<p><strong>注意</strong>该函数的参数<code>box_list</code>和<code>gt_roidb</code>都是元素为dictionary的list。list的长度为图片个数<code>num_images</code>。其中<code>box_list</code>由上一步rpn生成的proposals组成，<strong>当时只是保存了proposals的序号和四个坐标：</strong></p>
-<blockquote>
-<p><code>(n, x1, y1, x2, y2)</code> specifying an image batch index <code>n</code> and a rectangle <code>(x1, y1, x2, y2)</code>。</p>
-</blockquote>
-<p>因此需要根据<code>box_list</code>这个最原始的信息，得到更加深刻的信息，如overlaps、对应的gt_cls等。所以该函数首先计算<code>box_list</code>（由前面的rpn得到）中的box和<code>gt_roidb</code>的ground truth的overlap，以此作为后续操作的铺垫，得到这些信息后，将其放入dictionary，以生成roidb。</p>
-<p><strong>顺便总结以下roidb的流水线</strong>：先由proposals得到原始的框的四个坐标点，然后通过<code>rpn_roidb()</code>中的<code>create_roidb_from_box_list</code>函数得到初始的（同xml中得到的一样）roidb，最后通过<code>prepare_roidb</code>将其丰富，得到最终的roidb。</p>
-<hr>
-<p>看一下函数<code>bbox_overlaps()</code>的说明：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Parameters</span><br><span class="line"><span class="comment">#----------</span></span><br><span class="line">boxes: (N, <span class="number">4</span>) ndarray of float</span><br><span class="line">query_boxes: (K, <span class="number">4</span>) ndarray of float</span><br><span class="line">Returns</span><br><span class="line"><span class="comment">#-------</span></span><br><span class="line">overlaps: (N, K) ndarray of overlap between boxes <span class="keyword">and</span> query_boxes</span><br></pre></td></tr></table></figure></p>
-<p>并且在该函数的最后：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">overlaps[n, k] = iw * ih / ua</span><br></pre></td></tr></table></figure></p>
-<p>同时注意到overlaps的初始化为zeros：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cdef np.ndarray[DTYPE_t, ndim=<span class="number">2</span>] overlaps = np.zeros((N, K), dtype=DTYPE)</span><br></pre></td></tr></table></figure></p>
-<p>所以，overlaps中元素的值域为[0,1]，两个box没有交集时为0，完全重叠时为1.</p>
-<p>后面紧接着两个max的参数axis=1（表示沿着改维度进行操作）：表示保留boxes，并找出每一个box对应的最大的gt_box面积值/索引；I表示与gt_box有交集的boxes索引数组。</p>
-<hr>
-<p>总结一下：<code>argmaxes</code>存放每个box对应的最大overlaps的gt值，也就是类别；<code>maxes</code>存放每个box能够生成的最大的overlap；I筛选出了与gt_box有交集的boxes。<code>overlaps[I, gt_classes[argmaxes[I]]] = maxes[I]</code>表示将最大的overlaps挑选出来，按照对应的boxes和gt_classes放入新的数组，该数组每一行最多有一个为非零，剩下的全是0.后面的<code>overlaps = scipy.sparse.csr_matrix(overlaps)</code>表示将overlaps这个稀疏矩阵压缩，以节省存储空间。后面需要用到overlaps的时候，用到以下语句（在roidb.py的<code>prepare_roidb(imdb)</code>里）：</p>
-<pre><code>gt_overlaps = roidb[i][&apos;gt_overlaps&apos;].toarray()
-</code></pre><p>最后将两种roi——ground truth和rpn生成的与gt_roi有交集的boxes合并：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">merge_roidbs</span><span class="params">(a, b)</span>:</span></span><br><span class="line"><span class="keyword">assert</span> len(a) == len(b)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(len(a)):</span><br><span class="line">    a[i][<span class="string">'boxes'</span>] = np.vstack((a[i][<span class="string">'boxes'</span>], b[i][<span class="string">'boxes'</span>]))</span><br><span class="line">    a[i][<span class="string">'gt_classes'</span>] = np.hstack((a[i][<span class="string">'gt_classes'</span>],</span><br><span class="line">                                    b[i][<span class="string">'gt_classes'</span>]))</span><br><span class="line">    a[i][<span class="string">'gt_overlaps'</span>] = scipy.sparse.vstack([a[i][<span class="string">'gt_overlaps'</span>],</span><br><span class="line">                                               b[i][<span class="string">'gt_overlaps'</span>]])</span><br><span class="line">    a[i][<span class="string">'seg_areas'</span>] = np.hstack((a[i][<span class="string">'seg_areas'</span>],</span><br><span class="line">                                   b[i][<span class="string">'seg_areas'</span>]))</span><br><span class="line"><span class="keyword">return</span> a</span><br></pre></td></tr></table></figure></p>
-<p>其中的函数<code>vstack</code>和<code>hstack</code>可以参考<a href="https://blog.csdn.net/csdn15698845876/article/details/73380803" target="_blank" rel="noopener">这篇博客</a></p>
-<p>至于如何根据METHOD调用对应的函数，重点看<code>class imdb</code>中的成员函数<code>roidb()</code>（在Imdb.py中）：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@property</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">roidb_handler</span><span class="params">(self)</span>:</span></span><br><span class="line"><span class="keyword">return</span> self._roidb_handler</span><br><span class="line"></span><br><span class="line"><span class="meta">@roidb_handler.setter</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">roidb_handler</span><span class="params">(self, val)</span>:</span></span><br><span class="line">self._roidb_handler = val</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_proposal_method</span><span class="params">(self, method)</span>:</span></span><br><span class="line">method = eval(<span class="string">'self.'</span> + method + <span class="string">'_roidb'</span>)</span><br><span class="line">self.roidb_handler = method</span><br><span class="line"></span><br><span class="line"><span class="meta">@property</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">roidb</span><span class="params">(self)</span>:</span></span><br><span class="line"><span class="comment"># A roidb is a list of dictionaries, each with the following keys:</span></span><br><span class="line"><span class="comment">#   boxes</span></span><br><span class="line"><span class="comment">#   gt_overlaps</span></span><br><span class="line"><span class="comment">#   gt_classes</span></span><br><span class="line"><span class="comment">#   flipped</span></span><br><span class="line"><span class="keyword">if</span> self._roidb <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">    <span class="keyword">return</span> self._roidb</span><br><span class="line">self._roidb = self.roidb_handler()</span><br><span class="line"><span class="keyword">return</span> self._roidb</span><br></pre></td></tr></table></figure></p>
-<hr>
-<hr>
-<hr>
-<p>上述只是配置class，接下来是调用。进入函数<code>get_training_roidb(imdb)</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_training_roidb</span><span class="params">(imdb)</span>:</span></span><br><span class="line">    <span class="string">"""Returns a roidb (Region of Interest database) for use in training."""</span></span><br><span class="line">    <span class="keyword">if</span> cfg.TRAIN.USE_FLIPPED:</span><br><span class="line">        <span class="keyword">print</span> (<span class="string">'Appending horizontally-flipped training examples...'</span>)</span><br><span class="line">        imdb.append_flipped_images()</span><br><span class="line">        <span class="keyword">print</span> (<span class="string">'done'</span>)</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Preparing training data...'</span>)</span><br><span class="line">    rdl_roidb.prepare_roidb(imdb)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'done'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>该函数主要通过上面配置好的class，得到具体的数据。首先判断是否需要翻转，这样可以增加数据的多样性（使数据增加一倍），使网络训练地更充分。进入函数<code>append_flipped_images()</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">append_flipped_images</span><span class="params">(self)</span>:</span></span><br><span class="line">num_images = self.num_images</span><br><span class="line">widths = self._get_widths()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(num_images):</span><br><span class="line">    boxes = self.roidb[i][<span class="string">'boxes'</span>].copy()</span><br><span class="line">    oldx1 = boxes[:, <span class="number">0</span>].copy()</span><br><span class="line">    oldx2 = boxes[:, <span class="number">2</span>].copy()</span><br><span class="line">    boxes[:, <span class="number">0</span>] = widths[i] - oldx2 - <span class="number">1</span></span><br><span class="line">    boxes[:, <span class="number">2</span>] = widths[i] - oldx1 - <span class="number">1</span></span><br><span class="line">    <span class="keyword">assert</span> (boxes[:, <span class="number">2</span>] &gt;= boxes[:, <span class="number">0</span>]).all()</span><br><span class="line">    entry = &#123;<span class="string">'boxes'</span> : boxes,</span><br><span class="line">             <span class="string">'gt_overlaps'</span> : self.roidb[i][<span class="string">'gt_overlaps'</span>],</span><br><span class="line">             <span class="string">'gt_classes'</span> : self.roidb[i][<span class="string">'gt_classes'</span>],</span><br><span class="line">             <span class="string">'flipped'</span> : <span class="keyword">True</span>&#125;</span><br><span class="line">    self.roidb.append(entry)</span><br><span class="line">self._image_index = self._image_index * <span class="number">2</span></span><br></pre></td></tr></table></figure></p>
-<p>该函数将图片以中心线为轴进行翻转，把新的框的坐标存入字典，剩余信息不变，然后作为新的图片存入整个list，同时图片数量翻倍（最后一句）。</p>
-<p>进入函数<code>prepare_roidb(imdb)</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prepare_roidb</span><span class="params">(imdb)</span>:</span></span><br><span class="line">    <span class="string">"""Enrich the imdb's roidb by adding some derived quantities that</span></span><br><span class="line"><span class="string">    are useful for training. This function precomputes the maximum</span></span><br><span class="line"><span class="string">    overlap, taken over ground-truth boxes, between each ROI and</span></span><br><span class="line"><span class="string">    each ground-truth box. The class with maximum overlap is also</span></span><br><span class="line"><span class="string">    recorded.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    sizes = [PIL.Image.open(imdb.image_path_at(i)).size</span><br><span class="line">             <span class="keyword">for</span> i <span class="keyword">in</span> xrange(imdb.num_images)]</span><br><span class="line">    roidb = imdb.roidb</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(len(imdb.image_index)):</span><br><span class="line">        roidb[i][<span class="string">'image'</span>] = imdb.image_path_at(i)</span><br><span class="line">        roidb[i][<span class="string">'width'</span>] = sizes[i][<span class="number">0</span>]</span><br><span class="line">        roidb[i][<span class="string">'height'</span>] = sizes[i][<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># need gt_overlaps as a dense array for argmax</span></span><br><span class="line">        gt_overlaps = roidb[i][<span class="string">'gt_overlaps'</span>].toarray()</span><br><span class="line">        <span class="comment"># max overlap with gt over classes (columns)</span></span><br><span class="line">        max_overlaps = gt_overlaps.max(axis=<span class="number">1</span>)</span><br><span class="line">        <span class="comment"># gt class that had the max overlap</span></span><br><span class="line">        max_classes = gt_overlaps.argmax(axis=<span class="number">1</span>)</span><br><span class="line">        roidb[i][<span class="string">'max_classes'</span>] = max_classes</span><br><span class="line">        roidb[i][<span class="string">'max_overlaps'</span>] = max_overlaps</span><br><span class="line">        <span class="comment"># sanity checks</span></span><br><span class="line">        <span class="comment"># max overlap of 0 =&gt; class should be zero (background)</span></span><br><span class="line">        zero_inds = np.where(max_overlaps == <span class="number">0</span>)[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">assert</span> all(max_classes[zero_inds] == <span class="number">0</span>)</span><br><span class="line">        <span class="comment"># max overlap &gt; 0 =&gt; class should not be zero (must be a fg class)</span></span><br><span class="line">        nonzero_inds = np.where(max_overlaps &gt; <span class="number">0</span>)[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">assert</span> all(max_classes[nonzero_inds] != <span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
-<p>可以看出通过<code>roidb = imdb.roidb</code>，进行具体的函数调用——<code>gt_roidb()</code>或<code>rnp_roidb()</code>，重新回顾一下这两个函数的末尾。<code>gt_roidb()</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gt_roidb = [self._load_pascal_annotation(index)</span><br><span class="line">            <span class="keyword">for</span> index <span class="keyword">in</span> self.image_index]</span><br></pre></td></tr></table></figure></p>
-<p>而函数<code>_load_pascal_annotation(index)</code>的末尾：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> &#123;<span class="string">'boxes'</span> : boxes,</span><br><span class="line">    <span class="string">'gt_classes'</span>: gt_classes,</span><br><span class="line">    <span class="string">'gt_overlaps'</span> : overlaps,</span><br><span class="line">    <span class="string">'flipped'</span> : <span class="keyword">False</span>,</span><br><span class="line">    <span class="string">'seg_areas'</span> : seg_areas&#125;</span><br></pre></td></tr></table></figure></p>
-<p>以及<code>rnp_roidb()</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">roidb.append(&#123;</span><br><span class="line">        <span class="string">'boxes'</span> : boxes,</span><br><span class="line">        <span class="string">'gt_classes'</span> : np.zeros((num_boxes,), dtype=np.int32),</span><br><span class="line">        <span class="string">'gt_overlaps'</span> : overlaps,</span><br><span class="line">        <span class="string">'flipped'</span> : <span class="keyword">False</span>,</span><br><span class="line">        <span class="string">'seg_areas'</span> : np.zeros((num_boxes,), dtype=np.float32),</span><br><span class="line">        &#125;)</span><br><span class="line"><span class="keyword">return</span> roidb</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><strong><code>roidb</code>字典里的key值对应的数据结构：</strong></p>
-</blockquote>
-<blockquote>
-<ul>
-<li><code>boxes</code>: num_objs × 4</li>
-<li><code>gt_classes</code>: num_objs</li>
-<li><code>gt_overlaps</code>: num_objs × num_classes （存储时进行压缩，用到的时候再解压）</li>
-<li><code>seg_areas</code>: num_objs</li>
-</ul>
-</blockquote>
-<p>可以看出这两个函数的返回值roidb格式都是一致的：均为元素为dictionary的列表list，列表的长度为图片样本个数num_images；每个dictionary都有5个key：<code>boxes</code>、<code>gt_classes</code>、<code>gt_overlaps</code>、<code>flipped</code>、<code>seg_areas</code>。并且每个key的value为array类型，存放每一个框对应的属性。<strong>这是faster-rcnn中非常重要的一个数据结构。</strong></p>
-<p>重新回到函数<code>prepare_roidb(imdb)</code>，其作用是丰富dictionary的内容，增加了一些key：路径<code>image</code>、图片尺寸<code>width</code>和<code>length</code>，以及每张图片中每个box对应的最大的IOU<code>max_overlaps</code>及对应的类<code>max_classes</code>。（在函数<code>create_roidb_from_box_list(self, box_list, gt_roidb)</code>中也有类似操作，但当时是为了得到稀疏矩阵<code>overlaps</code>，这里是将这些信息针对性地提取出来，以和overlaps同样的身份放入dictionary。）此时，<code>roidb</code>的数据结构为：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">'boxes'</span> : boxes,</span><br><span class="line"><span class="string">'gt_classes'</span>: gt_classes,</span><br><span class="line"><span class="string">'gt_overlaps'</span> : overlaps,</span><br><span class="line"><span class="string">'flipped'</span> : <span class="keyword">False</span>,</span><br><span class="line"><span class="string">'seg_areas'</span> : seg_areas</span><br><span class="line"><span class="string">'image'</span> : imdb.image_path_at(i)</span><br><span class="line"><span class="string">'width'</span> : sizes[i][<span class="number">0</span>]</span><br><span class="line"><span class="string">'height'</span> : sizes[i][<span class="number">1</span>]</span><br><span class="line"><span class="string">'max_classes'</span> : max_classes</span><br><span class="line"><span class="string">'max_overlaps'</span> : max_overlaps&#125;</span><br></pre></td></tr></table></figure></p>
-<p>其中，<code>max_classes</code>为<code>(num_objs,)</code>,<code>max_overlaps</code>与之对应，为<code>(num_objs,)</code>。</p>
-<p>至此，就得到了原始数据集对应的类imdb（包含相应的数据处理方法）和训练数据roidb（以dictionary为元素的list，存放具体的boxes的信息）。</p>
-<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><hr>
-<h4 id="python中的axis"><a href="#python中的axis" class="headerlink" title="python中的axis"></a>python中的axis</h4><hr>
-<p>在python中，axis的顺序为矩阵从外到内，对应的shape顺序从左到右：</p>
-<p><img src="img/image0067.png" alt="image0067"></p>
-<p>在上图中，2代表的axis=0； 3代表的axis=1； 4代表的axis=2。</p>
-<p>当操作的参数为<code>axis=m</code>时，表示操作沿着m维度进行，或者说操作的结果消掉了m维度，以<code>sum</code>为例：</p>
-<p><img src="img/image0068.png" alt="image0068"></p>
-<p>上述从shape层面的解释，对理解代码中的类似操作很有作用，下面将四个数组展开：</p>
-<p><img src="img/image0069.png" alt="image0069"></p>
-<p>再验证以下<code>max</code>操作：</p>
-<p><img src="img/image0070.png" alt="image0070"></p>
-<p><img src="img/image0071.png" alt="image0071"></p>
-<h4 id="python中的where"><a href="#python中的where" class="headerlink" title="python中的where"></a>python中的where</h4><hr>
-<p>返回满足条件的元素，在每个维度下的坐标值：</p>
-<p><img src="img/image0073.png" alt="image0073"></p>
-<p><img src="img/image0072.png" alt="image0072"></p>
-<p><img src="img/image0074.png" alt="image0074"></p>
-<h4 id="压缩矩阵"><a href="#压缩矩阵" class="headerlink" title="压缩矩阵"></a>压缩矩阵</h4><hr>
-<p>关于scipy csr_matrix和csc_matrix函数的详解可以参考<a href="https://blog.csdn.net/u013010889/article/details/53305595" target="_blank" rel="noopener">博客</a>。</p>
-<p><img src="img/image0075.png" alt="image0075"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-07-06-【pytorch】关于torch.nn的两点/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-07-06-【pytorch】关于torch.nn的两点/" itemprop="url">【pytorch】关于torch.nn的两点</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="torch-nn中的BatchNorm函数"><a href="#torch-nn中的BatchNorm函数" class="headerlink" title="torch.nn中的BatchNorm函数"></a>torch.nn中的BatchNorm函数</h3><hr>
-<p><img src="img/image0065.png" alt="image0065"></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">torch</span>.<span class="title">nn</span>.<span class="title">BatchNorm1d</span><span class="params">(num_features, eps=<span class="number">1e-05</span>, momentum=<span class="number">0.1</span>, affine=True, track_running_stats=True)</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">torch</span>.<span class="title">nn</span>.<span class="title">BatchNorm2d</span><span class="params">(num_features, eps=<span class="number">1e-05</span>, momentum=<span class="number">0.1</span>, affine=True, track_running_stats=True)</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">torch</span>.<span class="title">nn</span>.<span class="title">BatchNorm3d</span><span class="params">(num_features, eps=<span class="number">1e-05</span>, momentum=<span class="number">0.1</span>, affine=True, track_running_stats=True)</span></span></span><br></pre></td></tr></table></figure>
-<p>对于<code>1d</code>，其实是2d或3d：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: (N,C)(N,C) <span class="keyword">or</span> (N,C,L)(N,C,L)</span><br><span class="line">Output: (N,C)(N,C) <span class="keyword">or</span> (N,C,L)(N,C,L) (same shape <span class="keyword">as</span> input)</span><br></pre></td></tr></table></figure></p>
-<p>对于<code>2d</code>，其实是4d：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: (N,C,H,W)(N,C,H,W)</span><br><span class="line">Output: (N,C,H,W)(N,C,H,W) (same shape <span class="keyword">as</span> input)</span><br></pre></td></tr></table></figure></p>
-<p>对于<code>3d</code>，其实是5d：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: (N,C,D,H,W)(N,C,D,H,W)</span><br><span class="line">Output: (N,C,D,H,W)(N,C,D,H,W) (same shape <span class="keyword">as</span> input)</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>The constructor builds a tuple whose items are the same and in the same order as iterable’s items. iterable may be either a sequence, a container that supports iteration, or an iterator object. If iterable is already a tuple, it is returned unchanged. For example, tuple(‘abc’) returns (‘a’, ‘b’, ‘c’) and tuple( [1, 2, 3] ) returns (1, 2, 3). If no argument is given, the constructor creates a new empty tuple, ().</p>
-</blockquote>
-<p><img src="img/image0087.png" alt="image0087"></p>
-<p><img src="img/image0088.png" alt="image0088"></p>
-<blockquote>
-<p>Note that <strong>it is actually the comma which makes a tuple, not the parentheses</strong>. The parentheses are optional, except in the empty tuple case, or when they are needed to avoid syntactic ambiguity. For example, f(a, b, c) is a function call with three arguments, while f((a, b, c)) is a function call with a 3-tuple as the sole argument.</p>
-</blockquote>
-<h3 id="torch-nn与torch-nn-functional之间的区别和联系"><a href="#torch-nn与torch-nn-functional之间的区别和联系" class="headerlink" title="torch.nn与torch.nn.functional之间的区别和联系"></a>torch.nn与torch.nn.functional之间的区别和联系</h3><hr>
-<h4 id="torch-nn-Conv2d"><a href="#torch-nn-Conv2d" class="headerlink" title="torch.nn.Conv2d"></a>torch.nn.Conv2d</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Conv2d</span><span class="params">(_ConvNd)</span>:</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, in_channels, out_channels, kernel_size, stride=<span class="number">1</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">         padding=<span class="number">0</span>, dilation=<span class="number">1</span>, groups=<span class="number">1</span>, bias=True)</span>:</span></span><br><span class="line">kernel_size = _pair(kernel_size)</span><br><span class="line">stride = _pair(stride)</span><br><span class="line">padding = _pair(padding)</span><br><span class="line">dilation = _pair(dilation)</span><br><span class="line">super(Conv2d, self).__init__(</span><br><span class="line">    in_channels, out_channels, kernel_size, stride, padding, dilation,</span><br><span class="line">    <span class="keyword">False</span>, _pair(<span class="number">0</span>), groups, bias)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, input)</span>:</span></span><br><span class="line"><span class="keyword">return</span> F.conv2d(input, self.weight, self.bias, self.stride,</span><br><span class="line">                self.padding, self.dilation, self.groups)</span><br><span class="line">```                      </span><br><span class="line"><span class="comment">#### torch.nn.functional.conv2d  </span></span><br><span class="line">```python</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv2d</span><span class="params">(input, weight, bias=None, stride=<span class="number">1</span>, padding=<span class="number">0</span>, dilation=<span class="number">1</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">           groups=<span class="number">1</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> input <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">and</span> input.dim() != <span class="number">4</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">"Expected 4D tensor as input, got &#123;&#125;D tensor instead."</span>.format(input.dim()))</span><br><span class="line"></span><br><span class="line">    f = _ConvNd(_pair(stride), _pair(padding), _pair(dilation), <span class="keyword">False</span>,</span><br><span class="line">                _pair(<span class="number">0</span>), groups, torch.backends.cudnn.benchmark,</span><br><span class="line">                torch.backends.cudnn.deterministic, torch.backends.cudnn.enabled)</span><br><span class="line">    <span class="keyword">return</span> f(input, weight, bias)</span><br></pre></td></tr></table></figure>
-<p>通过对比可以看出，<code>torch.nn.Conv2d</code>是一个类，而<code>torch.nn.functional.conv2d</code>是一个函数，并且，前者通过后者实现。也就是说<code>nn.Conv2d</code>是在<code>F.conv2d</code>外加的一层封装，从Module派生而来。关于Module最重要的一点是，它实现了<strong>call</strong>方法，在<strong>call</strong>方法里调用了<code>forward()</code>方法。所以，当执行<code>self.Conv2d(x)</code>，它就在调用Conv2d里面的<code>forward()</code>，并返回计算结果。通常在定义一些layer的时候，如果层内有weights、bias之类的参数时，用<code>torch.nn</code>，如果没有就用<code>torch.nn.functional</code>。</p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><hr>
-<p><a href="https://blog.csdn.net/GZHermit/article/details/78730856" target="_blank" rel="noopener">https://blog.csdn.net/GZHermit/article/details/78730856</a><br><a href="https://blog.csdn.net/DuinoDu/article/details/76577498" target="_blank" rel="noopener">https://blog.csdn.net/DuinoDu/article/details/76577498</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-07-06-【pytorch】resnet/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-07-06-【pytorch】resnet/" itemprop="url">【pytorch】resnet</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ResNet</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, block, layers, num_classes=<span class="number">1000</span>)</span>:</span></span><br><span class="line">        self.inplanes = <span class="number">64</span></span><br><span class="line">        super(ResNet, self).__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">3</span>, <span class="number">64</span>, kernel_size=<span class="number">7</span>, stride=<span class="number">2</span>, padding=<span class="number">3</span>,</span><br><span class="line">                               bias=<span class="keyword">False</span>)</span><br><span class="line">        self.bn1 = nn.BatchNorm2d(<span class="number">64</span>)</span><br><span class="line">        self.relu = nn.ReLU(inplace=<span class="keyword">True</span>)</span><br><span class="line">        self.maxpool = nn.MaxPool2d(kernel_size=<span class="number">3</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>)</span><br><span class="line">        self.layer1 = self._make_layer(block, <span class="number">64</span>, layers[<span class="number">0</span>])</span><br><span class="line">        self.layer2 = self._make_layer(block, <span class="number">128</span>, layers[<span class="number">1</span>], stride=<span class="number">2</span>)</span><br><span class="line">        self.layer3 = self._make_layer(block, <span class="number">256</span>, layers[<span class="number">2</span>], stride=<span class="number">2</span>)</span><br><span class="line">        self.layer4 = self._make_layer(block, <span class="number">512</span>, layers[<span class="number">3</span>], stride=<span class="number">2</span>)</span><br><span class="line">        self.avgpool = nn.AvgPool2d(<span class="number">7</span>, stride=<span class="number">1</span>)</span><br><span class="line">        self.fc = nn.Linear(<span class="number">512</span> * block.expansion, num_classes)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> m <span class="keyword">in</span> self.modules():</span><br><span class="line">            <span class="keyword">if</span> isinstance(m, nn.Conv2d):</span><br><span class="line">                n = m.kernel_size[<span class="number">0</span>] * m.kernel_size[<span class="number">1</span>] * m.out_channels</span><br><span class="line">                m.weight.data.normal_(<span class="number">0</span>, math.sqrt(<span class="number">2.</span> / n))</span><br><span class="line">            <span class="keyword">elif</span> isinstance(m, nn.BatchNorm2d):</span><br><span class="line">                m.weight.data.fill_(<span class="number">1</span>)</span><br><span class="line">                m.bias.data.zero_()</span><br><span class="line"></span><br><span class="line">	<span class="comment">####_make_layer() produce layers with the same output size and channels, which contains 'blocks' block.</span></span><br><span class="line">	<span class="comment">####downsample happens in the first layer</span></span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_make_layer</span><span class="params">(self, block, planes, blocks, stride=<span class="number">1</span>)</span>:</span></span><br><span class="line">        downsample = <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">if</span> stride != <span class="number">1</span> <span class="keyword">or</span> self.inplanes != planes * block.expansion:</span><br><span class="line">            downsample = nn.Sequential(</span><br><span class="line">                nn.Conv2d(self.inplanes, planes * block.expansion,</span><br><span class="line">                          kernel_size=<span class="number">1</span>, stride=stride, bias=<span class="keyword">False</span>),</span><br><span class="line">                nn.BatchNorm2d(planes * block.expansion),</span><br><span class="line">            )</span><br><span class="line"></span><br><span class="line">        layers = []</span><br><span class="line">        layers.append(block(self.inplanes, planes, stride, downsample))     <span class="comment">#### make the 1st sublayer in given certain layer, which needs downsample. </span></span><br><span class="line">        self.inplanes = planes * block.expansion</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, blocks):                                          <span class="comment">#### make the other layers, from 1 to blocks-1 </span></span><br><span class="line">            layers.append(block(self.inplanes, planes))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> nn.Sequential(*layers)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = self.conv1(x)</span><br><span class="line">        x = self.bn1(x)</span><br><span class="line">        x = self.relu(x)</span><br><span class="line">        x = self.maxpool(x)</span><br><span class="line"></span><br><span class="line">        x = self.layer1(x)</span><br><span class="line">        x = self.layer2(x)</span><br><span class="line">        x = self.layer3(x)</span><br><span class="line">        x = self.layer4(x)</span><br><span class="line"></span><br><span class="line">        x = self.avgpool(x)</span><br><span class="line">        x = x.view(x.size(<span class="number">0</span>), <span class="number">-1</span>)</span><br><span class="line">        x = self.fc(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><hr>
-<p>PyTorch源码解读之torchvision.models</p>
-<p><a href="https://blog.csdn.net/u014380165/article/details/79119664" target="_blank" rel="noopener">https://blog.csdn.net/u014380165/article/details/79119664</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-07-06-【pycharm】import问题/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-07-06-【pycharm】import问题/" itemprop="url">【pycharm】import问题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Pycharm下同一目录py文件不能相互调用？</p>
-<p><a href="https://blog.csdn.net/candy_gl/article/details/79222115" target="_blank" rel="noopener">https://blog.csdn.net/candy_gl/article/details/79222115</a></p>
-<p>caffe debug 1-Pycharm import caffe 报错 no module named caffe</p>
-<p><a href="https://www.cnblogs.com/keyky/p/6600557.html" target="_blank" rel="noopener">https://www.cnblogs.com/keyky/p/6600557.html</a></p>
-<p>pycharm中import caffe/caffe2</p>
-<p><a href="https://blog.csdn.net/u013010889/article/details/70808866" target="_blank" rel="noopener">https://blog.csdn.net/u013010889/article/details/70808866</a></p>
-<p>pycharm加入import路径 【显示当前已添加的路径】</p>
-<p><a href="https://blog.csdn.net/hongxingabc/article/details/77094059" target="_blank" rel="noopener">https://blog.csdn.net/hongxingabc/article/details/77094059</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-30-【caffe】python接口获取网络中的数据信息/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-06-30-【caffe】python接口获取网络中的数据信息/" itemprop="url">【caffe】python接口获取网络中的数据信息</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="查看神经网络中间层的blobs和params"><a href="#查看神经网络中间层的blobs和params" class="headerlink" title="查看神经网络中间层的blobs和params"></a>查看神经网络中间层的blobs和params</h3><p>Caffe主要处理两种形式的数据流： </p>
-<ol>
-<li>图像和标签在网络上的传输，随着网络的传输，它们转化更高层次的表示，最终以得分或者概率值的形式输出。 </li>
-<li>第二种数据流，主要保存各个网络层的参数，比如卷积层的weights和bias. 这些值是随着的网络的训练过程不断变化的。</li>
-</ol>
-<p><strong>第一种形式的数据流</strong>保存在net.blobs中：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.blobs</span><br></pre></td></tr></table></figure></p>
-<p>它是<strong>有序字典</strong>，保存了每一层前后相应的数据。每个blob保存了data和gradient:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">net.blobs[<span class="string">'data'</span>].data.shape  <span class="comment"># &gt;&gt; (64, 1, 28, 28)</span></span><br><span class="line">net.blobs[<span class="string">'data'</span>].diff.shape  <span class="comment"># &gt;&gt; (64, 1, 28, 28)</span></span><br><span class="line"></span><br><span class="line">net.blobs[<span class="string">'conv1'</span>].data.shape  <span class="comment"># &gt;&gt; (64, 20, 24, 24)</span></span><br><span class="line">net.blobs[<span class="string">'conv1'</span>].diff.shape  <span class="comment"># &gt;&gt; (64, 20, 24, 24)</span></span><br><span class="line"></span><br><span class="line">net.blobs[<span class="string">'ip1'</span>].data.shape  <span class="comment"># &gt;&gt; (64, 500)</span></span><br><span class="line">net.blobs[<span class="string">'ip1'</span>].diff.shape  <span class="comment"># &gt;&gt; (64, 500)</span></span><br></pre></td></tr></table></figure></p>
-<p><strong>第二种形式的数据流</strong>，即网络层的参数，可以通过net.layers来获得：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.layers</span><br></pre></td></tr></table></figure></p>
-<p>它的第一层是data layer:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">len(net.layers[<span class="number">0</span>].blobs)   <span class="comment"># &gt;&gt; 0</span></span><br></pre></td></tr></table></figure></p>
-<p>因为输入层没有权重参数，因此blob的个数是0</p>
-<p>它的第二层是卷积层：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">len(net.layers[<span class="number">1</span>].blobs)  <span class="comment"># &gt;&gt; 2</span></span><br><span class="line"></span><br><span class="line">net.layers[<span class="number">1</span>].blobs[<span class="number">0</span>].data.shape  <span class="comment"># &gt;&gt;  (20, 1, 5, 5)  conv1 weights</span></span><br><span class="line">net.layers[<span class="number">1</span>].blobs[<span class="number">1</span>].data.shape  <span class="comment"># &gt;&gt;  (20,)  bias</span></span><br></pre></td></tr></table></figure></p>
-<p>表示有20个卷积核，每个卷积核的大小是5*5，处理1-channel的输入图像。</p>
-<p>还有一种获得各层参数的方式就是net.params：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> net.params[<span class="string">'conv1'</span>][<span class="number">0</span>].data.shape   <span class="comment"># (20, 1, 5, 5)  conv1 weights</span></span><br><span class="line"><span class="keyword">print</span> net.params[<span class="string">'conv1'</span>][<span class="number">1</span>].data.shape   <span class="comment"># (20,) bias</span></span><br><span class="line">```	</span><br><span class="line">---</span><br><span class="line">	</span><br><span class="line"><span class="comment">#### 实例-查看blobs</span></span><br><span class="line">```python</span><br><span class="line"><span class="comment"># for each layer, show the output shape</span></span><br><span class="line"><span class="keyword">for</span> layer_name, blob <span class="keyword">in</span> net.blobs.iteritems():</span><br><span class="line">    <span class="keyword">print</span> layer_name + <span class="string">'\t'</span> + str(blob.data.shape)</span><br></pre></td></tr></table></figure></p>
-<p>结果大致为：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">data    (<span class="number">50</span>, <span class="number">3</span>, <span class="number">227</span>, <span class="number">227</span>)</span><br><span class="line">conv1   (<span class="number">50</span>, <span class="number">96</span>, <span class="number">55</span>, <span class="number">55</span>)</span><br><span class="line">pool1   (<span class="number">50</span>, <span class="number">96</span>, <span class="number">27</span>, <span class="number">27</span>)</span><br><span class="line">norm1   (<span class="number">50</span>, <span class="number">96</span>, <span class="number">27</span>, <span class="number">27</span>)</span><br><span class="line">conv2   (<span class="number">50</span>, <span class="number">256</span>, <span class="number">27</span>, <span class="number">27</span>)</span><br><span class="line">pool2   (<span class="number">50</span>, <span class="number">256</span>, <span class="number">13</span>, <span class="number">13</span>)</span><br><span class="line">norm2   (<span class="number">50</span>, <span class="number">256</span>, <span class="number">13</span>, <span class="number">13</span>)</span><br><span class="line">conv3   (<span class="number">50</span>, <span class="number">384</span>, <span class="number">13</span>, <span class="number">13</span>)</span><br><span class="line">conv4   (<span class="number">50</span>, <span class="number">384</span>, <span class="number">13</span>, <span class="number">13</span>)</span><br><span class="line">conv5   (<span class="number">50</span>, <span class="number">256</span>, <span class="number">13</span>, <span class="number">13</span>)</span><br><span class="line">pool5   (<span class="number">50</span>, <span class="number">256</span>, <span class="number">6</span>, <span class="number">6</span>)</span><br><span class="line">fc6 (<span class="number">50</span>, <span class="number">4096</span>)</span><br><span class="line">fc7 (<span class="number">50</span>, <span class="number">4096</span>)</span><br><span class="line">fc8 (<span class="number">50</span>, <span class="number">1000</span>)</span><br><span class="line">prob    (<span class="number">50</span>, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure></p>
-<h4 id="实例-查看params"><a href="#实例-查看params" class="headerlink" title="实例-查看params"></a>实例-查看params</h4><p>函数为<code>net.params</code>,其中weight的样子应该是<code>（output_channels,input_channels,filter_height,flier_width）</code>, biases的形状只有一维<code>output_channels,</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> layer_name,parame <span class="keyword">in</span> net.params.iteritems():</span><br><span class="line"><span class="keyword">print</span> layer_name+<span class="string">'\t'</span>+str(param[<span class="number">0</span>].shape),str(param[<span class="number">1</span>].data.shape) <span class="comment">#可以看出param里0为weight，1为biase</span></span><br></pre></td></tr></table></figure></p>
-<p>结果为：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">conv1   (<span class="number">96</span>, <span class="number">3</span>, <span class="number">11</span>, <span class="number">11</span>) (<span class="number">96</span>,)   <span class="comment">#输入3通道，输出96通道</span></span><br><span class="line">conv2   (<span class="number">256</span>, <span class="number">48</span>, <span class="number">5</span>, <span class="number">5</span>) (<span class="number">256</span>,)  <span class="comment">#输入为48，因为分成了两组，group=2</span></span><br><span class="line">conv3   (<span class="number">384</span>, <span class="number">256</span>, <span class="number">3</span>, <span class="number">3</span>) (<span class="number">384</span>,) <span class="comment">#这里的输入没变</span></span><br><span class="line">conv4   (<span class="number">384</span>, <span class="number">192</span>, <span class="number">3</span>, <span class="number">3</span>) (<span class="number">384</span>,)</span><br><span class="line">conv5   (<span class="number">256</span>, <span class="number">192</span>, <span class="number">3</span>, <span class="number">3</span>) (<span class="number">256</span>,)</span><br><span class="line">fc6 (<span class="number">4096</span>, <span class="number">9216</span>) (<span class="number">4096</span>,)        <span class="comment">#9216=256*3*3</span></span><br><span class="line">fc7 (<span class="number">4096</span>, <span class="number">4096</span>) (<span class="number">4096</span>,)</span><br><span class="line">fc8 (<span class="number">1000</span>, <span class="number">4096</span>) (<span class="number">1000</span>,)</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-07-04-【dataset】voc数据集/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-07-04-【dataset】voc数据集/" itemprop="url">【dataset】voc数据集</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>数据集与自己的网络框架不匹配时，通常有两个解决思路：</p>
-<ul>
-<li>修改测试代码的接口，使其适应自己的数据格式；</li>
-<li>将自己的数据格式转变为流行数据集，如voc的格式，然后使用标准的测试代码直接测试。</li>
-</ul>
-<p>下面针对第二种，分析一下标准数据集VOC的数据结构。</p>
-<p>如下图，共有五个文件夹：</p>
-<p><img src="img/image0060.png" alt="image0060"></p>
-<p>其中：</p>
-<p>Annotations存放<code>.xml</code>格式的文件：</p>
-<p><img src="img/image0061.png" alt="image0061"></p>
-<p>以<code>2007_000027.xml</code>为例：</p>
-<p><img src="https://github.com/goldentimecoolk/goldentime/raw/master/_posts/image/image0062.png" alt="image0062"></p>
-<ul>
-<li>source：图像源</li>
-<li>size：图片大小</li>
-<li>object：物体名称（分类的类别）</li>
-<li>…</li>
-</ul>
-<p>ImageSets下面有四个子文件夹，分别表示四种challenge对应的图像标签：</p>
-<p><img src="img/image0063.png" alt="image0063"></p>
-<ul>
-<li>Action：人的动作</li>
-<li>Layout：人体部位</li>
-<li>Main：图像识别，一共20类</li>
-<li>Segmentation：语义分割</li>
-</ul>
-<p>以Main文件夹为例，每个类都有xxx_train.txt、xxx_val.txt、xxx_trainval.txt三个文件，每一个class的train数据都有5717个，每一个class的val数据都有5823个，_trainval将上面两个进行了合并，每一个class有11540个。</p>
-<blockquote>
-<p>需要保证的是train和val两者没有交集，也就是训练数据和验证数据不能有重复，在选取训练数据的时候 ，也应该是随机产生的。</p>
-</blockquote>
-<p>JPEDImages存放这个数据集的所有图像数据，即<code>.jpg</code>：</p>
-<p><img src="https://github.com/goldentimecoolk/goldentime/raw/master/_posts/image/image0064.png" alt="image0064"></p>
-<p>JPEDImages与Annotations文件夹的数据一一对应。</p>
-<p>最后是SegmentationClass和SegmentationObject两个文件夹，他们都是存放分割任务的分割结果。但是前者将同一类标注为同一种颜色，后者将不同的instance标注为不同的结果。</p>
-<p><img src="img/2007_000032.jpg" alt="2007_000032.jpg"></p>
-<p><img src="img/2007_000032cls.png" alt="2007_000032cls.png"></p>
-<p><img src="img/2007_000032obj.png" alt="2007_000032obj.png"></p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><hr>
-<p><a href="https://blog.csdn.net/zhangjunbob/article/details/52769381" target="_blank" rel="noopener">https://blog.csdn.net/zhangjunbob/article/details/52769381</a></p>
+<p>代码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if [ ! -d $class ]; then</span><br><span class="line">  mkdir $b_dir/$class</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>最后就是copy了：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp $imgdire $b_dir/$class</span><br></pre></td></tr></table></figure></p>
+<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><hr>
+<p>[1] <strong><a href="http://www.361way.com/readfile/240.html" target="_blank" rel="noopener">shell下读取文件的方法</a></strong></p>
+<p>[2]<strong><a href="http://www.361way.com/shell-string-slice/5245.html" target="_blank" rel="noopener">shell字符串截断、切片与默认值</a></strong></p>
+<p>[3] <strong><a href="https://my.oschina.net/u/1456911/blog/737164" target="_blank" rel="noopener">Linux脚本shell字符串处理（全）</a></strong></p>
+<p>[4]<strong><a href="https://www.cnblogs.com/emanlee/p/3583769.html" target="_blank" rel="noopener">shell bash判断文件或文件夹是否存在</a></strong></p>
+<p>[5]<a href="https://www.cnblogs.com/dwdxdy/archive/2012/07/25/2608816.html" target="_blank" rel="noopener">Shell脚本——逐行处理文本文件</a></p>
+<p>[6]<a href="https://www.jb51.net/article/51348.htm" target="_blank" rel="noopener">Shell脚本中计算字符串长度的5种方法</a></p>
 
           
         
@@ -1296,7 +400,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:57:56+08:00">
                 2018-08-06
               </time>
             
@@ -1339,7 +443,7 @@
             <h3 id="准确率-Accuracy-精确率-Precision-召回率-Recall-："><a href="#准确率-Accuracy-精确率-Precision-召回率-Recall-：" class="headerlink" title="准确率(Accuracy), 精确率(Precision), 召回率(Recall)："></a>准确率(Accuracy), 精确率(Precision), 召回率(Recall)：</h3><hr>
 <p>之前对深度学习的量化指标的认识比较模糊，今天具体地整理一下各个指标的含义。只有明确量化指标，才能够对模型的质量更好地理解。</p>
 <h4 id="单标签图像分类"><a href="#单标签图像分类" class="headerlink" title="单标签图像分类"></a>单标签图像分类</h4><p>下面形象地上一些概念：</p>
-<p><img src="img/image0042.png" alt="image0042"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0042.png" alt="image0042"></p>
 <p>预测的正类个数/被检索到的样本个数为TP+FP，这些中正确的个数为TP，precision为两者的比例：precision=TP/(TP+FP)<br> <strong>该指标是为了突出某个class（即true positive）的预测效果，做到不预测则罢，一旦预测就要精准，要求精度。</strong> 比如预测家禽的种类，有鸡、鸭、鹅、牛、羊，如果把对‘羊’的预测当做P，那么其他的就是N，如果预测羊正确，TP+1，如果预测羊错误，FP+1。</p>
 <p>所有正样本个数/应该被检索到的样本个数为TP+FN，正确检索到的正样本个数为TP，recall为两个的比例：<br>recall=TP/(TP+FN)<br><strong>该指标为了突出某个class的覆盖率，尽可能地预测到所有的正类，要求广度。</strong></p>
 <p>所有样本数量为TP+TN+FP+FN，正确分类的样本个数为TP+TN，accuracy为两者的比例：<br>accuracy=(TP+TN)/(TP+TN+FP+FN)<br><strong>该指标比较均衡，不像上面两个指标只是突出正类，该指标追求综合的正确率。</strong></p>
@@ -1347,31 +451,31 @@
 <p>多标签图像分类（Multi-label   Image  Classification）任务中图片的标签不止一个，因此评价不能用普通单标签图像分类的标准，即mean  accuracy，该任务采用的是和信息检索中类似的方法——mAP（mean  Average  Precision）。mAP虽然字面意思和mean  accuracy看起来差不多，但是计算方法要繁琐得多，以下是mAP的计算方法：</p>
 <p>首先用训练好的模型得到所有测试样本的confidence  score，每一类（如car）的confidence   score保存到一个文件中（如comp1_cls_test_car.txt）。假设<strong>（这个类）</strong>共有20个测试样本，每个的id，confidence  score和ground  truth  label如下：​​</p>
 <blockquote>
-<p><img src="img/image0043.png" alt="image0043"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0043.png" alt="image0043"></p>
 </blockquote>
 <blockquote>
 <p>对confidence  score排序，得到：</p>
 </blockquote>
 <blockquote>
-<p><img src="img/image0044.png" alt="image0044"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0044.png" alt="image0044"></p>
 </blockquote>
 <blockquote>
 <p>然后计算precision和recall，这两个标准的定义如下：</p>
 </blockquote>
 <blockquote>
-<p><img src="img/image0042.png" alt="image0042"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0042.png" alt="image0042"></p>
 </blockquote>
 <blockquote>
 <p>上图比较直观，圆圈内（true   positives + false  positives）是我们选出的元素,它对应于分类任务中我们取出的结果，比如对测试样本在训练好的car模型上分类，我们想得到top-5的结果，即：</p>
 </blockquote>
 <blockquote>
-<p><img src="img/image0045.png" alt="image0045"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0045.png" alt="image0045"></p>
 </blockquote>
 <blockquote>
 <p>在这个例子中，true positives就是指第4和第2张图片，false positives就是指第13，19，6张图片。方框内圆圈外的元素（false negatives和true negatives）是相对于方框内的元素而言，在这个例子中，是指confidence score排在top-5之外的元素，即：</p>
 </blockquote>
 <blockquote>
-<p><img src="img/image0046.png" alt="image0046"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0046.png" alt="image0046"></p>
 </blockquote>
 <blockquote>
 <p>其中，false   negatives是指第9，16，7，20张图片，true   negatives是指第1,18,5,15,10,17,12,14,8,11,3张图片。</p>
@@ -1383,7 +487,7 @@
 <p><strong>实际多类别分类任务中，我们通常不满足只通过top-5来衡量一个模型的好坏，而是需要知道从top-1到top-N（N是所有测试样本个数，本文中为20）对应的precision和recall。</strong>显然随着我们选定的样本越来也多，recall一定会越来越高，而precision整体上会呈下降趋势。把recall当成横坐标，precision当成纵坐标，即可得到常用的precision-recall曲线。这个例子的precision-recall曲线如下：</p>
 </blockquote>
 <blockquote>
-<p><img src="img/image0048.png" alt="image0048"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0048.png" alt="image0048"></p>
 </blockquote>
 <blockquote>
 <p>接下来说说<strong>AP的计算</strong>，此处参考的是PASCAL  VOC  CHALLENGE的计算方法。首先设定一组阈值，[0, 0.1, 0.2, …, 1]。然后对于recall大于每一个阈值（比如recall&gt;0.3），我们都会得到一个对应的最大precision。这样，我们就计算出了11个precision。AP即为这11个precision的平均值。这种方法英文叫做11-point interpolated average precision。​</p>
@@ -1392,13 +496,13 @@
 <p>当然PASCAL VOC CHALLENGE自2010年后就换了另一种计算方法。新的计算方法假设这N个样本中有M个正例，那么我们会得到M个recall值（1/M, 2/M, …, M/M）,对于每个recall值r，我们可以计算出对应（r’ &gt; r）的最大precision，然后对这M个precision值取平均即得到最后的AP值。计算方法如下：​</p>
 </blockquote>
 <blockquote>
-<p><img src="img/image0047.png" alt="image0047"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0047.png" alt="image0047"></p>
 </blockquote>
 <blockquote>
 <p>相应的Precision-Recall曲线（这条曲线是单调递减的）如下：​</p>
 </blockquote>
 <blockquote>
-<p><img src="img/image0049.png" alt="image0049"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0049.png" alt="image0049"></p>
 </blockquote>
 <blockquote>
 <p><strong>AP衡量的是学出来的模型在每个类别上的好坏，mAP衡量的是学出的模型在所有类别上的好坏，得到AP后mAP的计算就变得很简单了，就是取所有AP的平均值。</strong></p>
@@ -1415,146 +519,6 @@
 <p>caffe中的Accuracy</p>
 <p><strong><a href="https://blog.csdn.net/scythe666/article/details/78790648" target="_blank" rel="noopener">https://blog.csdn.net/scythe666/article/details/78790648</a></strong></p>
 <p><a href="https://blog.csdn.net/u011501388/article/details/77962401" target="_blank" rel="noopener">https://blog.csdn.net/u011501388/article/details/77962401</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-21-【shell】根据label.txt提取图片/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-06-21-【shell】根据label.txt提取图片/" itemprop="url">【shell】根据label.txt提取图片</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>目的：根据之前生成的label.txt，从源图片地址将每张用到的每张图片拷贝到新地址，即提取图片。</strong><br>背景：在制作测试集的过程中，需要根据每张图片的评分，将其从原来的存放位置挑选出来，移动到新的路径下。</p>
-<ul>
-<li><p>逐行读取txt，为保证正确性，在前面加上index，统计总数：<br><img src="img/image0051.png" alt="image0051"></p>
-</li>
-<li><p>加上路径前缀，构成绝对路径：<br><img src="img/image0052.png" alt="image0052"></p>
-</li>
-<li><p>提取空格前面的名字，和空格后面的数字，即类别：<br><img src="img/image0053.png" alt="image0053"></p>
-</li>
-<li><p>然后为每个类别创建一个文件夹，存放该类别的图片：<br><img src="img/image0054.png" alt="image0054"></p>
-</li>
-</ul>
-<p>代码：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if [ ! -d $class ]; then</span><br><span class="line">  mkdir $b_dir/$class</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
-<p>最后就是copy了：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp $imgdire $b_dir/$class</span><br></pre></td></tr></table></figure></p>
-<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><hr>
-<p>[1] <strong><a href="http://www.361way.com/readfile/240.html" target="_blank" rel="noopener">shell下读取文件的方法</a></strong></p>
-<p>[2]<strong><a href="http://www.361way.com/shell-string-slice/5245.html" target="_blank" rel="noopener">shell字符串截断、切片与默认值</a></strong></p>
-<p>[3] <strong><a href="https://my.oschina.net/u/1456911/blog/737164" target="_blank" rel="noopener">Linux脚本shell字符串处理（全）</a></strong></p>
-<p>[4]<strong><a href="https://www.cnblogs.com/emanlee/p/3583769.html" target="_blank" rel="noopener">shell bash判断文件或文件夹是否存在</a></strong></p>
-<p>[5]<a href="https://www.cnblogs.com/dwdxdy/archive/2012/07/25/2608816.html" target="_blank" rel="noopener">Shell脚本——逐行处理文本文件</a></p>
-<p>[6]<a href="https://www.jb51.net/article/51348.htm" target="_blank" rel="noopener">Shell脚本中计算字符串长度的5种方法</a></p>
 
           
         
@@ -1634,7 +598,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:57:05+08:00">
                 2018-08-06
               </time>
             
@@ -1682,14 +646,14 @@
 
 GLOG_logtostderr=0 GLOG_log_dir=/home/shukun/2018prcv/recognition/structure/ResNet_50/LOG /home/shukun/caffe/build/tools/caffe test -model=test.prototxt -weights=snapshot_iter_12000.caffemodel -iterations=500 -gpu 1
 </code></pre><p>之后系统会在指定目录下，生成四个文件：</p>
-<p><img src="img/image0039.png" alt="image0039"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0039.png" alt="image0039"></p>
 <p>这里我们需要用到的是<code>caffe.usrname-Ubuntu.usrname.log.INFO.当前日期-当前时间.xxxx</code>。<strong>注意，</strong>应该在这个文件后面加上后缀<code>.log</code>，然后进行后续操作。</p>
 <p>在此基础上，需要用caffe自带的工具进行绘图。进入路径<code>~/caffe/tools/extra</code>,将其中的<code>parse_log.sh</code>、<code>extract_seconds.py</code>和<code>plot_training_log.py.example</code>拷贝到log存放的文件夹，然后在终端执行：</p>
 <pre><code>bash parse_log.sh caffe.ubuntu.shukun.log.INFO.20180618-175544.32514.log
 </code></pre><p>生成两个文件：<code>caffe.ubuntu.shukun.log.INFO.20180618-175544.32514.log.test</code>和<code>caffe.ubuntu.shukun.log.INFO.20180618-175544.32514.log.train</code></p>
 <p>这两个文件将绘图需要的直接数据提取了出来，相比之下原来的.log包含了我们训练/测试时在终端看到的所有信息。</p>
-<p><img src="img/20180803-094731.png" alt=""></p>
-<p><img src="img/20180803-094920.png" alt=""></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/20180803-094731.png" alt="20180803-094731.png"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/20180803-094920.png" alt="20180803-094920.png"></p>
 <h4 id="绘制accuracy、loss曲线"><a href="#绘制accuracy、loss曲线" class="headerlink" title="绘制accuracy、loss曲线"></a>绘制accuracy、loss曲线</h4><p>然后利用<code>./plot_training_log.py.example</code>画图，命令格式为：</p>
 <pre><code>python plot_training_log.py.example 0 acc_iter.png caffe.ubuntu.shukun.log.INFO.20180618-175544.32514.log
 </code></pre><p>其中第一个参数为数字0~7，每一个代表一种曲线类型：</p>
@@ -1714,6 +678,1191 @@ GLOG_logtostderr=0 GLOG_log_dir=/home/shukun/2018prcv/recognition/structure/ResN
 <p><a href="https://blog.csdn.net/sinat_34474705/article/details/77065972" target="_blank" rel="noopener">https://blog.csdn.net/sinat_34474705/article/details/77065972</a></p>
 <p><a href="https://blog.csdn.net/u011452869/article/details/54085275" target="_blank" rel="noopener">https://blog.csdn.net/u011452869/article/details/54085275</a> 【caffe训练日志输出】 </p>
 <p><a href="https://blog.csdn.net/hduxiejun/article/details/53543617" target="_blank" rel="noopener">https://blog.csdn.net/hduxiejun/article/details/53543617</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-15-【file with caffe】run label.py on remote server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/2018-06-15-【file with caffe】run label.py on remote server/" itemprop="url">【file with caffe】run label.py on remote server</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:56:00+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>I’ve writen the python file, using it to read images’ name, assign the same label to images in the same folder. Before this, I successfully run them in pycharm. However there seems to be a pure python without IDE in the server and I have to run .py in its terminal. There are some points deserve attention:</p>
+<ul>
+<li>the running command is <code>./filename.py</code>, the same as <code>filename.sh</code> previously run.</li>
+<li>when I successfully run it, there is some errors:</li>
+</ul>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0035.png" alt="image0035"></p>
+<p>the main error is <code>import: not found</code>. Notice that it’s not some module not found but the <code>import</code> itself. The reason is that I failed to specify which python to execute this .py. So I write this on the first line:</p>
+<pre><code>#!/usr/bin/python
+</code></pre><p>If you want to use your python with specific environments, you can write:</p>
+<pre><code>#!/usr/bin/env python
+</code></pre><p>Their differences are concluded as:</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0036.png" alt="image0036"></p>
+<ul>
+<li>Fixing that, there is another error:</li>
+</ul>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0037.png" alt="image0037"></p>
+<p>write this in the front:</p>
+<pre><code>#&lt; pre class =&quot;python&quot; name=&quot;code&quot; &gt;  # coding:utf-8
+</code></pre><h4 id="Other-Tips"><a href="#Other-Tips" class="headerlink" title="Other Tips"></a>Other Tips</h4><hr>
+<p>Tip 1:</p>
+<pre><code>frac = (float)(12000/40114) &gt;&gt; 0.0
+
+frac = (float)12000/40114 &gt;&gt; error
+
+frac = float(12000)/40114 &gt;&gt; 0.299
+</code></pre><p>Tip 2:</p>
+<p><code>tab</code> is 8 characters, so <code>anti-tab</code> move both 4-indent and 8-indent content to the first colum. This may cause some logical errors.</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0038.png" alt="image0038"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-08-【ML一步一脚印】调试笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/2018-06-08-【ML一步一脚印】调试笔记/" itemprop="url">【ML一步一脚印】调试笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:55:22+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>目的：</p>
+<ul>
+<li><p>在别人的框架上跑自己的数据，熟悉这个流程</p>
+</li>
+<li><p>测试数据的质量，看看是否适合作为比赛用的数据</p>
+</li>
+</ul>
+<hr>
+<p>在别人的基础上修改，原程序是使用jpg直接训练，这里想修改为lmdb。结果提示</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0029.png" alt="image0029"></p>
+<p>后来<a href="https://stackoverflow.com/questions/39343234/use-caffe-to-train-my-own-jpg-datasetstype-caffe-imagedataparameter-has-no-fi?answertab=votes#tab-top" target="_blank" rel="noopener">一查</a>，说是Inputlayer的类型不对，应该改为Data，注意有两处都要改，如下图：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0028.png" alt="image0028"></p>
+<p>一共205类，train包含2475个样本，valid包含412个样本，test包含1238个样本，batchsize均为20，训练300个iterations，结果如下：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0030.png" alt="image0030"></p>
+<p>accuracy达到15.67%，然后test，结果只有0.5%，惨不忍睹！</p>
+<p>这分明是随机猜测的结果：205*0.5%≈1.后来一检查，原来是test的输出层没有改。修改完之后，再进行test：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0031.png" alt="image0031"></p>
+<p>结果为21.29%，明显好很多。后来又训练了700个iterations，训练完的accuracy在20%~25%，test结果如下：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0032.png" alt="image0032"></p>
+<p>结果为22.02%，仅仅提升了不到0.8个百分点。（这是什么原因？）</p>
+<hr>
+<p>所以，数据的样本容量num_sample&amp;batchsize&amp;max_iter之前的关系，是不是可以用一个<strong>经验公式</strong>来表示？</p>
+<p>比如：max_iter×batchsize/num_sample=N，即每个样本能够训练迭代（forward+backward）N次？</p>
+<hr>
+<p>train_iter、test_iter、max_iter等参数的含义，可以搬到这里。</p>
+<hr>
+<p>还有，train、valid、test样本集之间的比例该如何把握？</p>
+<p>我觉得，train是evolution的motivation，是这个庞大machine的motor，推动这个machine向我们期待的方向移动，比如跳起来去接触悬在空中的小球，而valid是一个轻盈的小球，所以样本量可以稍微少一点，但是也不排除在这个引导下，由于对人的无解而产生的一种“隐形过拟合”，虽然他并不参与training（没有backward），因为test像是一个广袤的天空，随时随地会出现小球，需要这个machine去碰，所以valid越大越好，那样就越逼近test，而test越大就越逼近现实，因为现实中，无非就是“往天空随意抛出一个小球”，让machine去碰嘛！</p>
+<hr>
+<p>由于PC配置一般，为了减少训练时间，我取了总样本的10%进行训练、验证和测试，这个比例如何把握？</p>
+<p>对于训练而言，取了2475张图片，每个类大约12张，我现在不清楚深度学习网络能够把一张图片学到什么程度？但是可以猜测，如果一个类，特征鲜明（相对于其他类），那么数量可以稍微少一些；如果特征不明确，情况复杂，那么就需要相对多一些的样本来训练网络，以便覆盖到所有的情况。</p>
+<p>关于载入已经调好的参数文件.caffemodel，根据网络的名字命名吗？如果遇到新的网络，就随机初始化？</p>
+<hr>
+<p>关于accuracy的计算，看了一下caffe的源码，默认是top-1.所以对于205类的detection，22%的正确率也还行吧？</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/2018-06-06-【ML一步一脚印】批量删除子文件夹和文件名中的空格/" itemprop="url">【ML一步一脚印】批量删除子文件夹和文件名中的空格</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:54:50+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>目的：</strong> 利用create_imagenet在jpg基础上得到lmdb格式的文件；</p>
+<p><strong>问题：</strong> create_imagenet中的路径不支持空格，所以需要将文件路径以及文件名中的所有空格删除，由于有200+个子文件夹以及4w+张图片，因此需要批量操作。</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0020.png" alt="image0020"></p>
+<p>使用昨天生成标签文档txt的程序肯定不行，因为那个只是读取路径和文件名，然后分配一个类别，生成txt文档；而现在需要做的是对文件路径和文件名进行实际的修改。</p>
+<p>Google了一个“如何批量删除文档空格”，给出的95%的例程都是单文件夹下进行操作。而我们的文档组织结构如下：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0026.png" alt="image0026"></p>
+<p>所以需要先遍历子文件夹，再遍历其中每张图片。</p>
+<h4 id="1-在子文件夹下删除图片名字中的空格——这是最核心的操作"><a href="#1-在子文件夹下删除图片名字中的空格——这是最核心的操作" class="headerlink" title="1. 在子文件夹下删除图片名字中的空格——这是最核心的操作"></a>1. 在子文件夹下删除图片名字中的空格——这是最核心的操作</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for name in *.jpg</span><br><span class="line">do</span><br><span class="line">    na=$(echo $name | tr ' ' '_')          #tr ' ' '_'  将空格替换为下划线。单行执行时，读取屏幕输入，并输出执行后结果</span><br><span class="line">    mv "$name" "$na"</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>其中，| 叫做<a href="http://blog.sina.com.cn/s/blog_6d09b5750100vley.html" target="_blank" rel="noopener">管道符号</a>，<a href="https://blog.csdn.net/zhuying_linux/article/details/6825568" target="_blank" rel="noopener">tr</a>为translate的缩写，主要用于删除文件中的控制字符，或进行字符转换。</p>
+<p><a href="http://www.cnblogs.com/peida/archive/2012/10/27/2743022.html" target="_blank" rel="noopener">mv</a>是move的缩写，用来<u>移动文件</u>或者<u>对文件改名</u>。关于这个命令，我觉得设计地很模糊，对新人不友好，对于移动文件还是对文件改名只是根据第二个参数的类型，而我们要修改的对象包括路径本身，如果这个路径是新的路径（之前的路径中有空格），那么就会产生新路径并将原路径下的文件剪切到新路径下；如果这个路径仍是原路径（原路径中没有空格，无需改动），那么就会提示无法移动文件。</p>
+<p>语法：</p>
+<blockquote>
+<p> mv [选项] 源文件或目录 目标文件或目录</p>
+</blockquote>
+<p>操作说明：</p>
+<blockquote>
+<p> 视mv命令中第二个参数类型的不同（是目标文件还是目标目录），mv命令将文件重命名或将其移至一个新的目录中。当第二个参数类型是文件时，mv命令完成文件重命名，此时，源文件只能有一个（也可以是源目录名），它将所给的源文件或目录重命名为给定的目标文件名。当第二个参数是已存在的目录名称时，源文件或目录参数可以有多个，mv命令将各参数指定的源文件均移至目标目录中。在跨文件系统移动文件时，mv先拷贝，再将原有文件删除，而链至该文件的链接也将丢失。</p>
+</blockquote>
+<p>mv执行结果：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0022.png" alt="image0022"></p>
+<p>题外话：后来无意发现这里有一个小奇葩，但是也不影响后续生成lmdb的操作：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0023.png" alt="image0023"></p>
+<hr>
+<h4 id="2-对子文件夹的名称进行操作"><a href="#2-对子文件夹的名称进行操作" class="headerlink" title="2. 对子文件夹的名称进行操作"></a>2. 对子文件夹的名称进行操作</h4><p>如果上来就用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">filelist=`ls /home/sun/Documents/python/PRCV2018/data/project1/image/`</span><br><span class="line">num=0</span><br><span class="line">for file in $filelist</span><br><span class="line">do </span><br><span class="line">newname=$(echo $file | tr ' ' '_')</span><br><span class="line">	mv "$path$file" "$path$newname"</span><br><span class="line">	echo $file</span><br><span class="line">	let num+=1</span><br><span class="line">done</span><br><span class="line">echo $num</span><br></pre></td></tr></table></figure>
+<p>那么系统会将带有空格的文件夹名称分隔开，如“A B.txt”变为A，B.txt。Google了以下解决方案，只需要在for循环的前面加上即可。在上述基础上，对文件名进行处理：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">IFS=$(echo -en "\n\b")</span><br><span class="line">echo -en $IFS</span><br><span class="line"></span><br><span class="line">filelist=`ls /home/sun/Documents/python/PRCV2018/data/project1/image/`</span><br><span class="line">num=0</span><br><span class="line">for file in $filelist</span><br><span class="line">do </span><br><span class="line">newname=$(echo $file | tr ' ' '_')</span><br><span class="line">	mv "$path$file" "$path$newname"</span><br><span class="line">	echo $file</span><br><span class="line">	let num+=1</span><br><span class="line">done</span><br><span class="line">echo $num</span><br></pre></td></tr></table></figure></p>
+<p>此时得到了文件的绝对路径，下一步就是在绝对路径的索引下，和上一部分内容结合，对文件进行处理。这时有个很重要的部分，就是需要结合文档结构进行操作——需要先遍历子文件夹，然后遍历文件。</p>
+<h4 id="3-使用Shell遍历目录及其子目录中的所有文件"><a href="#3-使用Shell遍历目录及其子目录中的所有文件" class="headerlink" title="3. 使用Shell遍历目录及其子目录中的所有文件"></a>3. 使用Shell遍历目录及其子目录中的所有文件</h4><p>该部分主要参考这位<a href="https://blog.csdn.net/Register_man/article/details/53860064" target="_blank" rel="noopener">前辈</a>的教程：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0027.png" alt="image0027"></p>
+<h4 id="4-结果"><a href="#4-结果" class="headerlink" title="4. 结果"></a>4. 结果</h4><p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0025.png" alt="image0025"></p>
+<p>当然奇葩仍然存在：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0024.png" alt="image0024"></p>
+<p>删除了文件路径以及文件名中的空格之后，很快就得到了lmdb文件：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0021.png" alt="image0021"></p>
+<h5 id="除了文章中列出的参考教程，还参考了以下教程，在此罗列出来，对于一个新人，可以让我们从不同角度了解shell的语法和原理"><a href="#除了文章中列出的参考教程，还参考了以下教程，在此罗列出来，对于一个新人，可以让我们从不同角度了解shell的语法和原理" class="headerlink" title="除了文章中列出的参考教程，还参考了以下教程，在此罗列出来，对于一个新人，可以让我们从不同角度了解shell的语法和原理:"></a>除了文章中列出的参考教程，还参考了以下教程，在此罗列出来，对于一个新人，可以让我们从不同角度了解shell的语法和原理:</h5><p>[1] shell遍历目录下所有文件： <a href="https://blog.csdn.net/u012307002/article/details/51308710" target="_blank" rel="noopener">https://blog.csdn.net/u012307002/article/details/51308710</a></p>
+<p>[2] mv无法获取文件状态（根本原因是路径不对，或者文件不存在）： <a href="http://forum.ubuntu.org.cn/viewtopic.php?f=21&amp;t=395842" target="_blank" rel="noopener">http://forum.ubuntu.org.cn/viewtopic.php?f=21&amp;t=395842</a></p>
+<p>[3] shell函数的定义和调用： <a href="http://www.runoob.com/linux/linux-shell-func.html" target="_blank" rel="noopener">http://www.runoob.com/linux/linux-shell-func.html</a> </p>
+<p>[4] let指令： <a href="https://www.cnblogs.com/kaishirenshi/p/7686910.html" target="_blank" rel="noopener">https://www.cnblogs.com/kaishirenshi/p/7686910.html</a></p>
+<p>[5] shell 中的for、while循环及if语句： <a href="https://www.cnblogs.com/wenqiang/p/5352276.html" target="_blank" rel="noopener">https://www.cnblogs.com/wenqiang/p/5352276.html</a></p>
+<p>[6] BASH Shell: For Loop File Names With Spaces： <a href="https://www.cyberciti.biz/tips/handling-filenames-with-spaces-in-bash.html" target="_blank" rel="noopener">https://www.cyberciti.biz/tips/handling-filenames-with-spaces-in-bash.html</a></p>
+<p>[7] SHELL技巧：处理文件名中的那些空格： <a href="http://www.cnblogs.com/cocowool/archive/2013/01/15/2861904.html" target="_blank" rel="noopener">http://www.cnblogs.com/cocowool/archive/2013/01/15/2861904.html</a></p>
+<p>[8] Linux系统下除去文件名称中的空格字符： <a href="http://blog.sina.com.cn/s/blog_7ed5a8080101bh90.html" target="_blank" rel="noopener">http://blog.sina.com.cn/s/blog_7ed5a8080101bh90.html</a></p>
+<p>[9] Shell处理有空格的文件夹： <a href="https://my.oschina.net/yehun/blog/893217" target="_blank" rel="noopener">https://my.oschina.net/yehun/blog/893217</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-05-【ML一步一脚印】生成标签文件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/2018-06-05-【ML一步一脚印】生成标签文件/" itemprop="url">【ML一步一脚印】生成标签文件</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:54:08+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="预期实现效果"><a href="#预期实现效果" class="headerlink" title="预期实现效果"></a>预期实现效果</h3><ul>
+<li><p>生成一个标签文本，文本的每一行表示一个样本，格式为：</p>
+<p>  图片地址/名称（空格）标签类别<br>具体如下图：<br><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/20180804-112104.png" alt=""></p>
+</li>
+<li><p>根据比例，对总数据集进行划分，分为train.txt、val.txt、test.txt。</p>
+<h3 id="分步实现"><a href="#分步实现" class="headerlink" title="分步实现"></a>分步实现</h3></li>
+</ul>
+<hr>
+<p>join的作用：</p>
+<blockquote>
+<p>是在拼接路径的时候用的。举个例子：</p>
+</blockquote>
+<blockquote>
+<p>os.path.join(“home”, “me”, “mywork”)</p>
+</blockquote>
+<blockquote>
+<p>在Linux系统上会返回“home/me/mywork”</p>
+</blockquote>
+<blockquote>
+<p>在Windows系统上会返回”home\me\mywork”</p>
+</blockquote>
+<blockquote>
+<p>好处是可以根据系统自动选择正确的路径分隔符”/“或”\”</p>
+</blockquote>
+<h4 id="实现两级读取"><a href="#实现两级读取" class="headerlink" title="实现两级读取"></a>实现两级读取</h4><hr>
+<pre><code>folders = GetFileList(&apos;/media/sun/Seagate Expansion Drive/CAS/project1/image&apos;)  # 该路径为图片的存放地址
+
+i=0
+for folder in folders:
+    i+=1
+    print(i,&apos;:&apos;,folder)
+</code></pre><p>通过上述代码，发现folders就是路径，所以后面可以直接将教程的循环作为内循环：</p>
+<pre><code>total_txt = open(&apos;total.txt&apos;, &apos;w&apos;)
+for ind, folder in enumerate(folders):
+    imgfile = GetFileList(folder)
+    for img in imgfile:
+        str1 = img + &apos; &apos; + str(ind) + &apos;\n&apos;
+        total_txt.writelines(str1)
+total_txt.close()
+</code></pre><p>至此，生成total.txt，包含了所有的jpg以及他们对应的类（每个文件夹下的所有图片为一个类，从0开始标注）。<br>下面根据一定比例，将total.txt分割为train.txt、valid.txt、test.txt。</p>
+<h4 id="实现对txt的逐行读取"><a href="#实现对txt的逐行读取" class="headerlink" title="实现对txt的逐行读取"></a>实现对txt的<a href="https://blog.csdn.net/yatere/article/details/6591627" target="_blank" rel="noopener">逐行读取</a></h4><hr>
+<pre><code>specify = [1,3,5]
+for ind in specify:
+    str2 = linecache.getline(&apos;total.txt&apos;,ind)
+    print(str2)
+</code></pre><p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0018.png" alt="image0018"></p>
+<h4 id="生成txt"><a href="#生成txt" class="headerlink" title="生成txt"></a>生成txt</h4><hr>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0019.png" alt="image0019"></p>
+<blockquote>
+<p>参考 <a href="https://blog.csdn.net/qq_15505637/article/details/77687910" target="_blank" rel="noopener">https://blog.csdn.net/qq_15505637/article/details/77687910</a></p>
+</blockquote>
+<h4 id="生成随机数"><a href="#生成随机数" class="headerlink" title="生成随机数"></a>生成随机数</h4><hr>
+<p>生成指定范围内的、无重复的、整数、随机值。</p>
+<p>alternative method：</p>
+<p>利用<a href="http://www.runoob.com/python3/python3-func-number-shuffle.html" target="_blank" rel="noopener">shuffle()</a>先对index打乱，然后直接对index进行整段划分；</p>
+<hr>
+<h4 id="对total-txt按指定行读取，并存储到新的txt文件"><a href="#对total-txt按指定行读取，并存储到新的txt文件" class="headerlink" title="对total.txt按指定行读取，并存储到新的txt文件"></a>对total.txt按指定行读取，并存储到新的txt文件</h4><hr>
+<pre><code>def split_data(p_train = 0.6, p_val = 0.1, p_test = 0.4):
+    t = list(range(num_total))
+    random.shuffle(t)
+
+    num_train = int(p_train*num_total)
+    num_val = int(p_val*num_total)
+    num_test = num_total - num_train - num_val
+    print(num_train,num_val,num_test,num_train+num_val+num_test)
+
+    train_ind = t[0:num_train]
+    val_ind = t[num_train:num_train+num_val]
+    test_ind = t[num_train+num_val:]
+    print(len(train_ind),len(val_ind),len(test_ind))
+#    print(type(train_ind))
+
+    train_txt = open(&apos;train.txt&apos;, &apos;w&apos;)
+    for ind in train_ind:
+        str2 = linecache.getline(&apos;total.txt&apos;, ind)
+        train_txt.writelines(str2)
+ #       print(str2)
+    train_txt.close()
+
+    val_txt = open(&apos;val.txt&apos;, &apos;w&apos;)
+    for ind in val_ind:
+        str2 = linecache.getline(&apos;total.txt&apos;, ind)
+        val_txt.writelines(str2)
+ #       print(str2)
+    val_txt.close()
+
+    test_txt = open(&apos;test.txt&apos;, &apos;w&apos;)
+    for ind in test_ind:
+        str2 = linecache.getline(&apos;total.txt&apos;, ind)
+        test_txt.writelines(str2)
+ #       print(str2)
+    test_txt.close()
+</code></pre><h4 id="最终结果"><a href="#最终结果" class="headerlink" title="最终结果"></a>最终结果</h4><hr>
+<ul>
+<li><p>根据img文件的存放，生成标签文档total.txt；</p>
+</li>
+<li><p>根据给定的比例，对total.txt进行打乱划分，生成三个子标签文档train.txt、val.txt、test.txt。</p>
+</li>
+</ul>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><hr>
+<p><a href="https://blog.csdn.net/u010417185/article/details/52119863" target="_blank" rel="noopener">https://blog.csdn.net/u010417185/article/details/52119863</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-04-【ML一步一脚印】linux下安装MATLAB 2017a/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/2018-06-04-【ML一步一脚印】linux下安装MATLAB 2017a/" itemprop="url">【ML一步一脚印】linux下安装MATLAB 2017a</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:53:41+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="1-下载文件"><a href="#1-下载文件" class="headerlink" title="1.下载文件"></a>1.下载文件</h3><p>Matlab R2017a 链接地址：<br><a href="https://pan.baidu.com/s/1hsVnxdE#list/path=%2F" target="_blank" rel="noopener">https://pan.baidu.com/s/1hsVnxdE#list/path=%2F</a><br>（如果失效，可以私信我）</p>
+<h3 id="2-安装MATLAB"><a href="#2-安装MATLAB" class="headerlink" title="2.安装MATLAB"></a>2.安装MATLAB</h3><p>安装过程全称参考[1]，没有什么问题。有两点需要重复一下：</p>
+<p>####2.1 挂载iso文件的命令</p>
+<p>进入R2017a_glnxa64_dvd1.iso的文件目录下，打开终端，运行：</p>
+<pre><code>$sudo mount -t auto -o loop R2017a_glnxa64_dvd1.iso /home/sun/Matlab
+</code></pre><p>即：</p>
+<pre><code>$sudo mount -t auto -o 文件名.iso MATLAB的安装路径
+</code></pre><p>在挂载R2017a_glnxa64_dvd2.iso时也是同样的操作。挂载完成后，会多出一个盘，说明挂载成功。同时自动弹出一个iso文件界面，就是里面的内容。</p>
+<p>####2. 错误：无法从DVD内部安装运行程序…</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0015.png" alt="image0015"></p>
+<p>其实教程[1]中已经提到这个问题，作为小白的我一时没有看懂，所以折腾了一下。按照以下命令运行：</p>
+<pre><code>cd
+cd /home/sun/Matlab
+sudo ./install
+</code></pre><h3 id="3-破解"><a href="#3-破解" class="headerlink" title="3.破解"></a>3.破解</h3><p>在安装完MATLAB进行破解时，由于版本为2017a，而教程[1]的版本为2016a，所以参考了第二个教程[2]。在2017a中，只需要拷贝两个文件即可：</p>
+<ol>
+<li>license_standalone.lic</li>
+<li>libmwservices.so</li>
+</ol>
+<p>碎碎念：在教程[1]中，对我而言有个比较新的点是，<strong>取消安装目录的权限：</strong></p>
+<p>进入到MATLAB文件夹，然后执行以下命令：</p>
+<pre><code>sudo chmod 777 * -R
+</code></pre><h3 id="4-生成MATLAB桌面快捷方式："><a href="#4-生成MATLAB桌面快捷方式：" class="headerlink" title="4.生成MATLAB桌面快捷方式："></a>4.生成MATLAB桌面快捷方式：</h3><h4 id="1-添加路径"><a href="#1-添加路径" class="headerlink" title="1.添加路径"></a>1.添加路径</h4><p>在根目录（/home/sun）中，找到.bashrc，添加一句指令，见教程[1]；</p>
+<h4 id="2-生成快捷方式"><a href="#2-生成快捷方式" class="headerlink" title="2.生成快捷方式"></a>2.生成快捷方式</h4><p>进入/home/sun/.local/share/applications，运行以下命令：</p>
+<pre><code>sudo gedit /usr/share/applications/Matlab.desktop
+</code></pre><p>生成一个启动器，然后将下列代码拷进去：</p>
+<pre><code>[Desktop Entry]
+Type=Application
+Name=Matlab
+GenericName=Matlab 2017a
+Comment=Matlab:The Language of Technical Computing
+Exec=sh /home/sun/MATLAB/R2017a/bin/matlab -desktop
+Icon=/home/sun/MATLAB/R2017a/toolbox/nnet/nnresource/icons/matlab.png
+StartupNotify=true
+Terminal=false
+Categories=Development;Matlab;
+</code></pre><p>注意修改文件路径！</p>
+<p>然后就生成了MATLAB的图标，将其拷贝到桌面即可。</p>
+<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><p>[1]. <a href="https://blog.csdn.net/GJXS2017/article/details/78705410" target="_blank" rel="noopener">https://blog.csdn.net/GJXS2017/article/details/78705410</a></p>
+<p>[2]. <a href="https://blog.csdn.net/u011713358/article/details/69659265" target="_blank" rel="noopener">https://blog.csdn.net/u011713358/article/details/69659265</a></p>
+<p>[3]. <a href="https://blog.csdn.net/bug_creator/article/details/79382525" target="_blank" rel="noopener">https://blog.csdn.net/bug_creator/article/details/79382525</a></p>
+<h4 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h4><p>再次安装出现的新问题： 安装的时候没有弹出图形安装界面，直接显示installing… finish! 则需要在根目录media下来安装<br>[4]. <a href="https://blog.csdn.net/xunan003/article/details/79210712" target="_blank" rel="noopener">https://blog.csdn.net/xunan003/article/details/79210712</a></p>
+<p>解决方法：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0089.png" alt="image0089"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-02-【ML一步一脚印】在自己的数据集上跑深度学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/2018-06-02-【ML一步一脚印】在自己的数据集上跑深度学习/" itemprop="url">【ML一步一脚印】在自己的数据集上跑深度学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:53:13+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>今天在比较真实的数据集（<a href="https://github.com/jimgoo/caffe-oxford102" target="_blank" rel="noopener">Oxford flower dataset</a>）上，第一次，真正地开始跑深度学习框架。</p>
+<p>上一篇文章开头提到，使用深度学习解决问题主要分为四个步骤：</p>
+<ol>
+<li><p>下载图片，并制作分类信息txt，分别在train.txt、valid.txt和test.txt中将图片名称与类别相对应；</p>
+</li>
+<li><p>根据上述文件，生成lmdb；</p>
+</li>
+<li><p>定义自己的深度学习框架，设置好参数；</p>
+</li>
+<li><p>训练并验证。</p>
+</li>
+</ol>
+<p>折腾完1、2步，接下来就用到深度学习的具体知识了。</p>
+<p>让我们从训练时的指令开始：</p>
+<pre><code>caffe train -solver=solver.prototxt -weights=pretrained-weights.caffemodel -gpu 0
+</code></pre><p><strong>参数solver</strong>指定的文件solver.prototxt：</p>
+<pre><code>net: &quot;train_val.prototxt&quot;
+#test_iter: 21        # enough iterations to cover the 1020 images with a batch size of 50
+test_iter: 4
+#test_interval: 500
+test_interval: 50
+base_lr: 0.001        # lr for fine-tuning should be lower than when starting from scratch
+lr_policy: &quot;step&quot;
+gamma: 0.1
+stepsize: 20000       # stepsize should also be lower, as we&apos;re closer to being done
+#display: 50
+display: 10
+#max_iter: 50000      # 160+ h
+max_iter: 3000
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 5000
+snapshot_prefix: &quot;snapshot&quot;
+#solver_mode: GPU
+solver_mode: CPU  
+</code></pre><p>这个文件主要是设置训练的参数，由变量的定义可以比较直观地看出他们的含义。由于我的目的是体验一下这个完整的流程，对正确率暂时没有要求，所以做了一些更改。</p>
+<p><strong>参数weights</strong>指定网络中参数的初始化文件，这对于fine-tuning非常重要。现在给的是pretrained-weights.caffemodel，表明用这个文件初始化深度学习网络。除此之外，在snapshot后，也会生成类似文件，如snapshot_iter_617.caffemodel，表示迭代到617次时的网络参数，以后可以在这个基础上恢复训练。</p>
+<p><strong>参数gpu</strong>指定在用到的gpu编号。由于我的渣渣电脑是AMD的gpu，现在也不知道怎么用，所以默默选择了用CPU训练，删掉了这一部分。</p>
+<p>接下来进入solver.prototxt文件，主要看网络开头的数据层：</p>
+<pre><code>name: &quot;Oxford102_CaffeNet&quot;
+layer {
+  name: &quot;data&quot;
+  type: &quot;ImageData&quot;
+  top: &quot;data&quot;
+  top: &quot;label&quot;
+  image_data_param {
+    source: &quot;/home/sun/Documents/python/fine-tuning/Oxford102/CaffeNet/auxiliary/train.txt&quot;
+    batch_size: 50
+    new_height: 256
+    new_width: 256
+  }
+  transform_param {
+    crop_size: 227
+    mean_file: &quot;/home/sun/Documents/python/fine-tuning/Oxford102/CaffeNet/auxiliary/imagenet_mean.binaryproto&quot;
+    mirror: true
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: &quot;data&quot;
+  type: &quot;ImageData&quot;
+  top: &quot;data&quot;
+  top: &quot;label&quot;
+  image_data_param {
+    source: &quot;/home/sun/Documents/python/fine-tuning/Oxford102/CaffeNet/auxiliary/valid.txt&quot;
+    batch_size: 50
+    new_height: 256
+    new_width: 256
+  }
+  transform_param {
+    crop_size: 227
+    mean_file: &quot;/home/sun/Documents/python/fine-tuning/Oxford102/CaffeNet/auxiliary/imagenet_mean.binaryproto&quot;
+    mirror: false
+  }
+  include: { phase: TEST }
+}
+layer {
+  name: &quot;conv1&quot;
+  type: &quot;Convolution&quot;
+  bottom: &quot;data&quot;
+  top: &quot;conv1&quot;
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+</code></pre><p>主要还是路径的设置：</p>
+<p>source：表示图片的路径。<strong>注意</strong>这里用到的仍是jpg数据，而不是lmdb。难道折腾的lmdb就是为了计算mean文件吗？既然用到jpg数据，txt中的图片名称前，就要加上其绝对路径，这一点与计算lmdb时的txt不一样。</p>
+<p>mean_file：均值文件的路径。</p>
+<p>更改完这些之后，就可以开心地训练了！</p>
+<p>一开始我没有看清楚solver文件中的参数含义，训练时max_iter仍然保留原来的50000.计算一下需要160+个小时，也就是下周的这个时候，然后果断终止了训练。比较意外的是，终止后，自动进行snapshot，保留了当时的参数文件.caffemodel，这一点很让人感动。</p>
+<p>第一次完整地跑这个流程，还是非常激动的。熟练之后，就可以为所欲为，实现自己的idea了！</p>
+<p>截个训练时的图：</p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0014.png" alt="image0014"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/hello-world/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/hello-world/" itemprop="url">Hello World</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
 
           
         

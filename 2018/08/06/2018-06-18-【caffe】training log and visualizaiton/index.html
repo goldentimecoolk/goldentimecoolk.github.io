@@ -86,14 +86,14 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="训练结果可视化 获取训练日志常规train或者test时，在命令前面加上GLOG_logtostderr=0 GLOG_log_dir=&amp;#39;your_own_path&amp;#39;,即： GLOG_logtostderr=0 GLOG_log_dir=/home/shukun/2018prcv/recognition/structure/ResNet_50/LOG /home/shukun/ca">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-18-【caffe】training%20log%20and%20visualizaiton/img/image0039.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-18-【caffe】training%20log%20and%20visualizaiton/img/20180803-094731.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-18-【caffe】training%20log%20and%20visualizaiton/img/20180803-094920.png">
-<meta property="og:updated_time" content="2018-08-05T14:16:14.995Z">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0039.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/20180803-094731.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/20180803-094920.png">
+<meta property="og:updated_time" content="2018-08-06T03:57:05.771Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【caffe】training log and visualizaiton">
 <meta name="twitter:description" content="训练结果可视化 获取训练日志常规train或者test时，在命令前面加上GLOG_logtostderr=0 GLOG_log_dir=&amp;#39;your_own_path&amp;#39;,即： GLOG_logtostderr=0 GLOG_log_dir=/home/shukun/2018prcv/recognition/structure/ResNet_50/LOG /home/shukun/ca">
-<meta name="twitter:image" content="http://yoursite.com/2018/08/06/2018-06-18-【caffe】training%20log%20and%20visualizaiton/img/image0039.png">
+<meta name="twitter:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0039.png">
 
 
 
@@ -265,7 +265,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:57:05+08:00">
                 2018-08-06
               </time>
             
@@ -311,14 +311,14 @@
 
 GLOG_logtostderr=0 GLOG_log_dir=/home/shukun/2018prcv/recognition/structure/ResNet_50/LOG /home/shukun/caffe/build/tools/caffe test -model=test.prototxt -weights=snapshot_iter_12000.caffemodel -iterations=500 -gpu 1
 </code></pre><p>之后系统会在指定目录下，生成四个文件：</p>
-<p><img src="img/image0039.png" alt="image0039"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0039.png" alt="image0039"></p>
 <p>这里我们需要用到的是<code>caffe.usrname-Ubuntu.usrname.log.INFO.当前日期-当前时间.xxxx</code>。<strong>注意，</strong>应该在这个文件后面加上后缀<code>.log</code>，然后进行后续操作。</p>
 <p>在此基础上，需要用caffe自带的工具进行绘图。进入路径<code>~/caffe/tools/extra</code>,将其中的<code>parse_log.sh</code>、<code>extract_seconds.py</code>和<code>plot_training_log.py.example</code>拷贝到log存放的文件夹，然后在终端执行：</p>
 <pre><code>bash parse_log.sh caffe.ubuntu.shukun.log.INFO.20180618-175544.32514.log
 </code></pre><p>生成两个文件：<code>caffe.ubuntu.shukun.log.INFO.20180618-175544.32514.log.test</code>和<code>caffe.ubuntu.shukun.log.INFO.20180618-175544.32514.log.train</code></p>
 <p>这两个文件将绘图需要的直接数据提取了出来，相比之下原来的.log包含了我们训练/测试时在终端看到的所有信息。</p>
-<p><img src="img/20180803-094731.png" alt=""></p>
-<p><img src="img/20180803-094920.png" alt=""></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/20180803-094731.png" alt="20180803-094731.png"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/20180803-094920.png" alt="20180803-094920.png"></p>
 <h4 id="绘制accuracy、loss曲线"><a href="#绘制accuracy、loss曲线" class="headerlink" title="绘制accuracy、loss曲线"></a>绘制accuracy、loss曲线</h4><p>然后利用<code>./plot_training_log.py.example</code>画图，命令格式为：</p>
 <pre><code>python plot_training_log.py.example 0 acc_iter.png caffe.ubuntu.shukun.log.INFO.20180618-175544.32514.log
 </code></pre><p>其中第一个参数为数字0~7，每一个代表一种曲线类型：</p>
@@ -367,8 +367,8 @@ GLOG_logtostderr=0 GLOG_log_dir=/home/shukun/2018prcv/recognition/structure/ResN
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/06/2018-06-15-【shell】select files from different folders and put them into subfolders/" rel="next" title="【shell】select files from different folders and put them into subfolders">
-                <i class="fa fa-chevron-left"></i> 【shell】select files from different folders and put them into subfolders
+              <a href="/2018/08/06/2018-06-15-【file with caffe】run label.py on remote server/" rel="next" title="【file with caffe】run label.py on remote server">
+                <i class="fa fa-chevron-left"></i> 【file with caffe】run label.py on remote server
               </a>
             
           </div>
@@ -377,8 +377,8 @@ GLOG_logtostderr=0 GLOG_log_dir=/home/shukun/2018prcv/recognition/structure/ResN
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/06/2018-06-21-【shell】根据label.txt提取图片/" rel="prev" title="【shell】根据label.txt提取图片">
-                【shell】根据label.txt提取图片 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/06/2018-06-19-【评价指标】accuracy、precision、recall的来龙去脉/" rel="prev" title="【评价指标】accuracy、precision、recall的来龙去脉">
+                【评价指标】accuracy、precision、recall的来龙去脉 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

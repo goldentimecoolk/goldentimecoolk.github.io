@@ -86,14 +86,14 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="torch.nn中的BatchNorm函数  12345class torch.nn.BatchNorm1d(num_features, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)class torch.nn.BatchNorm2d(num_features, eps=1e-05, momentum=0.1, af">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-06-【pytorch】关于torch.nn的两点/img/image0065.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-06-【pytorch】关于torch.nn的两点/img/image0087.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-06-【pytorch】关于torch.nn的两点/img/image0088.png">
-<meta property="og:updated_time" content="2018-08-05T14:18:23.227Z">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0065.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0087.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0088.png">
+<meta property="og:updated_time" content="2018-08-06T03:59:49.841Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【pytorch】关于torch.nn的两点">
 <meta name="twitter:description" content="torch.nn中的BatchNorm函数  12345class torch.nn.BatchNorm1d(num_features, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)class torch.nn.BatchNorm2d(num_features, eps=1e-05, momentum=0.1, af">
-<meta name="twitter:image" content="http://yoursite.com/2018/08/06/2018-07-06-【pytorch】关于torch.nn的两点/img/image0065.png">
+<meta name="twitter:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0065.png">
 
 
 
@@ -265,7 +265,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:59:49+08:00">
                 2018-08-06
               </time>
             
@@ -304,7 +304,7 @@
 
       
         <h3 id="torch-nn中的BatchNorm函数"><a href="#torch-nn中的BatchNorm函数" class="headerlink" title="torch.nn中的BatchNorm函数"></a>torch.nn中的BatchNorm函数</h3><hr>
-<p><img src="img/image0065.png" alt="image0065"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0065.png" alt="image0065"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">torch</span>.<span class="title">nn</span>.<span class="title">BatchNorm1d</span><span class="params">(num_features, eps=<span class="number">1e-05</span>, momentum=<span class="number">0.1</span>, affine=True, track_running_stats=True)</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">torch</span>.<span class="title">nn</span>.<span class="title">BatchNorm2d</span><span class="params">(num_features, eps=<span class="number">1e-05</span>, momentum=<span class="number">0.1</span>, affine=True, track_running_stats=True)</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">torch</span>.<span class="title">nn</span>.<span class="title">BatchNorm3d</span><span class="params">(num_features, eps=<span class="number">1e-05</span>, momentum=<span class="number">0.1</span>, affine=True, track_running_stats=True)</span></span></span><br></pre></td></tr></table></figure>
 <p>对于<code>1d</code>，其实是2d或3d：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: (N,C)(N,C) <span class="keyword">or</span> (N,C,L)(N,C,L)</span><br><span class="line">Output: (N,C)(N,C) <span class="keyword">or</span> (N,C,L)(N,C,L) (same shape <span class="keyword">as</span> input)</span><br></pre></td></tr></table></figure></p>
 <p>对于<code>2d</code>，其实是4d：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: (N,C,H,W)(N,C,H,W)</span><br><span class="line">Output: (N,C,H,W)(N,C,H,W) (same shape <span class="keyword">as</span> input)</span><br></pre></td></tr></table></figure></p>
@@ -312,8 +312,8 @@
 <blockquote>
 <p>The constructor builds a tuple whose items are the same and in the same order as iterable’s items. iterable may be either a sequence, a container that supports iteration, or an iterator object. If iterable is already a tuple, it is returned unchanged. For example, tuple(‘abc’) returns (‘a’, ‘b’, ‘c’) and tuple( [1, 2, 3] ) returns (1, 2, 3). If no argument is given, the constructor creates a new empty tuple, ().</p>
 </blockquote>
-<p><img src="img/image0087.png" alt="image0087"></p>
-<p><img src="img/image0088.png" alt="image0088"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0087.png" alt="image0087"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0088.png" alt="image0088"></p>
 <blockquote>
 <p>Note that <strong>it is actually the comma which makes a tuple, not the parentheses</strong>. The parentheses are optional, except in the empty tuple case, or when they are needed to avoid syntactic ambiguity. For example, f(a, b, c) is a function call with three arguments, while f((a, b, c)) is a function call with a 3-tuple as the sole argument.</p>
 </blockquote>
@@ -346,8 +346,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/06/2018-07-06-【pytorch】resnet/" rel="next" title="【pytorch】resnet">
-                <i class="fa fa-chevron-left"></i> 【pytorch】resnet
+              <a href="/2018/08/06/2018-07-04-【dataset】voc数据集/" rel="next" title="【dataset】voc数据集">
+                <i class="fa fa-chevron-left"></i> 【dataset】voc数据集
               </a>
             
           </div>

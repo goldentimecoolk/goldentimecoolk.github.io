@@ -86,12 +86,12 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="该层用于rpn的训练阶段。 看一下该层的使用方法： layer {   name: &amp;apos;rpn-data&amp;apos;   type: &amp;apos;Python&amp;apos;   bottom: &amp;apos;rpn_cls_score&amp;apos;   bottom: &amp;apos;gt_boxes&amp;apos;   bottom: &amp;apos;im_info&amp;apos;   bottom: &amp;ap">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-11-【faster-rcnn】anchortargetlayer/img/image0085.png">
-<meta property="og:updated_time" content="2018-08-05T14:21:27.947Z">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0085.png">
+<meta property="og:updated_time" content="2018-08-06T04:03:15.880Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【faster-rcnn】anchortargetlayer">
 <meta name="twitter:description" content="该层用于rpn的训练阶段。 看一下该层的使用方法： layer {   name: &amp;apos;rpn-data&amp;apos;   type: &amp;apos;Python&amp;apos;   bottom: &amp;apos;rpn_cls_score&amp;apos;   bottom: &amp;apos;gt_boxes&amp;apos;   bottom: &amp;apos;im_info&amp;apos;   bottom: &amp;ap">
-<meta name="twitter:image" content="http://yoursite.com/2018/08/06/2018-07-11-【faster-rcnn】anchortargetlayer/img/image0085.png">
+<meta name="twitter:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0085.png">
 
 
 
@@ -263,7 +263,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T12:03:15+08:00">
                 2018-08-06
               </time>
             
@@ -320,7 +320,7 @@
     param_str: &quot;&apos;feat_stride&apos;: 16&quot;
   }
 }
-</code></pre><p><img src="img/image0085.png" alt="image0085"></p>
+</code></pre><p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0085.png" alt="image0085"></p>
 <p>在<code>AnchorTargetLayer</code>的具体实现中，只用到三个输入信息。该层的作用是根据<code>gt_boxes</code>（结构为1 × 4）和原图0到原图1的resize信息<code>im_info</code>，和conv_5特征图的尺寸（1,2*9,H,W）,通过<code>rpn_cls_score</code>获得，得到anchor需要的修正量以及有效anchor的fg/bg的labels。关于原始图片数据<code>data</code>并没有看到有被利用。</p>
 <p>看一下<code>setup()</code>部分：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">setup</span><span class="params">(self, bottom, top)</span>:</span></span><br><span class="line">    layer_params = yaml.load(self.param_str_)</span><br><span class="line">    anchor_scales = layer_params.get(<span class="string">'scales'</span>, (<span class="number">8</span>, <span class="number">16</span>, <span class="number">32</span>))</span><br><span class="line">    self._anchors = generate_anchors(scales=np.array(anchor_scales))</span><br><span class="line">    self._num_anchors = self._anchors.shape[<span class="number">0</span>]</span><br><span class="line">    self._feat_stride = layer_params[<span class="string">'feat_stride'</span>]</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'anchors:'</span></span><br><span class="line">        <span class="keyword">print</span> self._anchors</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'anchor shapes:'</span></span><br><span class="line">        <span class="keyword">print</span> np.hstack((</span><br><span class="line">            self._anchors[:, <span class="number">2</span>::<span class="number">4</span>] - self._anchors[:, <span class="number">0</span>::<span class="number">4</span>],</span><br><span class="line">            self._anchors[:, <span class="number">3</span>::<span class="number">4</span>] - self._anchors[:, <span class="number">1</span>::<span class="number">4</span>],</span><br><span class="line">        ))</span><br><span class="line">        self._counts = cfg.EPS</span><br><span class="line">        self._sums = np.zeros((<span class="number">1</span>, <span class="number">4</span>))</span><br><span class="line">        self._squared_sums = np.zeros((<span class="number">1</span>, <span class="number">4</span>))</span><br><span class="line">        self._fg_sum = <span class="number">0</span></span><br><span class="line">        self._bg_sum = <span class="number">0</span></span><br><span class="line">        self._count = <span class="number">0</span></span><br><span class="line">	</span><br><span class="line">    <span class="comment"># allow boxes to sit over the edge by a small amount</span></span><br><span class="line">    self._allowed_border = layer_params.get(<span class="string">'allowed_border'</span>, <span class="number">0</span>)</span><br><span class="line">	</span><br><span class="line">    height, width = bottom[<span class="number">0</span>].data.shape[<span class="number">-2</span>:]</span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'AnchorTargetLayer: height'</span>, height, <span class="string">'width'</span>, width</span><br><span class="line">	</span><br><span class="line">    A = self._num_anchors</span><br><span class="line">    <span class="comment"># labels</span></span><br><span class="line">    top[<span class="number">0</span>].reshape(<span class="number">1</span>, <span class="number">1</span>, A * height, width)</span><br><span class="line">    <span class="comment"># bbox_targets</span></span><br><span class="line">    top[<span class="number">1</span>].reshape(<span class="number">1</span>, A * <span class="number">4</span>, height, width)</span><br><span class="line">    <span class="comment"># bbox_inside_weights</span></span><br><span class="line">    top[<span class="number">2</span>].reshape(<span class="number">1</span>, A * <span class="number">4</span>, height, width)</span><br><span class="line">    <span class="comment"># bbox_outside_weights</span></span><br><span class="line">    top[<span class="number">3</span>].reshape(<span class="number">1</span>, A * <span class="number">4</span>, height, width)</span><br></pre></td></tr></table></figure></p>
 <p>这里重点是记住<code>top</code>的shape。</p>
@@ -375,8 +375,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/06/2018-07-13-【faster rcnn】roi_pooling_layer/" rel="prev" title="【faster rcnn】roi_pooling_layer">
-                【faster rcnn】roi_pooling_layer <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/06/2018-05-27-【ML一步一脚印】CIFAR10的数据结构/" rel="prev" title="【ML一步一脚印】CIFAR10的数据结构">
+                【ML一步一脚印】CIFAR10的数据结构 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

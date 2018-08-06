@@ -86,20 +86,20 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="在faster-rcnn训练的第一个阶段：  stage 1 train_rpn() stage1_rpn_solver60k80k.pt  在train_rpn()中，首先需要加载数据——得到roidb：1roidb, imdb = get_roidb(imdb_name) 函数get_roidb()的定义：123456789def get_roidb(imdb_name, rpn_file=N">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-07-【faster%20rcnn%20】get_roidb/img/image0067.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-07-【faster%20rcnn%20】get_roidb/img/image0068.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-07-【faster%20rcnn%20】get_roidb/img/image0069.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-07-【faster%20rcnn%20】get_roidb/img/image0070.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-07-【faster%20rcnn%20】get_roidb/img/image0071.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-07-【faster%20rcnn%20】get_roidb/img/image0073.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-07-【faster%20rcnn%20】get_roidb/img/image0072.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-07-【faster%20rcnn%20】get_roidb/img/image0074.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-07-07-【faster%20rcnn%20】get_roidb/img/image0075.png">
-<meta property="og:updated_time" content="2018-08-05T14:19:09.275Z">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0067.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0068.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0069.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0070.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0071.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0073.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0072.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0074.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0075.png">
+<meta property="og:updated_time" content="2018-08-06T04:00:56.224Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【faster rcnn 】get_roidb">
 <meta name="twitter:description" content="在faster-rcnn训练的第一个阶段：  stage 1 train_rpn() stage1_rpn_solver60k80k.pt  在train_rpn()中，首先需要加载数据——得到roidb：1roidb, imdb = get_roidb(imdb_name) 函数get_roidb()的定义：123456789def get_roidb(imdb_name, rpn_file=N">
-<meta name="twitter:image" content="http://yoursite.com/2018/08/06/2018-07-07-【faster%20rcnn%20】get_roidb/img/image0067.png">
+<meta name="twitter:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0067.png">
 
 
 
@@ -271,7 +271,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T12:00:56+08:00">
                 2018-08-06
               </time>
             
@@ -391,23 +391,23 @@
 <h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><hr>
 <h4 id="python中的axis"><a href="#python中的axis" class="headerlink" title="python中的axis"></a>python中的axis</h4><hr>
 <p>在python中，axis的顺序为矩阵从外到内，对应的shape顺序从左到右：</p>
-<p><img src="img/image0067.png" alt="image0067"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0067.png" alt="image0067"></p>
 <p>在上图中，2代表的axis=0； 3代表的axis=1； 4代表的axis=2。</p>
 <p>当操作的参数为<code>axis=m</code>时，表示操作沿着m维度进行，或者说操作的结果消掉了m维度，以<code>sum</code>为例：</p>
-<p><img src="img/image0068.png" alt="image0068"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0068.png" alt="image0068"></p>
 <p>上述从shape层面的解释，对理解代码中的类似操作很有作用，下面将四个数组展开：</p>
-<p><img src="img/image0069.png" alt="image0069"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0069.png" alt="image0069"></p>
 <p>再验证以下<code>max</code>操作：</p>
-<p><img src="img/image0070.png" alt="image0070"></p>
-<p><img src="img/image0071.png" alt="image0071"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0070.png" alt="image0070"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0071.png" alt="image0071"></p>
 <h4 id="python中的where"><a href="#python中的where" class="headerlink" title="python中的where"></a>python中的where</h4><hr>
 <p>返回满足条件的元素，在每个维度下的坐标值：</p>
-<p><img src="img/image0073.png" alt="image0073"></p>
-<p><img src="img/image0072.png" alt="image0072"></p>
-<p><img src="img/image0074.png" alt="image0074"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0073.png" alt="image0073"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0072.png" alt="image0072"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0074.png" alt="image0074"></p>
 <h4 id="压缩矩阵"><a href="#压缩矩阵" class="headerlink" title="压缩矩阵"></a>压缩矩阵</h4><hr>
 <p>关于scipy csr_matrix和csc_matrix函数的详解可以参考<a href="https://blog.csdn.net/u013010889/article/details/53305595" target="_blank" rel="noopener">博客</a>。</p>
-<p><img src="img/image0075.png" alt="image0075"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0075.png" alt="image0075"></p>
 
       
     </div>
@@ -442,8 +442,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/06/2018-07-07-【faster rcnn】重装caffe——caffe-fast-rcnn/" rel="prev" title="【faster rcnn】重装caffe——caffe-fast-rcnn">
-                【faster rcnn】重装caffe——caffe-fast-rcnn <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/06/2018-07-08-【faster rcnn】proposal/" rel="prev" title="【faster rcnn】proposal">
+                【faster rcnn】proposal <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

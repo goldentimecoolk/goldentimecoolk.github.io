@@ -86,16 +86,16 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="目的：  在别人的框架上跑自己的数据，熟悉这个流程  测试数据的质量，看看是否适合作为比赛用的数据    在别人的基础上修改，原程序是使用jpg直接训练，这里想修改为lmdb。结果提示  后来一查，说是Inputlayer的类型不对，应该改为Data，注意有两处都要改，如下图：  一共205类，train包含2475个样本，valid包含412个样本，test包含1238个样本，batchsize">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-08-【ML一步一脚印】调试笔记/img/image0029.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-08-【ML一步一脚印】调试笔记/img/image0028.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-08-【ML一步一脚印】调试笔记/img/image0030.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-08-【ML一步一脚印】调试笔记/img/image0031.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/2018-06-08-【ML一步一脚印】调试笔记/img/image0032.png">
-<meta property="og:updated_time" content="2018-08-05T14:14:49.006Z">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0029.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0028.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0030.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0031.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0032.png">
+<meta property="og:updated_time" content="2018-08-06T03:55:22.268Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【ML一步一脚印】调试笔记">
 <meta name="twitter:description" content="目的：  在别人的框架上跑自己的数据，熟悉这个流程  测试数据的质量，看看是否适合作为比赛用的数据    在别人的基础上修改，原程序是使用jpg直接训练，这里想修改为lmdb。结果提示  后来一查，说是Inputlayer的类型不对，应该改为Data，注意有两处都要改，如下图：  一共205类，train包含2475个样本，valid包含412个样本，test包含1238个样本，batchsize">
-<meta name="twitter:image" content="http://yoursite.com/2018/08/06/2018-06-08-【ML一步一脚印】调试笔记/img/image0029.png">
+<meta name="twitter:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0029.png">
 
 
 
@@ -267,7 +267,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:55:22+08:00">
                 2018-08-06
               </time>
             
@@ -314,16 +314,16 @@
 </ul>
 <hr>
 <p>在别人的基础上修改，原程序是使用jpg直接训练，这里想修改为lmdb。结果提示</p>
-<p><img src="img/image0029.png" alt="image0029"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0029.png" alt="image0029"></p>
 <p>后来<a href="https://stackoverflow.com/questions/39343234/use-caffe-to-train-my-own-jpg-datasetstype-caffe-imagedataparameter-has-no-fi?answertab=votes#tab-top" target="_blank" rel="noopener">一查</a>，说是Inputlayer的类型不对，应该改为Data，注意有两处都要改，如下图：</p>
-<p><img src="img/image0028.png" alt="image0028"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0028.png" alt="image0028"></p>
 <p>一共205类，train包含2475个样本，valid包含412个样本，test包含1238个样本，batchsize均为20，训练300个iterations，结果如下：</p>
-<p><img src="img/image0030.png" alt="image0030"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0030.png" alt="image0030"></p>
 <p>accuracy达到15.67%，然后test，结果只有0.5%，惨不忍睹！</p>
 <p>这分明是随机猜测的结果：205*0.5%≈1.后来一检查，原来是test的输出层没有改。修改完之后，再进行test：</p>
-<p><img src="img/image0031.png" alt="image0031"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0031.png" alt="image0031"></p>
 <p>结果为21.29%，明显好很多。后来又训练了700个iterations，训练完的accuracy在20%~25%，test结果如下：</p>
-<p><img src="img/image0032.png" alt="image0032"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0032.png" alt="image0032"></p>
 <p>结果为22.02%，仅仅提升了不到0.8个百分点。（这是什么原因？）</p>
 <hr>
 <p>所以，数据的样本容量num_sample&amp;batchsize&amp;max_iter之前的关系，是不是可以用一个<strong>经验公式</strong>来表示？</p>
@@ -373,8 +373,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/06/2018-06-14-【caffe】Brewing ImageNet/" rel="prev" title="【caffe】Brewing ImageNet">
-                【caffe】Brewing ImageNet <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/06/2018-06-15-【file with caffe】run label.py on remote server/" rel="prev" title="【file with caffe】run label.py on remote server">
+                【file with caffe】run label.py on remote server <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
