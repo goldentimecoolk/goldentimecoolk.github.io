@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="This guide is meant to get you ready to train your own model on your own data. If you just want an ImageNet-trained network, then note that since training takes a lot of energy and we hate global warm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【caffe】Brewing ImageNet">
+<meta property="og:url" content="http://yoursite.com/2018/08/06/2018-06-14-【caffe】Brewing ImageNet/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="This guide is meant to get you ready to train your own model on your own data. If you just want an ImageNet-trained network, then note that since training takes a lot of energy and we hate global warm">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-08-05T13:17:10.212Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【caffe】Brewing ImageNet">
+<meta name="twitter:description" content="This guide is meant to get you ready to train your own model on your own data. If you just want an ImageNet-trained network, then note that since training takes a lot of energy and we hate global warm">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/06/2018-06-14-【caffe】Brewing ImageNet/"/>
+
+
+
+
+
+  <title>【caffe】Brewing ImageNet | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-14-【caffe】Brewing ImageNet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【caffe】Brewing ImageNet</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-05T21:17:10+08:00">
+                2018-08-05
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>This guide is meant to <strong>get you ready to train your own model on your own data</strong>. If you just want an ImageNet-trained network, then note that since training takes a lot of energy and we hate global warming, we provide the CaffeNet model trained as described below in the <a href="http://caffe.berkeleyvision.org/model_zoo.html" target="_blank" rel="noopener">model zoo</a>.</p>
+<h3 id="Data-Preparation"><a href="#Data-Preparation" class="headerlink" title="Data Preparation"></a>Data Preparation</h3><hr>
+<h5 id="The-guide-specifies-all-paths-and-assumes-all-commands-are-executed-from-the-root-caffe-directory"><a href="#The-guide-specifies-all-paths-and-assumes-all-commands-are-executed-from-the-root-caffe-directory" class="headerlink" title="The guide specifies all paths and assumes all commands are executed from the root caffe directory."></a><em>The guide specifies all paths and assumes all commands are executed from the root caffe directory.</em></h5><h5 id="By-“ImageNet”-we-here-mean-the-ILSVRC12-challenge-but-you-can-easily-train-on-the-whole-of-ImageNet-as-well-just-with-more-disk-space-and-a-little-longer-training-time"><a href="#By-“ImageNet”-we-here-mean-the-ILSVRC12-challenge-but-you-can-easily-train-on-the-whole-of-ImageNet-as-well-just-with-more-disk-space-and-a-little-longer-training-time" class="headerlink" title="By “ImageNet” we here mean the ILSVRC12 challenge, but you can easily train on the whole of ImageNet as well, just with more disk space, and a little longer training time."></a><em>By “ImageNet” we here mean the ILSVRC12 challenge, but you can easily train on the whole of ImageNet as well, just with more disk space, and a little longer training time.</em></h5><p>We assume that you already have downloaded the ImageNet training data and validation data, and they are stored on your disk like:</p>
+<pre><code>/path/to/imagenet/train/n01440764/n01440764_10026.JPEG
+/path/to/imagenet/val/ILSVRC2012_val_00000001.JPEG
+</code></pre><p>You will first need to prepare some <strong>auxiliary data</strong> for training. This data can be downloaded by:</p>
+<pre><code>./data/ilsvrc12/get_ilsvrc_aux.sh
+</code></pre><p>The training and validation input are described in <code>train.txt</code> and <code>val.txt</code> as text listing all the files and their labels. Note that we use a different indexing for labels than the ILSVRC devkit: we sort the synset names in their ASCII order, and then label them from 0 to 999. See <code>synset_words.txt</code> for the synset/name mapping.</p>
+<p>You may want to resize the images to 256x256 in advance. By default, we do not explicitly do this because in a cluster environment, one may benefit from resizing images in a parallel fashion, using mapreduce. For example, Yangqing used his lightweight mincepie package. If you prefer things to be simpler, you can also use shell commands, something like:</p>
+<pre><code>for name in /path/to/imagenet/val/*.JPEG; do
+    convert -resize 256x256\! $name $name
+done
+</code></pre><p>Take a look at <code>examples/imagenet/create_imagenet.sh</code>:</p>
+<ul>
+<li>Set the paths to the train and val dirs as needed;</li>
+<li>et <code>RESIZE=true</code> to resize all images to 256x256 if you haven’t resized the images in advance. </li>
+</ul>
+<p>Now simply create the leveldbs with <code>examples/imagenet/create_imagenet.sh</code>. Note that <code>examples/imagenet/ilsvrc12_train_leveldb</code> and <code>examples/imagenet/ilsvrc12_val_leveldb</code> should not exist before this execution. It will be created by the script. <code>GLOG_logtostderr=1</code> simply dumps more information for you to inspect, and you can safely ignore it.</p>
+<h3 id="Compute-Image-Mean"><a href="#Compute-Image-Mean" class="headerlink" title="Compute Image Mean"></a>Compute Image Mean</h3><hr>
+<p>The model requires us to subtract the image mean from each image, so we have to compute the mean. <code>tools/compute_image_mean.cpp</code> implements that - it is also a good example to familiarize yourself on how to manipulate the multiple components, such as <strong>protocol buffers, leveldbs, and logging</strong>, if you are not familiar with them. Anyway, the mean computation can be carried out as:</p>
+<pre><code>./examples/imagenet/make_imagenet_mean.sh
+</code></pre><p>which will make <code>data/ilsvrc12/imagenet_mean.binaryproto</code>.</p>
+<h3 id="Model-Definition"><a href="#Model-Definition" class="headerlink" title="Model Definition"></a>Model Definition</h3><hr>
+<p>We are going to describe a reference implementation for the approach first proposed by Krizhevsky, Sutskever, and Hinton in their <a href="http://books.nips.cc/papers/files/nips25/NIPS2012_0534.pdf" target="_blank" rel="noopener">NIPS 2012 paper</a>.</p>
+<p>The network definition <code>models/bvlc_reference_caffenet/train_val.prototxt</code> follows the one in Krizhevsky et al. Note that if you deviated from file paths suggested in this guide, you’ll need to adjust the relevant paths in the <code>.prototxt files</code>.</p>
+<p>If you look carefully at <code>models/bvlc_reference_caffenet/train_val.prototxt</code>, you will notice several <code>include sections</code> specifying either phase: TRAIN or phase: TEST. These sections allow us to <strong>define two closely related networks in one file:</strong> the network used for training and the network used for testing. These two networks are almost identical, sharing all layers except for those marked with <code>include { phase: TRAIN }</code> or <code>include { phase: TEST }</code>. <u>In this case, only the input layers and one output layer are different.</u></p>
+<p><strong>Input layer differences:</strong> The training network’s data input layer draws its data from <code>examples/imagenet/ilsvrc12_train_leveldb</code> and randomly mirrors the input image. The testing network’s data layer takes data from <code>examples/imagenet/ilsvrc12_val_leveldb</code> and does not perform random mirroring.</p>
+<p><strong>Output layer differences:</strong> Both networks output the <code>softmax_loss layer</code>, which <u>in training is used to compute the loss function and to initialize the backpropagation</u>, while in <u>validation this loss is simply reported</u>. The testing network also has a second output layer, <code>accuracy</code>, which is used to <u>report the accuracy on the test set</u>. <em>In the process of training, the test network will occasionally be instantiated and tested on the test set, producing lines like</em> <code>Test score #0: xxx and Test score #1: xxx.</code> In this case <strong>score 0</strong> is the accuracy (which will start around 1/1000 = 0.001 for an untrained network) and <strong>score 1</strong> is the loss (which will start around 7 for an untrained network).</p>
+<p>We will also lay out a protocol buffer for running the solver. Let’s make a few plans:</p>
+<ul>
+<li>We will run in batches of 256, and run a total of 450,000 iterations (about 90 epochs).</li>
+<li>For every 1,000 iterations, we test the learned net on the validation data.</li>
+<li>We set the initial learning rate to 0.01, and decrease it every 100,000 iterations (about 20 epochs).</li>
+<li>Information will be displayed every 20 iterations.</li>
+<li>The network will be trained with momentum 0.9 and a weight decay of 0.0005.</li>
+<li>For every 10,000 iterations, we will take a snapshot of the current status.</li>
+</ul>
+<p>Sound good? This is implemented in <code>models/bvlc_reference_caffenet/solver.prototxt</code>.</p>
+<h3 id="Training-ImageNet"><a href="#Training-ImageNet" class="headerlink" title="Training ImageNet"></a>Training ImageNet</h3><hr>
+<p>Ready? Let’s train.</p>
+<pre><code>./build/tools/caffe train --solver=models/bvlc_reference_caffenet/solver.prototxt
+</code></pre><p>Sit back and enjoy!</p>
+<p>On a K40 machine, every 20 iterations take about 26.5 seconds to run (while a on a K20 this takes 36 seconds), so effectively about 5.2 ms per image for the full forward-backward pass. About 2 ms of this is on forward, and the rest is backward. If you are interested in dissecting the computation time, you can run</p>
+<pre><code>./build/tools/caffe time --model=models/bvlc_reference_caffenet/train_val.prototxt
+</code></pre><h3 id="Resume-Training"><a href="#Resume-Training" class="headerlink" title="Resume Training?"></a>Resume Training?</h3><hr>
+<p>We all experience times when the <u>power goes out</u>, or we feel like rewarding ourself a little by playing Battlefield (does anyone still remember Quake?). Since we are snapshotting intermediate results during training, we will be able to resume from snapshots. This can be done as easy as:</p>
+<pre><code>./build/tools/caffe train --solver=models/bvlc_reference_caffenet/solver.prototxt --snapshot=models/bvlc_reference_caffenet/caffenet_train_iter_10000.solverstate
+</code></pre><p>where in the script <code>caffenet_train_iter_10000.solverstate</code> is the solver state snapshot that stores all necessary information to recover the exact solver state (including the parameters, <em>momentum history</em>, etc).</p>
+<h3 id="Parting-Words"><a href="#Parting-Words" class="headerlink" title="Parting Words"></a>Parting Words</h3><hr>
+<p>Hope you liked this recipe! Many researchers have gone further since the ILSVRC 2012 challenge, changing the network architecture and/or fine-tuning the various parameters in the network to address new data and tasks. <strong>Caffe lets you explore different network choices more easily by simply writing different prototxt files</strong> - isn’t that exciting?</p>
+<p>And since now you have a trained network, check out how to use it with the Python interface for <a href="http://nbviewer.ipython.org/github/BVLC/caffe/blob/master/examples/00-classification.ipynb" target="_blank" rel="noopener">classifying ImageNet</a>.</p>
+<h3 id="Review"><a href="#Review" class="headerlink" title="Review"></a>Review</h3><hr>
+<p>the loss and accuracy are computed by particular layer, which is correlated to prefessional code. Generally the kind of accuracy you want to calculate is included in caffe’s inherent layer. If you want to compute come special accuracy, you can create your own kind layer and register them in caffe.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/06/2018-06-06-【caffe】interface/" rel="next" title="【caffe】interface">
+                <i class="fa fa-chevron-left"></i> 【caffe】interface
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/06/2018-06-10-【caffe】从命令行到函数调用/" rel="prev" title="【caffe】从命令行到函数调用">
+                【caffe】从命令行到函数调用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-Preparation"><span class="nav-number">1.</span> <span class="nav-text">Data Preparation</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#The-guide-specifies-all-paths-and-assumes-all-commands-are-executed-from-the-root-caffe-directory"><span class="nav-number">1.0.1.</span> <span class="nav-text">The guide specifies all paths and assumes all commands are executed from the root caffe directory.</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#By-“ImageNet”-we-here-mean-the-ILSVRC12-challenge-but-you-can-easily-train-on-the-whole-of-ImageNet-as-well-just-with-more-disk-space-and-a-little-longer-training-time"><span class="nav-number">1.0.2.</span> <span class="nav-text">By “ImageNet” we here mean the ILSVRC12 challenge, but you can easily train on the whole of ImageNet as well, just with more disk space, and a little longer training time.</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compute-Image-Mean"><span class="nav-number">2.</span> <span class="nav-text">Compute Image Mean</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-Definition"><span class="nav-number">3.</span> <span class="nav-text">Model Definition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Training-ImageNet"><span class="nav-number">4.</span> <span class="nav-text">Training ImageNet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Resume-Training"><span class="nav-number">5.</span> <span class="nav-text">Resume Training?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parting-Words"><span class="nav-number">6.</span> <span class="nav-text">Parting Words</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Review"><span class="nav-number">7.</span> <span class="nav-text">Review</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
