@@ -86,14 +86,14 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="深度学习（分类问题）的流程大致为：  准备数据 准备模型 加载数据、模型以及参数 调试参数（反复的训练、验证和测试）  利用compute_image_mean.cpp生成个人数据集的均值文件imagenet_mean.binaryproto 1.获取compute_image_mean.cpp（安装caffe）上次说道，在数据集上跑baseline，有一个很好的项目，https://github">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/img/image0004.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/img/image0003.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/img/image0005.png">
-<meta property="og:updated_time" content="2018-08-05T14:43:07.508Z">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0004.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0003.png">
+<meta property="og:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0005.png">
+<meta property="og:updated_time" content="2018-08-06T03:47:32.049Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【ML一步一脚印】深度学习之流程初体验">
 <meta name="twitter:description" content="深度学习（分类问题）的流程大致为：  准备数据 准备模型 加载数据、模型以及参数 调试参数（反复的训练、验证和测试）  利用compute_image_mean.cpp生成个人数据集的均值文件imagenet_mean.binaryproto 1.获取compute_image_mean.cpp（安装caffe）上次说道，在数据集上跑baseline，有一个很好的项目，https://github">
-<meta name="twitter:image" content="http://yoursite.com/2018/08/06/img/image0004.png">
+<meta name="twitter:image" content="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0004.png">
 
 
 
@@ -265,7 +265,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:47:32+08:00">
                 2018-08-06
               </time>
             
@@ -361,18 +361,18 @@ set -e
 # 运行solver，即examples/mnist/lenet_solver.prototxt
 ./build/tools/caffe train --solver=examples/mnist/lenet_solver.prototxt $@
 </code></pre><p>运行第三步后，开始训练。下面是训练的一部分截图：</p>
-<p><img src="../img/image0004.png" alt="image0004"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0004.png" alt="image0004"></p>
 <p>可以看到每隔500次iteration，进行一次in-training的test。这与我们在lenet_solver.prototxt中设定的参数有关：</p>
 <pre><code># Carry out testing every 500 training iterations.
 test_interval: 500
 </code></pre><p>除此之外，在迭代到5000的时候，文件夹里出现了如下文件：</p>
-<p><img src="../img/image0003.png" alt="image0003"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0003.png" alt="image0003"></p>
 <p>这也和我们设置的参数有关：</p>
 <pre><code># snapshot intermediate results
 snapshot: 5000
 snapshot_prefix: &quot;examples/mnist/lenet&quot;
 </code></pre><p>这样也顺便理解了一点<strong>snapshot的作用</strong>：在训练中保存一些中间的状态，方便以后追踪或者从此处开始复原。我现在能想到的最具体的作用——由于训练需要很长时间，万一中间发生了点意外，训练终止（比如停电！），那么我们可以从最近的一个时间点开始恢复，不至于前功尽弃。在学术上可能也有点用，比如在训练到一定阶段后用两种不同的方法进行训练从而对比效果？以后慢慢体会。</p>
-<p><img src="../img/image0005.png" alt="image0005"></p>
+<p><img src="https://github.com/goldentimecoolk/goldentimecoolk.github.io/raw/master/img/image0005.png" alt="image0005"></p>
 <p>总之，该步之后，就完成了最终的训练，理论上应该得到理想的网络。这种理想网络的实质就是基于训练框架（net: “examples/mnist/lenet_train_test.prototxt”）的一套参数，因为训练完后，仅仅多生成以下两个文件，除此之外没有察觉到任何变化。（下一步对网络test的指令也可以印证这一点）</p>
 <p>最后一步：对训练结果进行测试。</p>
 <pre><code>./build/tools/caffe.bin test -model examples/mnist/lenet_train_test.prototxt -weights examples/mnist/lenet_iter_10000.caffemodel -iterations 100
@@ -409,8 +409,8 @@ snapshot_prefix: &quot;examples/mnist/lenet&quot;
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/06/2018-05-28-【ML踩坑实录】python3中的zip函数/" rel="next" title="【ML踩坑实录】python3中的zip函数">
-                <i class="fa fa-chevron-left"></i> 【ML踩坑实录】python3中的zip函数
+              <a href="/2018/08/06/2018-05-26-goldentime/" rel="next" title="GoldenTime">
+                <i class="fa fa-chevron-left"></i> GoldenTime
               </a>
             
           </div>
@@ -419,8 +419,8 @@ snapshot_prefix: &quot;examples/mnist/lenet&quot;
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/06/2018-06-02-【ML一步一脚印】在自己的数据集上跑深度学习/" rel="prev" title="【ML一步一脚印】在自己的数据集上跑深度学习">
-                【ML一步一脚印】在自己的数据集上跑深度学习 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/06/2018-05-28-【ML踩坑实录】python3中的zip函数/" rel="prev" title="【ML踩坑实录】python3中的zip函数">
+                【ML踩坑实录】python3中的zip函数 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

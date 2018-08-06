@@ -229,6 +229,316 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-15-【shell】select files from different folders and put them into subfolders/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/2018-06-15-【shell】select files from different folders and put them into subfolders/" itemprop="url">【shell】select files from different folders and put them into subfolders</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Today, there is an emergency to deal with. Two folders are given. The first includes pure images and the second includes images with notifications and label txt. Document structure is as following:</p>
+<ul>
+<li>A/classes/pure images;</li>
+<li>B/classes/ <ul>
+<li>sub_a:  images with notifications;</li>
+<li>sub_b:  corresponding label txt.</li>
+</ul>
+</li>
+</ul>
+<p>The images in folder A and B have the same file name, and there only difference is that A’s are origin but B’s are notified with ground truth.</p>
+<p>Now I have to pick out origin images from folder A and its corresponding labels txt from folder B. Then rename the classes as increasing indexes from 1 to 2, 3, … And build a new pic folder and txt folder to contain images and labels respectively.</p>
+<p>At beginning, I want to use a ‘pysical method’ — manully conduct these steps one by one. But there are as many as 212 classes and in every class’ folder, it usually has many subfolders in depth. So I quickly give up this method and turn to the shell code.</p>
+<p>These are key points in the process:</p>
+<ol>
+<li>create folders from 1 to 212</li>
+<li>create sub folders <code>pic</code> and <code>txt</code> in every folder</li>
+<li>go through deep direction and target specific files, .jpg or .txt</li>
+<li>distinguish from .jpg to .txt</li>
+<li>copy file from a new folder</li>
+<li>traverse class folder along A and B parallelly</li>
+</ol>
+<p>There are specific important commands of shell:</p>
+<ol>
+<li>create folders from 1 to 212</li>
+<li>create sub folders <code>pic</code> and <code>txt</code> in every folder</li>
+</ol>
+<p>code:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for k in $( seq 1 10 )</span><br><span class="line">do</span><br><span class="line">    mkdir /media/sun/Seagate_Casia/tank/new/$&#123;k&#125;</span><br><span class="line">    dire=/media/sun/Seagate_Casia/tank/new/$&#123;k&#125;</span><br><span class="line">    mkdir $dire/pic</span><br><span class="line">    mkdir $dire/txt       </span><br><span class="line">done</span><br></pre></td></tr></table></figure></p>
+<ol start="3">
+<li>go through deep direction and target specific files, .jpg or .txt</li>
+</ol>
+<p>code:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function copy_pic()&#123;</span><br><span class="line">for file in `ls $1`       #the signal of system command ``</span><br><span class="line">do</span><br><span class="line">    if [ -d $1"/"$file ]  #notice the blank in this command</span><br><span class="line">    then</span><br><span class="line">        copy_pic $1"/"$file $2 $3      #this is very important for the func with more params</span><br><span class="line">    else</span><br><span class="line">        echo $1"/"$file   #handle with files there</span><br><span class="line">    fi</span><br><span class="line">done</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol start="4">
+<li>distinguish from .jpg to .txt</li>
+</ol>
+<p>code:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if [ "$&#123;file##*.&#125;" = "jpg" ]</span><br><span class="line">    then</span><br><span class="line">	cp $1"/"$file $3 </span><br><span class="line">fi</span><br></pre></td></tr></table></figure></p>
+<ol start="5">
+<li>copy file from a new folder</li>
+</ol>
+<p>code:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp $1"/"$file $3</span><br></pre></td></tr></table></figure></p>
+<ol start="6">
+<li>traverse class folder along A and B parallelly: This is a trick combining  above modules. Whole code is on my github.</li>
+</ol>
+<h3 id="Review"><a href="#Review" class="headerlink" title="Review"></a>Review</h3><hr>
+<p>Divide whatever the problem into several sub problems, you will find it’s not that hard and not that unsolvable.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-15-【file with caffe】run label.py on remote server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/2018-06-15-【file with caffe】run label.py on remote server/" itemprop="url">【file with caffe】run label.py on remote server</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>I’ve writen the python file, using it to read images’ name, assign the same label to images in the same folder. Before this, I successfully run them in pycharm. However there seems to be a pure python without IDE in the server and I have to run .py in its terminal. There are some points deserve attention:</p>
+<ul>
+<li>the running command is <code>./filename.py</code>, the same as <code>filename.sh</code> previously run.</li>
+<li>when I successfully run it, there is some errors:</li>
+</ul>
+<p><img src="img/image0035.png" alt="image0035"></p>
+<p>the main error is <code>import: not found</code>. Notice that it’s not some module not found but the <code>import</code> itself. The reason is that I failed to specify which python to execute this .py. So I write this on the first line:</p>
+<pre><code>#!/usr/bin/python
+</code></pre><p>If you want to use your python with specific environments, you can write:</p>
+<pre><code>#!/usr/bin/env python
+</code></pre><p>Their differences are concluded as:</p>
+<p><img src="img/image0036.png" alt="image0036"></p>
+<ul>
+<li>Fixing that, there is another error:</li>
+</ul>
+<p><img src="img/image0037.png" alt="image0037"></p>
+<p>write this in the front:</p>
+<pre><code>#&lt; pre class =&quot;python&quot; name=&quot;code&quot; &gt;  # coding:utf-8
+</code></pre><h4 id="Other-Tips"><a href="#Other-Tips" class="headerlink" title="Other Tips"></a>Other Tips</h4><hr>
+<p>Tip 1:</p>
+<pre><code>frac = (float)(12000/40114) &gt;&gt; 0.0
+
+frac = (float)12000/40114 &gt;&gt; error
+
+frac = float(12000)/40114 &gt;&gt; 0.299
+</code></pre><p>Tip 2:</p>
+<p><code>tab</code> is 8 characters, so <code>anti-tab</code> move both 4-indent and 8-indent content to the first colum. This may cause some logical errors.</p>
+<p><img src="img/image0038.png" alt="image0038"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-10-【caffe】从命令行到函数调用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1228,169 +1538,6 @@ im_data = single(im_data); % convert to single precision
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-04-【ML一步一脚印】linux下安装MATLAB 2017a/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-06-04-【ML一步一脚印】linux下安装MATLAB 2017a/" itemprop="url">【ML一步一脚印】linux下安装MATLAB 2017a</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="1-下载文件"><a href="#1-下载文件" class="headerlink" title="1.下载文件"></a>1.下载文件</h3><p>Matlab R2017a 链接地址：<br><a href="https://pan.baidu.com/s/1hsVnxdE#list/path=%2F" target="_blank" rel="noopener">https://pan.baidu.com/s/1hsVnxdE#list/path=%2F</a><br>（如果失效，可以私信我）</p>
-<h3 id="2-安装MATLAB"><a href="#2-安装MATLAB" class="headerlink" title="2.安装MATLAB"></a>2.安装MATLAB</h3><p>安装过程全称参考[1]，没有什么问题。有两点需要重复一下：</p>
-<p>####2.1 挂载iso文件的命令</p>
-<p>进入R2017a_glnxa64_dvd1.iso的文件目录下，打开终端，运行：</p>
-<pre><code>$sudo mount -t auto -o loop R2017a_glnxa64_dvd1.iso /home/sun/Matlab
-</code></pre><p>即：</p>
-<pre><code>$sudo mount -t auto -o 文件名.iso MATLAB的安装路径
-</code></pre><p>在挂载R2017a_glnxa64_dvd2.iso时也是同样的操作。挂载完成后，会多出一个盘，说明挂载成功。同时自动弹出一个iso文件界面，就是里面的内容。</p>
-<p>####2. 错误：无法从DVD内部安装运行程序…</p>
-<p><img src="../img/image0015.png" alt="image0015"></p>
-<p>其实教程[1]中已经提到这个问题，作为小白的我一时没有看懂，所以折腾了一下。按照以下命令运行：</p>
-<pre><code>cd
-cd /home/sun/Matlab
-sudo ./install
-</code></pre><h3 id="3-破解"><a href="#3-破解" class="headerlink" title="3.破解"></a>3.破解</h3><p>在安装完MATLAB进行破解时，由于版本为2017a，而教程[1]的版本为2016a，所以参考了第二个教程[2]。在2017a中，只需要拷贝两个文件即可：</p>
-<ol>
-<li>license_standalone.lic</li>
-<li>libmwservices.so</li>
-</ol>
-<p>碎碎念：在教程[1]中，对我而言有个比较新的点是，<strong>取消安装目录的权限：</strong></p>
-<p>进入到MATLAB文件夹，然后执行以下命令：</p>
-<pre><code>sudo chmod 777 * -R
-</code></pre><h3 id="4-生成MATLAB桌面快捷方式："><a href="#4-生成MATLAB桌面快捷方式：" class="headerlink" title="4.生成MATLAB桌面快捷方式："></a>4.生成MATLAB桌面快捷方式：</h3><h4 id="1-添加路径"><a href="#1-添加路径" class="headerlink" title="1.添加路径"></a>1.添加路径</h4><p>在根目录（/home/sun）中，找到.bashrc，添加一句指令，见教程[1]；</p>
-<h4 id="2-生成快捷方式"><a href="#2-生成快捷方式" class="headerlink" title="2.生成快捷方式"></a>2.生成快捷方式</h4><p>进入/home/sun/.local/share/applications，运行以下命令：</p>
-<pre><code>sudo gedit /usr/share/applications/Matlab.desktop
-</code></pre><p>生成一个启动器，然后将下列代码拷进去：</p>
-<pre><code>[Desktop Entry]
-Type=Application
-Name=Matlab
-GenericName=Matlab 2017a
-Comment=Matlab:The Language of Technical Computing
-Exec=sh /home/sun/MATLAB/R2017a/bin/matlab -desktop
-Icon=/home/sun/MATLAB/R2017a/toolbox/nnet/nnresource/icons/matlab.png
-StartupNotify=true
-Terminal=false
-Categories=Development;Matlab;
-</code></pre><p>注意修改文件路径！</p>
-<p>然后就生成了MATLAB的图标，将其拷贝到桌面即可。</p>
-<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><p>[1]. <a href="https://blog.csdn.net/GJXS2017/article/details/78705410" target="_blank" rel="noopener">https://blog.csdn.net/GJXS2017/article/details/78705410</a></p>
-<p>[2]. <a href="https://blog.csdn.net/u011713358/article/details/69659265" target="_blank" rel="noopener">https://blog.csdn.net/u011713358/article/details/69659265</a></p>
-<p>[3]. <a href="https://blog.csdn.net/bug_creator/article/details/79382525" target="_blank" rel="noopener">https://blog.csdn.net/bug_creator/article/details/79382525</a></p>
-<h4 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h4><p>再次安装出现的新问题： 安装的时候没有弹出图形安装界面，直接显示installing… finish! 则需要在根目录media下来安装<br>[4]. <a href="https://blog.csdn.net/xunan003/article/details/79210712" target="_blank" rel="noopener">https://blog.csdn.net/xunan003/article/details/79210712</a></p>
-<p>解决方法：</p>
-<p><img src="../img/image0089.png" alt="image0089"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-05-【ML一步一脚印】生成标签文件/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1611,6 +1758,169 @@ for ind in specify:
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-04-【ML一步一脚印】linux下安装MATLAB 2017a/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/2018-06-04-【ML一步一脚印】linux下安装MATLAB 2017a/" itemprop="url">【ML一步一脚印】linux下安装MATLAB 2017a</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="1-下载文件"><a href="#1-下载文件" class="headerlink" title="1.下载文件"></a>1.下载文件</h3><p>Matlab R2017a 链接地址：<br><a href="https://pan.baidu.com/s/1hsVnxdE#list/path=%2F" target="_blank" rel="noopener">https://pan.baidu.com/s/1hsVnxdE#list/path=%2F</a><br>（如果失效，可以私信我）</p>
+<h3 id="2-安装MATLAB"><a href="#2-安装MATLAB" class="headerlink" title="2.安装MATLAB"></a>2.安装MATLAB</h3><p>安装过程全称参考[1]，没有什么问题。有两点需要重复一下：</p>
+<p>####2.1 挂载iso文件的命令</p>
+<p>进入R2017a_glnxa64_dvd1.iso的文件目录下，打开终端，运行：</p>
+<pre><code>$sudo mount -t auto -o loop R2017a_glnxa64_dvd1.iso /home/sun/Matlab
+</code></pre><p>即：</p>
+<pre><code>$sudo mount -t auto -o 文件名.iso MATLAB的安装路径
+</code></pre><p>在挂载R2017a_glnxa64_dvd2.iso时也是同样的操作。挂载完成后，会多出一个盘，说明挂载成功。同时自动弹出一个iso文件界面，就是里面的内容。</p>
+<p>####2. 错误：无法从DVD内部安装运行程序…</p>
+<p><img src="../img/image0015.png" alt="image0015"></p>
+<p>其实教程[1]中已经提到这个问题，作为小白的我一时没有看懂，所以折腾了一下。按照以下命令运行：</p>
+<pre><code>cd
+cd /home/sun/Matlab
+sudo ./install
+</code></pre><h3 id="3-破解"><a href="#3-破解" class="headerlink" title="3.破解"></a>3.破解</h3><p>在安装完MATLAB进行破解时，由于版本为2017a，而教程[1]的版本为2016a，所以参考了第二个教程[2]。在2017a中，只需要拷贝两个文件即可：</p>
+<ol>
+<li>license_standalone.lic</li>
+<li>libmwservices.so</li>
+</ol>
+<p>碎碎念：在教程[1]中，对我而言有个比较新的点是，<strong>取消安装目录的权限：</strong></p>
+<p>进入到MATLAB文件夹，然后执行以下命令：</p>
+<pre><code>sudo chmod 777 * -R
+</code></pre><h3 id="4-生成MATLAB桌面快捷方式："><a href="#4-生成MATLAB桌面快捷方式：" class="headerlink" title="4.生成MATLAB桌面快捷方式："></a>4.生成MATLAB桌面快捷方式：</h3><h4 id="1-添加路径"><a href="#1-添加路径" class="headerlink" title="1.添加路径"></a>1.添加路径</h4><p>在根目录（/home/sun）中，找到.bashrc，添加一句指令，见教程[1]；</p>
+<h4 id="2-生成快捷方式"><a href="#2-生成快捷方式" class="headerlink" title="2.生成快捷方式"></a>2.生成快捷方式</h4><p>进入/home/sun/.local/share/applications，运行以下命令：</p>
+<pre><code>sudo gedit /usr/share/applications/Matlab.desktop
+</code></pre><p>生成一个启动器，然后将下列代码拷进去：</p>
+<pre><code>[Desktop Entry]
+Type=Application
+Name=Matlab
+GenericName=Matlab 2017a
+Comment=Matlab:The Language of Technical Computing
+Exec=sh /home/sun/MATLAB/R2017a/bin/matlab -desktop
+Icon=/home/sun/MATLAB/R2017a/toolbox/nnet/nnresource/icons/matlab.png
+StartupNotify=true
+Terminal=false
+Categories=Development;Matlab;
+</code></pre><p>注意修改文件路径！</p>
+<p>然后就生成了MATLAB的图标，将其拷贝到桌面即可。</p>
+<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><p>[1]. <a href="https://blog.csdn.net/GJXS2017/article/details/78705410" target="_blank" rel="noopener">https://blog.csdn.net/GJXS2017/article/details/78705410</a></p>
+<p>[2]. <a href="https://blog.csdn.net/u011713358/article/details/69659265" target="_blank" rel="noopener">https://blog.csdn.net/u011713358/article/details/69659265</a></p>
+<p>[3]. <a href="https://blog.csdn.net/bug_creator/article/details/79382525" target="_blank" rel="noopener">https://blog.csdn.net/bug_creator/article/details/79382525</a></p>
+<h4 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h4><p>再次安装出现的新问题： 安装的时候没有弹出图形安装界面，直接显示installing… finish! 则需要在根目录media下来安装<br>[4]. <a href="https://blog.csdn.net/xunan003/article/details/79210712" target="_blank" rel="noopener">https://blog.csdn.net/xunan003/article/details/79210712</a></p>
+<p>解决方法：</p>
+<p><img src="../img/image0089.png" alt="image0089"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-06-02-【ML一步一脚印】在自己的数据集上跑深度学习/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1775,393 +2085,6 @@ layer {
 <p>第一次完整地跑这个流程，还是非常激动的。熟练之后，就可以为所欲为，实现自己的idea了！</p>
 <p>截个训练时的图：</p>
 <p><img src="../img/image0014.png" alt="image0014"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-05-30-【ML一步一脚印】通过MNIST例程上手fine tuning（附caffe安装）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-05-30-【ML一步一脚印】通过MNIST例程上手fine tuning（附caffe安装）/" itemprop="url">【ML一步一脚印】深度学习之流程初体验</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>深度学习（分类问题）的流程大致为：</p>
-<ol>
-<li>准备数据</li>
-<li>准备模型</li>
-<li>加载数据、模型以及参数</li>
-<li>调试参数（反复的训练、验证和测试）</li>
-</ol>
-<h4 id="利用compute-image-mean-cpp生成个人数据集的均值文件imagenet-mean-binaryproto"><a href="#利用compute-image-mean-cpp生成个人数据集的均值文件imagenet-mean-binaryproto" class="headerlink" title="利用compute_image_mean.cpp生成个人数据集的均值文件imagenet_mean.binaryproto"></a>利用compute_image_mean.cpp生成个人数据集的均值文件imagenet_mean.binaryproto</h4><hr>
-<h4 id="1-获取compute-image-mean-cpp（安装caffe）"><a href="#1-获取compute-image-mean-cpp（安装caffe）" class="headerlink" title="1.获取compute_image_mean.cpp（安装caffe）"></a>1.获取compute_image_mean.cpp（安装caffe）</h4><p>上次说道，在数据集上跑baseline，有一个很好的项目，<a href="https://github.com/junyuseu/fine-tuning" target="_blank" rel="noopener">https://github.com/junyuseu/fine-tuning</a>，clone下来运行时发现，少了个均值文件mean_file: “../imagenet_mean.binaryproto”，Google一下，都说是用..caffe/tools文件夹里面的compute_image_mean.cpp文件生成。既然文件路径都这么统一，那很可能是安装的caffe自带的文件。然后Google如何在Linux下（CPU only）安装caffe。问题解决（参考：<a href="https://blog.csdn.net/muzilinxi90/article/details/53673184" target="_blank" rel="noopener">1</a> <a href="https://blog.csdn.net/xhhjin/article/details/78512913" target="_blank" rel="noopener">2</a> <a href="https://blog.csdn.net/b1015222035/article/details/70242898" target="_blank" rel="noopener">3</a>）。（如果Google和百度都找不到类似的问题，那就说明这个问题非常personal）</p>
-<hr>
-<h4 id="2-通过MNIST样例，实现完整的深度学习流程（caffe自带工具-sh等的语法解释和剖析）"><a href="#2-通过MNIST样例，实现完整的深度学习流程（caffe自带工具-sh等的语法解释和剖析）" class="headerlink" title="2.通过MNIST样例，实现完整的深度学习流程（caffe自带工具.sh等的语法解释和剖析）"></a>2.通过MNIST样例，实现完整的深度学习流程（<a href="先刨个坑，以后填">caffe自带工具.sh等的语法解释和剖析</a>）</h4><pre><code># 第一步：下载 MNIST 数据集
-./data/mnist/get_mnist.sh
-# 第二步：数据格式转换
-./examples/mnist/create_mnist.sh
-# 第三步：训练LeNet-5的网络参数
-./examples/mnist/train_lenet.sh
-# 第四步：对测试集进行预测测试
-./build/tools/caffe.bin test -model examples/mnist/lenet_train_test.prototxt -weights examples/mnist/lenet_iter_10000.caffemodel -iterations 100
-</code></pre><p>下面对这些步骤进行详细地解释：</p>
-<p>第一步，获取数据。由于我们用的是自己的数据集，所以这里暂时不用详细了解get_mnist.sh文件。</p>
-<p>第二步，将数据转换为lmdb/leveldb格式。看一下create_mnist.sh的细节：</p>
-<pre><code>#!/usr/bin/env sh
-# This script converts the mnist data into lmdb/leveldb format,
-# depending on the value assigned to $BACKEND.
-set -e
-
-###此处为变量设置，用于简化后面的表达    
-EXAMPLE=examples/mnist              ###指定lmdb/leveldb文件生成的地址
-DATA=data/mnist                     ###上一步生成的data的存放地址
-BUILD=build/examples/mnist          ###暂时不知道如何打开bin(这里刨个坑)
-
-###指定lmdb/leveldb
-BACKEND=&quot;lmdb&quot;
-
-echo &quot;Creating ${BACKEND}...&quot;
-
-###删除当前的lmdb文件，如果有的话。
-rm -rf $EXAMPLE/mnist_train_${BACKEND}
-rm -rf $EXAMPLE/mnist_test_${BACKEND}
-
-#这里是该文件的主要部分，利用.bin工具，对第一步得到的data以及对应的label进行处理，得到lmdb/leveldb。至于为什么要这样做，lmdb/leveldb文件又是什么？这里刨个坑。
-$BUILD/convert_mnist_data.bin $DATA/train-images-idx3-ubyte \
-  $DATA/train-labels-idx1-ubyte $EXAMPLE/mnist_train_${BACKEND} --backend=${BACKEND}
-$BUILD/convert_mnist_data.bin $DATA/t10k-images-idx3-ubyte \
-  $DATA/t10k-labels-idx1-ubyte $EXAMPLE/mnist_test_${BACKEND} --backend=${BACKEND}
-
-echo &quot;Done.&quot;
-</code></pre><p>第三步，训练LeNet-5的网络参数。看一下train_lenet.sh的细节：</p>
-<pre><code>#!/usr/bin/env sh
-set -e
-# 我也是刚接触shell语法，百度了一下，这么说：
-# set命令的-e参数，linux自带的说明如下：
-# &quot;Exit immediately if a simple command exits with a non-zero status.&quot;
-# 也就是说，在&quot;set -e&quot;之后出现的代码，一旦出现了返回值非零，整个脚本就会立即退出。有的人喜欢使用这个参    数，是出于保证代码安全性的考虑。但有的时候，这种美好的初衷，也会导致严重的问题。
-
-# 运行solver，即examples/mnist/lenet_solver.prototxt
-./build/tools/caffe train --solver=examples/mnist/lenet_solver.prototxt $@
-</code></pre><p>运行第三步后，开始训练。下面是训练的一部分截图：</p>
-<p><img src="../img/image0004.png" alt="image0004"></p>
-<p>可以看到每隔500次iteration，进行一次in-training的test。这与我们在lenet_solver.prototxt中设定的参数有关：</p>
-<pre><code># Carry out testing every 500 training iterations.
-test_interval: 500
-</code></pre><p>除此之外，在迭代到5000的时候，文件夹里出现了如下文件：</p>
-<p><img src="../img/image0003.png" alt="image0003"></p>
-<p>这也和我们设置的参数有关：</p>
-<pre><code># snapshot intermediate results
-snapshot: 5000
-snapshot_prefix: &quot;examples/mnist/lenet&quot;
-</code></pre><p>这样也顺便理解了一点<strong>snapshot的作用</strong>：在训练中保存一些中间的状态，方便以后追踪或者从此处开始复原。我现在能想到的最具体的作用——由于训练需要很长时间，万一中间发生了点意外，训练终止（比如停电！），那么我们可以从最近的一个时间点开始恢复，不至于前功尽弃。在学术上可能也有点用，比如在训练到一定阶段后用两种不同的方法进行训练从而对比效果？以后慢慢体会。</p>
-<p><img src="../img/image0005.png" alt="image0005"></p>
-<p>总之，该步之后，就完成了最终的训练，理论上应该得到理想的网络。这种理想网络的实质就是基于训练框架（net: “examples/mnist/lenet_train_test.prototxt”）的一套参数，因为训练完后，仅仅多生成以下两个文件，除此之外没有察觉到任何变化。（下一步对网络test的指令也可以印证这一点）</p>
-<p>最后一步：对训练结果进行测试。</p>
-<pre><code>./build/tools/caffe.bin test -model examples/mnist/lenet_train_test.prototxt -weights examples/mnist/lenet_iter_10000.caffemodel -iterations 100
-</code></pre><p>同样，利用caffe.bin这个工具进行测试。参数如下：</p>
-<ul>
-<li>test：表示状态（？）</li>
-<li>model：同train阶段，lenet_train_test.prototxt</li>
-<li>weights：训练的结果，lenet_iter_10000.caffemodel</li>
-<li>iterations：迭代次数为100（不太理解为什么在test阶段需要这个？）</li>
-</ul>
-<p>测试的accuracy在99%以上，训练非常理想。这样就实现了<strong>下载数据——准备数据（转换为lmdb/leveldb格式）——训练模型——测试模型</strong>深度学习的完整流程。</p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p><a href="https://blog.csdn.net/xhhjin/article/details/78512913" target="_blank" rel="noopener">https://blog.csdn.net/xhhjin/article/details/78512913</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-05-28-【ML踩坑实录】python3中的zip函数/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/2018-05-28-【ML踩坑实录】python3中的zip函数/" itemprop="url">【ML踩坑实录】python3中的zip函数</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T11:16:33+08:00">
-                2018-08-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>今天开始探索“如何在数据集上跑baseline”，一大早就找到了一个很好的<a href="https://github.com/junyuseu/fine-tuning" target="_blank" rel="noopener">项目</a>，本以为可以速战速决，结果一开始就踩了个zip的坑。</p>
-<p>源代码片段如下：</p>
-<pre><code>labels = np.array(zip(files, image_labels))
-
-～～～（中间部分）～～～
-
-def write_set_file(fout, labels):
-    with open(fout, &apos;w+&apos;) as f:
-        for label in labels:
-            f.write(&apos;{}/{} {}\n&apos;.format(cwd,label[0],label[1]))
-
-write_set_file(&apos;train.txt&apos;, labels[idx_train,:])
-write_set_file(&apos;test.txt&apos;, labels[idx_test,:])
-write_set_file(&apos;valid.txt&apos;, labels[idx_valid,:])       
-</code></pre><p>总体来看，就是根据图片名称，对其分类标签进行数字化，然后对数据集切分为train、test、valid三大部分。结果run之后，提示：</p>
-<pre><code>IndexError: too many indices for array
-</code></pre><p>找到错误位置，打印labels.shape，结果是空；又打印labels，结果显示;</p>
-<pre><code>ndarray &lt;zip object at 0x7fa11be482c8&gt;
-</code></pre><p>为此专门在python在线工具测试了一小段代码：</p>
-<pre><code>x = [1, 2, 3]
-y = [4, 5, 6]
-z = [7, 8, 9]
-xyz = zip(x, y, z)
-print(xyz)
-array = np.array(xyz)
-print(array)
-</code></pre><p>结果输出一切正常：</p>
-<pre><code>[(1, 4, 7), (2, 5, 8), (3, 6, 9)]
-[[1 4 7]
- [2 5 8]
- [3 6 9]]
-</code></pre><p>这就开始了自我怀疑的入坑之路。后来无意中Google了一下：</p>
-<pre><code>ndarray &lt;zip object at 0x7fa11be482c8&gt;
-</code></pre><p>然后才发现问题所在：</p>
-<p>由于<strong>版本问题</strong>，python3中zip返回的是一个迭代器，这跟之前不一样，所以打印时看不到具体的内容。只有通过list(zip(object))才能将其内容呈现出来。而array，好像跟list没有直接关系 (我找的所有资料都是将zip转换为list)。至于之间的种种原因，还没来得及细究，迭代器之类的隐形坑以后补上，现在先专注于实现baseline。总之，通过list过渡，解决了这个问题：</p>
-<pre><code>labels = list(zip(files, image_labels))
-labels = np.array(labels)
-print(labels)
-</code></pre><p>回头想想这个锅应该分给python在线工具，结果仔细一搜才发现，这个在线工具也是分版本的，我之前一直用的碰巧是python2。</p>
-<p>不甘心，为了identify两个环境下的结果，又找了python3的在线工具，同样执行上面的小段代码，结果显示：</p>
-<pre><code>&lt;zip object at 0x7fa67deba808&gt;
-&lt;zip object at 0x7fa67deba808&gt;
-</code></pre><p>完美。</p>
-<h3 id="教训"><a href="#教训" class="headerlink" title="教训"></a>教训</h3><ul>
-<li><p>不能只盯着初始的、显化的debug信息，应该进行思考分析，追根溯源，若发现过程中有哪些不正常的现象，就去Google，这样才能真正找到问题根源。</p>
-</li>
-<li><p>调试代码的过程中(科研应该也是)，如果怀疑地很是地方、很犀利，那么问题很容易解决，并且产生好的idea，即“好的问题”能为你打开一个世界的大门。</p>
-</li>
-</ul>
-<h3 id="reference："><a href="#reference：" class="headerlink" title="reference："></a>reference：</h3><ol>
-<li><p><a href="http://www.cnblogs.com/antflow/p/7299112.html" target="_blank" rel="noopener">http://www.cnblogs.com/antflow/p/7299112.html</a></p>
-</li>
-<li><p><a href="https://stackoverflow.com/questions/31683959/the-zip-function-in-python-3?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa" target="_blank" rel="noopener">https://stackoverflow.com/questions/31683959/the-zip-function-in-python-3?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/weixin_37226516/article/details/60881763" target="_blank" rel="noopener">https://blog.csdn.net/weixin_37226516/article/details/60881763</a></p>
-</li>
-</ol>
-<hr>
-<h3 id="拾穗"><a href="#拾穗" class="headerlink" title="拾穗"></a>拾穗</h3><p>来自底层科研人员的疑问：为什么同样的方法，大神很容易发文章而我却被拒？</p>
-<p>A：</p>
-<blockquote>
-<p><img src="img/image0001.png" alt="image0001"></p>
-</blockquote>
-<p>Q：</p>
-<blockquote>
-<p><img src="../img/image0002.png" alt="image0002"> </p>
-</blockquote>
 
           
         
