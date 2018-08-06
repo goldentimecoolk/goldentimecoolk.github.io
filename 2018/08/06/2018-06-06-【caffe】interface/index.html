@@ -920,7 +920,7 @@ im_data = single(im_data); % convert to single precision
       <script type="text/javascript">
       function renderGitment(){
         var gitment = new Gitmint({
-            id: window.location.pathname, 
+            id: decodeURI(window.location.pathname), 
             owner: 'goldentimecoolk',
             repo: 'gitment-comments',
             

@@ -769,7 +769,7 @@ frac = float(12000)/40114 &gt;&gt; 0.299
       <script type="text/javascript">
       function renderGitment(){
         var gitment = new Gitmint({
-            id: window.location.pathname, 
+            id: decodeURI(window.location.pathname), 
             owner: 'goldentimecoolk',
             repo: 'gitment-comments',
             
