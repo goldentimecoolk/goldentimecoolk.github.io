@@ -205,6 +205,16 @@
           </a>
         </li>
       
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Commonweal 404
+          </a>
+        </li>
+      
 
       
     </ul>
@@ -664,7 +674,7 @@ layer {
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/08/【faster rcnn】proposal/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/08/【faster-rcnn】网络的数据投喂——RoIDataLayer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Sky">
@@ -683,7 +693,7 @@ layer {
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/08/【faster rcnn】proposal/" itemprop="url">【faster rcnn】proposal</a></h1>
+                <a class="post-title-link" href="/2018/07/08/【faster-rcnn】网络的数据投喂——RoIDataLayer/" itemprop="url">【faster-rcnn】网络的数据投喂——RoIDataLayer</a></h1>
         
 
         <div class="post-meta">
@@ -711,7 +721,7 @@ layer {
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T19:30:03+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T20:02:30+08:00">
                 2018-08-06
               </time>
             
@@ -747,12 +757,19 @@ layer {
       
         
           
-          首先看一下函数imdb_proposals：
-1234567891011121314151617def imdb_proposals(net, imdb):    """Generate RPN pr
+          对于caffe中的layer，主要有以下几个性质：
+
+setup
+forward
+backward
+
+对于所有的data layer而言，主要是前两点，这里也不例外。
+RoIDataLayer
+123
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/07/08/【faster rcnn】proposal/#more" rel="contents">
+            <a class="btn" href="/2018/07/08/【faster-rcnn】网络的数据投喂——RoIDataLayer/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -942,7 +959,7 @@ layer {
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/08/【faster-rcnn】网络的数据投喂——RoIDataLayer/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/08/【faster rcnn】proposal/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Sky">
@@ -961,7 +978,7 @@ layer {
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/08/【faster-rcnn】网络的数据投喂——RoIDataLayer/" itemprop="url">【faster-rcnn】网络的数据投喂——RoIDataLayer</a></h1>
+                <a class="post-title-link" href="/2018/07/08/【faster rcnn】proposal/" itemprop="url">【faster rcnn】proposal</a></h1>
         
 
         <div class="post-meta">
@@ -989,7 +1006,7 @@ layer {
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T20:02:30+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T19:30:03+08:00">
                 2018-08-06
               </time>
             
@@ -1025,160 +1042,12 @@ layer {
       
         
           
-          对于caffe中的layer，主要有以下几个性质：
-
-setup
-forward
-backward
-
-对于所有的data layer而言，主要是前两点，这里也不例外。
-RoIDataLayer
-123
+          首先看一下函数imdb_proposals：
+1234567891011121314151617def imdb_proposals(net, imdb):    """Generate RPN pr
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/07/08/【faster-rcnn】网络的数据投喂——RoIDataLayer/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/07/【faster rcnn】重装caffe——caffe-fast-rcnn/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Sky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/07/【faster rcnn】重装caffe——caffe-fast-rcnn/" itemprop="url">【faster rcnn】重装caffe——caffe-fast-rcnn</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-07T00:00:00+08:00">
-                2018-07-07
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Post modified&#58;</span>
-              
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:08:26+08:00">
-                2018-08-06
-              </time>
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          最近开始上手目标检测的代码，先从别人已经成功运行的例程开始：
-https://github.com/rbgirshick/py-faster-rcnn
-参考了几篇博客：
-深度学习实践经验：用Faste
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/07/【faster rcnn】重装caffe——caffe-fast-rcnn/#more" rel="contents">
+            <a class="btn" href="/2018/07/08/【faster rcnn】proposal/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1373,7 +1242,7 @@ stage1_rpn_solver60k80k.pt
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/06/【pycharm】import问题/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/07/【faster rcnn】重装caffe——caffe-fast-rcnn/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Sky">
@@ -1392,7 +1261,7 @@ stage1_rpn_solver60k80k.pt
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/06/【pycharm】import问题/" itemprop="url">【pycharm】import问题</a></h1>
+                <a class="post-title-link" href="/2018/07/07/【faster rcnn】重装caffe——caffe-fast-rcnn/" itemprop="url">【faster rcnn】重装caffe——caffe-fast-rcnn</a></h1>
         
 
         <div class="post-meta">
@@ -1404,8 +1273,8 @@ stage1_rpn_solver60k80k.pt
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-06T00:00:00+08:00">
-                2018-07-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-07T00:00:00+08:00">
+                2018-07-07
               </time>
             
 
@@ -1420,7 +1289,7 @@ stage1_rpn_solver60k80k.pt
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:07:32+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:08:26+08:00">
                 2018-08-06
               </time>
             
@@ -1456,13 +1325,14 @@ stage1_rpn_solver60k80k.pt
       
         
           
-          Pycharm下同一目录py文件不能相互调用？
-https://blog.csdn.net/candy_gl/article/details/79222115
-caffe debug 1-Pychar
+          最近开始上手目标检测的代码，先从别人已经成功运行的例程开始：
+https://github.com/rbgirshick/py-faster-rcnn
+参考了几篇博客：
+深度学习实践经验：用Faste
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/07/06/【pycharm】import问题/#more" rel="contents">
+            <a class="btn" href="/2018/07/07/【faster rcnn】重装caffe——caffe-fast-rcnn/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1601,6 +1471,146 @@ caffe debug 1-Pychar
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/07/06/【pytorch】resnet/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/06/【pytorch】关于torch.nn的两点/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Sky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/06/【pytorch】关于torch.nn的两点/" itemprop="url">【pytorch】关于torch.nn的两点</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-06T00:00:00+08:00">
+                2018-07-06
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:07:49+08:00">
+                2018-08-06
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          torch.nn中的BatchNorm函数
+
+12345class torch.nn.BatchNorm1d(num_features, eps=1e-05, momentum=0.1, affine
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/06/【pytorch】关于torch.nn的两点/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
