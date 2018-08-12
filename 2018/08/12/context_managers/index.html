@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Context ManagersContext managers allow you to allocate and release resources precisely when you want to. The most widely used example of context managers is the with statement. Suppose you have two re">
+<meta name="description" content="Context Managers Context managers allow you to allocate and release resources precisely when you want to. The most widely used example of context managers is the with statement. Suppose you have two r">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://yoursite.com/2018/08/12/context_managers/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Context ManagersContext managers allow you to allocate and release resources precisely when you want to. The most widely used example of context managers is the with statement. Suppose you have two re">
+<meta property="og:description" content="Context Managers Context managers allow you to allocate and release resources precisely when you want to. The most widely used example of context managers is the with statement. Suppose you have two r">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-08-12T02:52:57.940Z">
+<meta property="og:updated_time" content="2018-08-12T03:01:36.803Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="Context ManagersContext managers allow you to allocate and release resources precisely when you want to. The most widely used example of context managers is the with statement. Suppose you have two re">
+<meta name="twitter:description" content="Context Managers Context managers allow you to allocate and release resources precisely when you want to. The most widely used example of context managers is the with statement. Suppose you have two r">
 
 
 
@@ -280,7 +280,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-12T10:53:21+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-12T11:01:36+08:00">
                 2018-08-12
               </time>
             
@@ -296,7 +296,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-12T10:52:57+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-12T11:01:36+08:00">
                 2018-08-12
               </time>
             
@@ -345,21 +345,21 @@
       
 
       
-        <h2 id="Context-Managers"><a href="#Context-Managers" class="headerlink" title="Context Managers"></a>Context Managers</h2><p>Context managers allow you to allocate and release resources precisely when you want to. The most widely used example of context managers is the <code>with</code> statement. Suppose you have two related operations which you’d like to execute as a pair, with a block of code in between. Context managers allow you to do specifically that. For example:</p>
+        <h3 id="Context-Managers"><a href="#Context-Managers" class="headerlink" title="Context Managers"></a>Context Managers</h3><hr>
+<p>Context managers allow you to allocate and release resources precisely when you want to. The most widely used example of context managers is the <code>with</code> statement. Suppose you have two related operations which you’d like to execute as a pair, with a block of code in between. Context managers allow you to do specifically that. For example:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">'some_file'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> opened_file:</span><br><span class="line">    opened_file.write(<span class="string">'Hola!'</span>)</span><br></pre></td></tr></table></figure>
 <p>The above code opens the file, writes some data to it and then closes it. If an error occurs while writing the data to the file, it tries to close it. The above code is equivalent to:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">file = open(<span class="string">'some_file'</span>, <span class="string">'w'</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    file.write(<span class="string">'Hola!'</span>)</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    file.close()</span><br></pre></td></tr></table></figure>
-<p>While comparing it to the first example we can see that a lot of<br>boilerplate code is eliminated just by using <code>with</code>. The main<br>advantage of using a <code>with</code> statement is that it makes sure our file<br>is closed without paying attention to how the nested block exits.</p>
-<p>A common use case of context managers is locking and unlocking resources<br>and closing opened files (as I have already shown you).</p>
-<p>Let’s see how we can implement our own Context Manager. This should allow<br>us to understand exactly what’s going on behind the scenes.</p>
-<p>Implementing a Context Manager as a Class:<br>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</p>
-<p>At the very least a context manager has an <code>__enter__</code> and<br><code>__exit__</code> method defined. Let’s make our own file-opening Context<br>Manager and learn the basics.</p>
+<p>While comparing it to the first example we can see that a lot of boilerplate code is eliminated just by using <code>with</code>. The main advantage of using a <code>with</code> statement is that it makes sure our file is closed without paying attention to how the nested block exits.</p>
+<p>A common use case of context managers is locking and unlocking resources and closing opened files (as I have already shown you).</p>
+<p>Let’s see how we can implement our own Context Manager. This should allow us to understand exactly what’s going on behind the scenes.</p>
+<h4 id="1-Implementing-a-Context-Manager-as-a-Class"><a href="#1-Implementing-a-Context-Manager-as-a-Class" class="headerlink" title="1. Implementing a Context Manager as a Class:"></a>1. Implementing a Context Manager as a Class:</h4><p>At the very least a context manager has an <code>__enter__</code> and <code>__exit__</code> method defined. Let’s make our own file-opening Context Manager and learn the basics.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">File</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, file_name, method)</span>:</span></span><br><span class="line">        self.file_obj = open(file_name, method)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__enter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.file_obj</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__exit__</span><span class="params">(self, type, value, traceback)</span>:</span></span><br><span class="line">        self.file_obj.close()</span><br></pre></td></tr></table></figure>
-<p>Just by defining <code>__enter__</code> and <code>__exit__</code> methods we can use our new class in<br>a <code>with</code> statement. Let’s try:</p>
+<p>Just by defining <code>__enter__</code> and <code>__exit__</code> methods we can use our new class in a <code>with</code> statement. Let’s try:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> File(<span class="string">'demo.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> opened_file:</span><br><span class="line">    opened_file.write(<span class="string">'Hola!'</span>)</span><br></pre></td></tr></table></figure>
-<p>Our <code>__exit__</code> method accepts three arguments. They are required by<br>every <code>__exit__</code> method which is a part of a Context Manager class.<br>Let’s talk about what happens under-the-hood.</p>
+<p>Our <code>__exit__</code> method accepts three arguments. They are required by every <code>__exit__</code> method which is a part of a Context Manager class. Let’s talk about what happens under-the-hood.</p>
 <ol>
-<li>The <code>with</code> statement stores the <code>__exit__</code> method of the <code>File</code><br>class.</li>
+<li>The <code>with</code> statement stores the <code>__exit__</code> method of the <code>File</code> class.</li>
 <li>It calls the <code>__enter__</code> method of the <code>File</code> class.</li>
 <li>The <code>__enter__</code> method opens the file and returns it.</li>
 <li>The opened file handle is passed to <code>opened_file</code>.</li>
@@ -367,32 +367,30 @@
 <li>The <code>with</code> statement calls the stored <code>__exit__</code> method.</li>
 <li>The <code>__exit__</code> method closes the file.</li>
 </ol>
-<p>Handling Exceptions<br>^^^^^^^^^^^^^^^^^^^</p>
-<p>We did not talk about the <code>type</code>, <code>value</code> and <code>traceback</code><br>arguments of the <code>__exit__</code> method. Between the 4th and 6th step, if<br>an exception occurs, Python passes the type, value and traceback of the<br>exception to the <code>__exit__</code> method. It allows the <code>__exit__</code> method<br>to decide how to close the file and if any further steps are required.<br>In our case we are not paying any attention to them.</p>
-<p>What if our file object raises an exception? We might be trying to<br>access a method on the file object which it does not supports. For<br>instance:</p>
+<h4 id="2-Handling-Exceptions"><a href="#2-Handling-Exceptions" class="headerlink" title="2. Handling Exceptions"></a>2. Handling Exceptions</h4><p>We did not talk about the <code>type</code>, <code>value</code> and <code>traceback</code> arguments of the <code>__exit__</code> method. Between the 4th and 6th step, if<br>an exception occurs, Python passes the type, value and traceback of the exception to the <code>__exit__</code> method. It allows the <code>__exit__</code> method<br>to decide how to close the file and if any further steps are required. In our case we are not paying any attention to them.</p>
+<p>What if our file object raises an exception? We might be trying to access a method on the file object which it does not supports. For instance:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> File(<span class="string">'demo.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> opened_file:</span><br><span class="line">    opened_file.undefined_function(<span class="string">'Hola!'</span>)</span><br></pre></td></tr></table></figure>
-<p>Let’s list the steps which are taken by the <code>with</code> statement when<br>an error is encountered:</p>
+<p>Let’s list the steps which are taken by the <code>with</code> statement when an error is encountered:</p>
 <ol>
-<li>It passes the type, value and traceback of the error to the<br><code>__exit__</code> method.</li>
+<li>It passes the type, value and traceback of the error to the <code>__exit__</code> method.</li>
 <li>It allows the <code>__exit__</code> method to handle the exception.</li>
-<li>If <code>__exit__</code> returns <code>True</code> then the exception was gracefully<br>handled.</li>
-<li>If anything other than <code>True</code> is returned by the <code>__exit__</code> method then<br>the exception is raised by the <code>with</code> statement.</li>
+<li>If <code>__exit__</code> returns <code>True</code> then the exception was gracefully handled.</li>
+<li>If anything other than <code>True</code> is returned by the <code>__exit__</code> method then the exception is raised by the <code>with</code> statement.</li>
 </ol>
-<p>In our case the <code>__exit__</code> method returns <code>None</code> (when no return<br>statement is encountered then the method returns <code>None</code>). Therefore,<br>the <code>with</code> statement raises the exception:</p>
+<p>In our case the <code>__exit__</code> method returns <code>None</code> (when no return statement is encountered then the method returns <code>None</code>). Therefore, the <code>with</code> statement raises the exception:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">2</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">AttributeError: <span class="string">'file'</span> object has no attribute <span class="string">'undefined_function'</span></span><br></pre></td></tr></table></figure>
 <p>Let’s try handling the exception in the <code>__exit__</code> method:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">File</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, file_name, method)</span>:</span></span><br><span class="line">        self.file_obj = open(file_name, method)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__enter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.file_obj</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__exit__</span><span class="params">(self, type, value, traceback)</span>:</span></span><br><span class="line">        print(<span class="string">"Exception has been handled"</span>)</span><br><span class="line">        self.file_obj.close()</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> File(<span class="string">'demo.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> opened_file:</span><br><span class="line">    opened_file.undefined_function()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Output: Exception has been handled</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">File</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, file_name, method)</span>:</span></span><br><span class="line">        self.file_obj = open(file_name, method)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__enter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.file_obj</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__exit__</span><span class="params">(self, type, value, traceback)</span>:</span></span><br><span class="line">        print(<span class="string">"Exception has been handled"</span>)</span><br><span class="line">        self.file_obj.close()</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> File(<span class="string">'demo.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> opened_file:</span><br><span class="line">    opened_file.undefined_function()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Output: Exception has been handled</span></span><br></pre></td></tr></table></figure>
 <p>Our <code>__exit__</code> method returned <code>True</code>, therefore no exception was raised by the <code>with</code> statement.</p>
-<p>This is not the only way to implement Context Managers. There is another<br>way and we will be looking at it in the next section.</p>
-<p>Implementing a Context Manager as a Generator<br>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</p>
-<p>We can also implement Context Managers using decorators and generators.<br>Python has a contextlib module for this very purpose. Instead of a class, we can implement a Context Manager using a generator function. Let’s see a basic, useless example:</p>
+<p>This is not the only way to implement Context Managers. There is another way and we will be looking at it in the next section.</p>
+<h4 id="3-Implementing-a-Context-Manager-as-a-Generator"><a href="#3-Implementing-a-Context-Manager-as-a-Generator" class="headerlink" title="3. Implementing a Context Manager as a Generator"></a>3. Implementing a Context Manager as a Generator</h4><p>We can also implement Context Managers using decorators and generators. Python has a contextlib module for this very purpose. Instead of a class, we can implement a Context Manager using a generator function. Let’s see a basic, useless example:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> contextlib <span class="keyword">import</span> contextmanager</span><br><span class="line"></span><br><span class="line"><span class="meta">@contextmanager</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">open_file</span><span class="params">(name)</span>:</span></span><br><span class="line">    f = open(name, <span class="string">'w'</span>)</span><br><span class="line">    <span class="keyword">yield</span> f</span><br><span class="line">    f.close()</span><br></pre></td></tr></table></figure>
 <p>Okay! This way of implementing Context Managers appear to be more intuitive and easy. However, this method requires some knowledge about generators, yield and decorators. In this example we have not caught any exceptions which might occur. It works in mostly the same way as the previous method.</p>
 <p>Let’s dissect this method a little.</p>
 <ol>
-<li>Python encounters the <code>yield</code> keyword. Due to this it creates a<br>generator instead of a normal function.</li>
-<li>Due to the decoration, contextmanager is called with the function<br>name (<code>open\_file</code>) as it’s argument.</li>
-<li>The <code>contextmanager</code> decorator returns the generator wrapped by the<br><code>GeneratorContextManager</code> object.</li>
+<li>Python encounters the <code>yield</code> keyword. Due to this it creates a generator instead of a normal function.</li>
+<li>Due to the decoration, contextmanager is called with the function name (<code>open\_file</code>) as it’s argument.</li>
+<li>The <code>contextmanager</code> decorator returns the generator wrapped by the <code>GeneratorContextManager</code> object.</li>
 <li>The <code>GeneratorContextManager</code> is assigned to the <code>open_file</code> function. Therefore, when we later call the <code>open_file</code> function, we are actually calling the <code>GeneratorContextManager</code> object.</li>
 </ol>
 <p>So now that we know all this, we can use the newly generated Context Manager like this:</p>
