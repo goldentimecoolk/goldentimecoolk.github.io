@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="pytorch," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061class ResNet(nn.Module):    def __init__(self, block, layers, num_classes=1000):">
+<meta name="description" content="Before you can see the whole, it’s sea.Before you organize the whole, it’s universe.See the whole and organize it, it’s a transparent box.——Sky. J.  torch.nn.functional.binary_cross_entropy(input, tar">
+<meta name="keywords" content="pytorch">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【pytorch】resnet">
-<meta property="og:url" content="http://yoursite.com/2018/07/06/【pytorch】resnet/index.html">
+<meta property="og:title" content="【pytorch】Loss functions">
+<meta property="og:url" content="http://yoursite.com/2018/08/08/【pytorch】Loss-functions/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061class ResNet(nn.Module):    def __init__(self, block, layers, num_classes=1000):">
+<meta property="og:description" content="Before you can see the whole, it’s sea.Before you organize the whole, it’s universe.See the whole and organize it, it’s a transparent box.——Sky. J.  torch.nn.functional.binary_cross_entropy(input, tar">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-08-06T10:07:40.881Z">
+<meta property="og:updated_time" content="2018-08-08T03:02:04.698Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="【pytorch】resnet">
-<meta name="twitter:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061class ResNet(nn.Module):    def __init__(self, block, layers, num_classes=1000):">
+<meta name="twitter:title" content="【pytorch】Loss functions">
+<meta name="twitter:description" content="Before you can see the whole, it’s sea.Before you organize the whole, it’s universe.See the whole and organize it, it’s a transparent box.——Sky. J.  torch.nn.functional.binary_cross_entropy(input, tar">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/07/06/【pytorch】resnet/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/08/【pytorch】Loss-functions/"/>
 
 
 
 
 
-  <title>【pytorch】resnet | Hexo</title>
+  <title>【pytorch】Loss functions | Hexo</title>
   
 
 
@@ -251,7 +252,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/06/【pytorch】resnet/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/08/【pytorch】Loss-functions/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Sky">
@@ -268,7 +269,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">【pytorch】resnet</h1>
+          <h1 class="post-title" itemprop="name headline">【pytorch】Loss functions</h1>
         
 
         <div class="post-meta">
@@ -280,8 +281,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-06T00:00:00+08:00">
-                2018-07-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-08T10:21:02+08:00">
+                2018-08-08
               </time>
             
 
@@ -296,8 +297,8 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:07:40+08:00">
-                2018-08-06
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-08T11:02:04+08:00">
+                2018-08-08
               </time>
             
           </span>
@@ -311,8 +312,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/07/06/【pytorch】resnet/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/07/06/【pytorch】resnet/" itemprop="commentsCount"></span>
+                <a href="/2018/08/08/【pytorch】Loss-functions/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/08/08/【pytorch】Loss-functions/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -345,10 +346,27 @@
       
 
       
-        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ResNet</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, block, layers, num_classes=<span class="number">1000</span>)</span>:</span></span><br><span class="line">        self.inplanes = <span class="number">64</span></span><br><span class="line">        super(ResNet, self).__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">3</span>, <span class="number">64</span>, kernel_size=<span class="number">7</span>, stride=<span class="number">2</span>, padding=<span class="number">3</span>,</span><br><span class="line">                               bias=<span class="keyword">False</span>)</span><br><span class="line">        self.bn1 = nn.BatchNorm2d(<span class="number">64</span>)</span><br><span class="line">        self.relu = nn.ReLU(inplace=<span class="keyword">True</span>)</span><br><span class="line">        self.maxpool = nn.MaxPool2d(kernel_size=<span class="number">3</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>)</span><br><span class="line">        self.layer1 = self._make_layer(block, <span class="number">64</span>, layers[<span class="number">0</span>])</span><br><span class="line">        self.layer2 = self._make_layer(block, <span class="number">128</span>, layers[<span class="number">1</span>], stride=<span class="number">2</span>)</span><br><span class="line">        self.layer3 = self._make_layer(block, <span class="number">256</span>, layers[<span class="number">2</span>], stride=<span class="number">2</span>)</span><br><span class="line">        self.layer4 = self._make_layer(block, <span class="number">512</span>, layers[<span class="number">3</span>], stride=<span class="number">2</span>)</span><br><span class="line">        self.avgpool = nn.AvgPool2d(<span class="number">7</span>, stride=<span class="number">1</span>)</span><br><span class="line">        self.fc = nn.Linear(<span class="number">512</span> * block.expansion, num_classes)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> m <span class="keyword">in</span> self.modules():</span><br><span class="line">            <span class="keyword">if</span> isinstance(m, nn.Conv2d):</span><br><span class="line">                n = m.kernel_size[<span class="number">0</span>] * m.kernel_size[<span class="number">1</span>] * m.out_channels</span><br><span class="line">                m.weight.data.normal_(<span class="number">0</span>, math.sqrt(<span class="number">2.</span> / n))</span><br><span class="line">            <span class="keyword">elif</span> isinstance(m, nn.BatchNorm2d):</span><br><span class="line">                m.weight.data.fill_(<span class="number">1</span>)</span><br><span class="line">                m.bias.data.zero_()</span><br><span class="line"></span><br><span class="line">	<span class="comment">####_make_layer() produce layers with the same output size and channels, which contains 'blocks' block.</span></span><br><span class="line">	<span class="comment">####downsample happens in the first layer</span></span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_make_layer</span><span class="params">(self, block, planes, blocks, stride=<span class="number">1</span>)</span>:</span></span><br><span class="line">        downsample = <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">if</span> stride != <span class="number">1</span> <span class="keyword">or</span> self.inplanes != planes * block.expansion:</span><br><span class="line">            downsample = nn.Sequential(</span><br><span class="line">                nn.Conv2d(self.inplanes, planes * block.expansion,</span><br><span class="line">                          kernel_size=<span class="number">1</span>, stride=stride, bias=<span class="keyword">False</span>),</span><br><span class="line">                nn.BatchNorm2d(planes * block.expansion),</span><br><span class="line">            )</span><br><span class="line"></span><br><span class="line">        layers = []</span><br><span class="line">        layers.append(block(self.inplanes, planes, stride, downsample))     <span class="comment">#### make the 1st sublayer in given certain layer, which needs downsample. </span></span><br><span class="line">        self.inplanes = planes * block.expansion</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, blocks):                                          <span class="comment">#### make the other layers, from 1 to blocks-1 </span></span><br><span class="line">            layers.append(block(self.inplanes, planes))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> nn.Sequential(*layers)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = self.conv1(x)</span><br><span class="line">        x = self.bn1(x)</span><br><span class="line">        x = self.relu(x)</span><br><span class="line">        x = self.maxpool(x)</span><br><span class="line"></span><br><span class="line">        x = self.layer1(x)</span><br><span class="line">        x = self.layer2(x)</span><br><span class="line">        x = self.layer3(x)</span><br><span class="line">        x = self.layer4(x)</span><br><span class="line"></span><br><span class="line">        x = self.avgpool(x)</span><br><span class="line">        x = x.view(x.size(<span class="number">0</span>), <span class="number">-1</span>)</span><br><span class="line">        x = self.fc(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><hr>
-<p>PyTorch源码解读之torchvision.models</p>
-<p><a href="https://blog.csdn.net/u014380165/article/details/79119664" target="_blank" rel="noopener">https://blog.csdn.net/u014380165/article/details/79119664</a></p>
+        <p>Before you can see the whole, it’s sea.<br>Before you organize the whole, it’s universe.<br>See the whole and organize it, it’s a transparent box.<br>——Sky. J.</p>
+<ul>
+<li><p><code>torch.nn.functional.binary_cross_entropy(input, target, weight=None, size_average=None, reduce=None, reduction=&#39;elementwise_mean&#39;)</code><br>  Function that measures the Binary Cross Entropy between the target and the output.</p>
+<ul>
+<li><strong>input</strong> – Tensor of arbitrary shape</li>
+<li><strong>target</strong> – Tensor of the same shape as input</li>
+<li><strong>size_average </strong>(bool, optional) – By default, the losses are averaged over each loss element in the batch.</li>
+</ul>
+</li>
+<li><p><code>torch.nn.functional.poisson_nll_loss(input, target, log_input=True, full=False, size_average=None, eps=1e-08, reduce=None, reduction=&#39;elementwise_mean&#39;)</code><br>  Poisson negative log likelihood loss.</p>
+<ul>
+<li>input – expectation of underlying Poisson distribution.</li>
+<li>target – random sample target∼Poisson(input).</li>
+</ul>
+</li>
+<li><p><code>torch.nn.functional.cross_entropy(input, target, weight=None, size_average=None, ignore_index=-100, reduce=None, reduction=&#39;elementwise_mean&#39;)</code></p>
+<ul>
+<li></li>
+</ul>
+</li>
+</ul>
 
       
     </div>
@@ -388,6 +406,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/pytorch/" rel="tag"># pytorch</a>
+          
+        </div>
+      
 
       
       
@@ -397,8 +421,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/04/【dataset】voc数据集/" rel="next" title="【dataset】voc数据集">
-                <i class="fa fa-chevron-left"></i> 【dataset】voc数据集
+              <a href="/2018/08/07/【pytorch】ops for tensor/" rel="next" title="ops for tensor">
+                <i class="fa fa-chevron-left"></i> ops for tensor
               </a>
             
           </div>
@@ -407,8 +431,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/06/【pytorch】关于torch.nn的两点/" rel="prev" title="【pytorch】关于torch.nn的两点">
-                【pytorch】关于torch.nn的两点 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/08/【pytorch】torch-nn/" rel="prev" title="【pytorch】torch.nn">
+                【pytorch】torch.nn <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

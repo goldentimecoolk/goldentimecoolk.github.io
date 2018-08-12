@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="pytorch," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061class ResNet(nn.Module):    def __init__(self, block, layers, num_classes=1000):">
+<meta name="description" content="torch.nnParametersclass torch.nn.Parameter  data (Tensor) – parameter tensor. requires_grad (bool, optional) – if the parameter requires gradient. Default: True  A kind of Tensor that is to be conside">
+<meta name="keywords" content="pytorch">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【pytorch】resnet">
-<meta property="og:url" content="http://yoursite.com/2018/07/06/【pytorch】resnet/index.html">
+<meta property="og:title" content="【pytorch】torch.nn">
+<meta property="og:url" content="http://yoursite.com/2018/08/08/【pytorch】torch-nn/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061class ResNet(nn.Module):    def __init__(self, block, layers, num_classes=1000):">
+<meta property="og:description" content="torch.nnParametersclass torch.nn.Parameter  data (Tensor) – parameter tensor. requires_grad (bool, optional) – if the parameter requires gradient. Default: True  A kind of Tensor that is to be conside">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-08-06T10:07:40.881Z">
+<meta property="og:updated_time" content="2018-08-09T11:51:45.168Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="【pytorch】resnet">
-<meta name="twitter:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061class ResNet(nn.Module):    def __init__(self, block, layers, num_classes=1000):">
+<meta name="twitter:title" content="【pytorch】torch.nn">
+<meta name="twitter:description" content="torch.nnParametersclass torch.nn.Parameter  data (Tensor) – parameter tensor. requires_grad (bool, optional) – if the parameter requires gradient. Default: True  A kind of Tensor that is to be conside">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/07/06/【pytorch】resnet/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/08/【pytorch】torch-nn/"/>
 
 
 
 
 
-  <title>【pytorch】resnet | Hexo</title>
+  <title>【pytorch】torch.nn | Hexo</title>
   
 
 
@@ -251,7 +252,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/06/【pytorch】resnet/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/08/【pytorch】torch-nn/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Sky">
@@ -268,7 +269,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">【pytorch】resnet</h1>
+          <h1 class="post-title" itemprop="name headline">【pytorch】torch.nn</h1>
         
 
         <div class="post-meta">
@@ -280,8 +281,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-06T00:00:00+08:00">
-                2018-07-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-08T15:26:24+08:00">
+                2018-08-08
               </time>
             
 
@@ -296,8 +297,8 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-06T18:07:40+08:00">
-                2018-08-06
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-09T19:51:45+08:00">
+                2018-08-09
               </time>
             
           </span>
@@ -311,8 +312,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/07/06/【pytorch】resnet/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/07/06/【pytorch】resnet/" itemprop="commentsCount"></span>
+                <a href="/2018/08/08/【pytorch】torch-nn/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/08/08/【pytorch】torch-nn/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -345,10 +346,61 @@
       
 
       
-        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ResNet</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, block, layers, num_classes=<span class="number">1000</span>)</span>:</span></span><br><span class="line">        self.inplanes = <span class="number">64</span></span><br><span class="line">        super(ResNet, self).__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">3</span>, <span class="number">64</span>, kernel_size=<span class="number">7</span>, stride=<span class="number">2</span>, padding=<span class="number">3</span>,</span><br><span class="line">                               bias=<span class="keyword">False</span>)</span><br><span class="line">        self.bn1 = nn.BatchNorm2d(<span class="number">64</span>)</span><br><span class="line">        self.relu = nn.ReLU(inplace=<span class="keyword">True</span>)</span><br><span class="line">        self.maxpool = nn.MaxPool2d(kernel_size=<span class="number">3</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>)</span><br><span class="line">        self.layer1 = self._make_layer(block, <span class="number">64</span>, layers[<span class="number">0</span>])</span><br><span class="line">        self.layer2 = self._make_layer(block, <span class="number">128</span>, layers[<span class="number">1</span>], stride=<span class="number">2</span>)</span><br><span class="line">        self.layer3 = self._make_layer(block, <span class="number">256</span>, layers[<span class="number">2</span>], stride=<span class="number">2</span>)</span><br><span class="line">        self.layer4 = self._make_layer(block, <span class="number">512</span>, layers[<span class="number">3</span>], stride=<span class="number">2</span>)</span><br><span class="line">        self.avgpool = nn.AvgPool2d(<span class="number">7</span>, stride=<span class="number">1</span>)</span><br><span class="line">        self.fc = nn.Linear(<span class="number">512</span> * block.expansion, num_classes)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> m <span class="keyword">in</span> self.modules():</span><br><span class="line">            <span class="keyword">if</span> isinstance(m, nn.Conv2d):</span><br><span class="line">                n = m.kernel_size[<span class="number">0</span>] * m.kernel_size[<span class="number">1</span>] * m.out_channels</span><br><span class="line">                m.weight.data.normal_(<span class="number">0</span>, math.sqrt(<span class="number">2.</span> / n))</span><br><span class="line">            <span class="keyword">elif</span> isinstance(m, nn.BatchNorm2d):</span><br><span class="line">                m.weight.data.fill_(<span class="number">1</span>)</span><br><span class="line">                m.bias.data.zero_()</span><br><span class="line"></span><br><span class="line">	<span class="comment">####_make_layer() produce layers with the same output size and channels, which contains 'blocks' block.</span></span><br><span class="line">	<span class="comment">####downsample happens in the first layer</span></span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_make_layer</span><span class="params">(self, block, planes, blocks, stride=<span class="number">1</span>)</span>:</span></span><br><span class="line">        downsample = <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">if</span> stride != <span class="number">1</span> <span class="keyword">or</span> self.inplanes != planes * block.expansion:</span><br><span class="line">            downsample = nn.Sequential(</span><br><span class="line">                nn.Conv2d(self.inplanes, planes * block.expansion,</span><br><span class="line">                          kernel_size=<span class="number">1</span>, stride=stride, bias=<span class="keyword">False</span>),</span><br><span class="line">                nn.BatchNorm2d(planes * block.expansion),</span><br><span class="line">            )</span><br><span class="line"></span><br><span class="line">        layers = []</span><br><span class="line">        layers.append(block(self.inplanes, planes, stride, downsample))     <span class="comment">#### make the 1st sublayer in given certain layer, which needs downsample. </span></span><br><span class="line">        self.inplanes = planes * block.expansion</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, blocks):                                          <span class="comment">#### make the other layers, from 1 to blocks-1 </span></span><br><span class="line">            layers.append(block(self.inplanes, planes))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> nn.Sequential(*layers)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = self.conv1(x)</span><br><span class="line">        x = self.bn1(x)</span><br><span class="line">        x = self.relu(x)</span><br><span class="line">        x = self.maxpool(x)</span><br><span class="line"></span><br><span class="line">        x = self.layer1(x)</span><br><span class="line">        x = self.layer2(x)</span><br><span class="line">        x = self.layer3(x)</span><br><span class="line">        x = self.layer4(x)</span><br><span class="line"></span><br><span class="line">        x = self.avgpool(x)</span><br><span class="line">        x = x.view(x.size(<span class="number">0</span>), <span class="number">-1</span>)</span><br><span class="line">        x = self.fc(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><hr>
-<p>PyTorch源码解读之torchvision.models</p>
-<p><a href="https://blog.csdn.net/u014380165/article/details/79119664" target="_blank" rel="noopener">https://blog.csdn.net/u014380165/article/details/79119664</a></p>
+        <h3 id="torch-nn"><a href="#torch-nn" class="headerlink" title="torch.nn"></a>torch.nn</h3><h4 id="Parameters"><a href="#Parameters" class="headerlink" title="Parameters"></a>Parameters</h4><p><code>class torch.nn.Parameter</code></p>
+<ul>
+<li><strong>data</strong> (Tensor) – parameter tensor.</li>
+<li><strong>requires_grad</strong> (bool, optional) – if the parameter requires gradient. <u>Default: True</u></li>
+</ul>
+<p>A kind of Tensor that is to be considered a module parameter.<br>Parameters are Tensor subclasses, that have a very special property when used with <code>Module</code> s - when they’re assigned as Module attributes they are automatically added to the list of its parameters, and will appear e.g. in <code>parameters()</code> iterator. Assigning a Tensor doesn’t have such effect. This is because one might want to cache some temporary state, like last hidden state of the RNN, in the model. If there was no such class as <code>Parameter</code>, these temporaries would get registered too.</p>
+<p><strong>SUMMARY:</strong> This is a class, whose objects can be acquired through methods of <code>torch.nn.Module</code>, i.e. <code>parameters()</code>.</p>
+<p>一切接<code>对象</code>，<code>class</code>，<code>方法</code>。具体操作的是<code>对象</code>，通过<code>class</code>实例化得到，得到的过程需要<code>初始化</code>，在网络中有很多需要配置的地方，简便起见，很多都有默认值，使得在多数情况下不需要特别地<code>初始化</code>。<code>方法</code>使得操作更加丰富、规范和便利。<br>class—(initionize, default)—object</p>
+<h3 id="torch-optim"><a href="#torch-optim" class="headerlink" title="torch.optim"></a>torch.optim</h3><h4 id="How-to-use-an-optimizer"><a href="#How-to-use-an-optimizer" class="headerlink" title="How to use an optimizer?"></a><strong>How to use an optimizer?</strong></h4><p>To use torch.optim you have to construct an optimizer object, that will hold the current state and will update the parameters based on the computed gradients.</p>
+<p>#<strong>Constructing it</strong># To construct an Optimizer you have to give it an iterable containing the parameters (all should be Variable s) to optimize. Then, you can specify optimizer-specific options such as the learning rate, weight decay, etc.<br>【If you need to move a model to GPU via .cuda(), please do so before constructing optimizers for it. Parameters of a model after .cuda() will be different objects with those before the call. In general, you should make sure that optimized parameters live in consistent locations when optimizers are constructed and used.】</p>
+<p>#<strong>Per-parameter options</strong># <code>Optimizer</code>s also support specifying per-parameter options. To do this, instead of passing an iterable of <code>Variable</code>s, pass in an iterable of <code>dict</code>s. Each of them will define a separate parameter group, and should contain a <code>params</code> key, containing a list of parameters belonging to it. Other keys should match the keyword arguments accepted by the optimizers, and will be used as optimization options for this group.</p>
+<p>#<strong>Taking an optimization step</strong># All optimizers implement a <code>step()</code> method, that updates the parameters. It can be used in two ways:</p>
+<ul>
+<li><code>optimizer.step()</code></li>
+<li><code>optimizer.step(closure)</code></li>
+</ul>
+<h4 id="Algorithms"><a href="#Algorithms" class="headerlink" title="Algorithms"></a><strong>Algorithms</strong></h4><ul>
+<li>class <code>torch.optim.Optimizer(params, defaults)</code>: Base class for all optimizers.<ul>
+<li><code>add_param_group(param_group)</code></li>
+<li><code>load_state_dict(state_dict)</code></li>
+<li><code>state_dict()</code></li>
+<li><code>step(closure)</code></li>
+<li><code>zero_grad()</code></li>
+</ul>
+</li>
+<li>class <code>torch.optim.Adadelta(params, lr=1.0, rho=0.9, eps=1e-06, weight_decay=0)</code></li>
+<li>class <code>torch.optim.Adagrad(params, lr=0.01, lr_decay=0, weight_decay=0, initial_accumulator_value=0)</code></li>
+<li>class <code>torch.optim.Adam(params, lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)</code></li>
+<li>class <code>torch.optim.SparseAdam(params, lr=0.001, betas=(0.9, 0.999), eps=1e-08)</code></li>
+<li>class <code>torch.optim.RMSprop(params, lr=0.01, alpha=0.99, eps=1e-08, weight_decay=0, momentum=0, centered=False)</code></li>
+<li>class <code>torch.optim.SGD(params, lr=&lt;object object&gt;, momentum=0, dampening=0, weight_decay=0, nesterov=False)</code></li>
+<li>…</li>
+</ul>
+<p>####<strong>How to adjust Learning Rate?</strong></p>
+<p> <code>torch.optim.lr_scheduler</code> provides several methods to adjust the learning rate based on the number of epochs.【<code>learning rate</code> is the function of <code>epochs</code>】 <code>torch.optim.lr_scheduler.ReduceLROnPlateau</code> allows dynamic learning rate reducing based on some validation measurements.【<code>learning rate</code>is the function of some kind of <code>measurement</code>s】.</p>
+<ul>
+<li>class <code>torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda, last_epoch=-1)</code><ul>
+<li>Sets the learning rate of each parameter group to the initial lr <u>times a given function.</u> When last_epoch=-1, sets initial lr as lr.</li>
+</ul>
+</li>
+<li>class <code>torch.optim.lr_scheduler.StepLR(optimizer, step_size, gamma=0.1, last_epoch=-1)</code><ul>
+<li>Sets the learning rate of each parameter group to the initial lr decayed by gamma <u>every step_size epochs.</u> When last_epoch=-1, sets initial lr as lr.</li>
+</ul>
+</li>
+<li>class <code>torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones, gamma=0.1, last_epoch=-1)</code><ul>
+<li>Set the learning rate of each parameter group to the initial lr decayed by gamma <u>once the number of epoch reaches one of the milestones.</u> When last_epoch=-1, sets initial lr as lr.</li>
+</ul>
+</li>
+<li>…</li>
+<li>class <code>torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode=&#39;min&#39;, factor=0.1, patience=10, verbose=False, threshold=0.0001, threshold_mode=&#39;rel&#39;, cooldown=0, min_lr=0, eps=1e-08)</code><ul>
+<li>Reduce learning rate when a metric has stopped improving. Models often benefit from reducing the learning rate by a factor of 2-10 once learning stagnates. This scheduler reads a metrics quantity and if no improvement is seen for a ‘patience’ number of epochs, the learning rate is reduced.</li>
+</ul>
+</li>
+</ul>
+<p><strong>SUMMARY:</strong> construct an optimizer object, and mainly pay attention to these points: <strong>1.</strong> which part of params need to be optimized and which not. <strong>2.</strong> which algorithm to choose? <strong>3.</strong> adjust learning rate in different period of training.</p>
 
       
     </div>
@@ -388,6 +440,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/pytorch/" rel="tag"># pytorch</a>
+          
+        </div>
+      
 
       
       
@@ -397,8 +455,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/04/【dataset】voc数据集/" rel="next" title="【dataset】voc数据集">
-                <i class="fa fa-chevron-left"></i> 【dataset】voc数据集
+              <a href="/2018/08/08/【pytorch】Loss-functions/" rel="next" title="【pytorch】Loss functions">
+                <i class="fa fa-chevron-left"></i> 【pytorch】Loss functions
               </a>
             
           </div>
@@ -407,8 +465,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/06/【pytorch】关于torch.nn的两点/" rel="prev" title="【pytorch】关于torch.nn的两点">
-                【pytorch】关于torch.nn的两点 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/12/context_managers/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
