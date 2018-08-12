@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Context Managers Context managers allow you to allocate and release resources precisely when you want to. The most widely used example of context managers is the with statement. Suppose you have two r">
+<meta name="description" content="Context Managers (REFERENCE: http://book.pythontips.com/en/latest/context_managers.html) Context managers allow you to allocate and release resources precisely when you want to. The most widely used e">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://yoursite.com/2018/08/12/context_managers/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Context Managers Context managers allow you to allocate and release resources precisely when you want to. The most widely used example of context managers is the with statement. Suppose you have two r">
+<meta property="og:description" content="Context Managers (REFERENCE: http://book.pythontips.com/en/latest/context_managers.html) Context managers allow you to allocate and release resources precisely when you want to. The most widely used e">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-08-12T03:01:36.803Z">
+<meta property="og:updated_time" content="2018-08-12T03:02:50.376Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="Context Managers Context managers allow you to allocate and release resources precisely when you want to. The most widely used example of context managers is the with statement. Suppose you have two r">
+<meta name="twitter:description" content="Context Managers (REFERENCE: http://book.pythontips.com/en/latest/context_managers.html) Context managers allow you to allocate and release resources precisely when you want to. The most widely used e">
 
 
 
@@ -280,7 +280,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-12T11:01:36+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-12T11:02:50+08:00">
                 2018-08-12
               </time>
             
@@ -296,7 +296,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-12T11:01:36+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-12T11:02:50+08:00">
                 2018-08-12
               </time>
             
@@ -346,6 +346,7 @@
 
       
         <h3 id="Context-Managers"><a href="#Context-Managers" class="headerlink" title="Context Managers"></a>Context Managers</h3><hr>
+<p>(<strong>REFERENCE</strong>: <a href="http://book.pythontips.com/en/latest/context_managers.html" target="_blank" rel="noopener">http://book.pythontips.com/en/latest/context_managers.html</a>)</p>
 <p>Context managers allow you to allocate and release resources precisely when you want to. The most widely used example of context managers is the <code>with</code> statement. Suppose you have two related operations which you’d like to execute as a pair, with a block of code in between. Context managers allow you to do specifically that. For example:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">'some_file'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> opened_file:</span><br><span class="line">    opened_file.write(<span class="string">'Hola!'</span>)</span><br></pre></td></tr></table></figure>
 <p>The above code opens the file, writes some data to it and then closes it. If an error occurs while writing the data to the file, it tries to close it. The above code is equivalent to:</p>
