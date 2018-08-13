@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-08-13T04:17:15.523Z">
+<meta property="og:updated_time" content="2018-08-13T04:18:57.306Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【pytorch】fine tune on your own dataset">
 <meta name="twitter:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
@@ -296,7 +296,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-13T12:17:15+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-13T12:18:57+08:00">
                 2018-08-13
               </time>
             
@@ -376,11 +376,11 @@
 <li><p>line 95: <code>_, preds = torch.max(outputs, 1)</code></p>
 <blockquote>
 <p>Returns the maximum value of each row of the input tensor in the given dimension dim. The second return value is the index location of each maximum value found (argmax). <a href="https://pytorch.org/docs/stabl/torch.html#torch.max]" target="_blank" rel="noopener">From here</a></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(torch.max(outputs, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>(tensor([<span class="number">1.9105</span>, <span class="number">1.5765</span>, <span class="number">1.7810</span>, <span class="number">1.8969</span>, <span class="number">1.7162</span>, <span class="number">2.5723</span>, <span class="number">1.8377</span>, <span class="number">1.8657</span>],</span><br><span class="line">       device=<span class="string">'cuda:2'</span>, grad_fn=&lt;MaxBackward0&gt;), tensor([<span class="number">146</span>, <span class="number">146</span>, <span class="number">146</span>, <span class="number">146</span>, <span class="number">146</span>, <span class="number">146</span>,  <span class="number">19</span>, <span class="number">146</span>], device=<span class="string">'cuda:2'</span>))</span><br></pre></td></tr></table></figure>
 </blockquote>
 </li>
 </ul>
-<h4 id="data-structure"><a href="#data-structure" class="headerlink" title="data structure"></a>data structure</h4><p>set <code>batch size = 8</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(torch.max(outputs, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>(tensor([<span class="number">1.9105</span>, <span class="number">1.5765</span>, <span class="number">1.7810</span>, <span class="number">1.8969</span>, <span class="number">1.7162</span>, <span class="number">2.5723</span>, <span class="number">1.8377</span>, <span class="number">1.8657</span>],</span><br><span class="line">       device=<span class="string">'cuda:2'</span>, grad_fn=&lt;MaxBackward0&gt;), tensor([<span class="number">146</span>, <span class="number">146</span>, <span class="number">146</span>, <span class="number">146</span>, <span class="number">146</span>, <span class="number">146</span>,  <span class="number">19</span>, <span class="number">146</span>], device=<span class="string">'cuda:2'</span>))</span><br></pre></td></tr></table></figure>
+<h4 id="data-structure"><a href="#data-structure" class="headerlink" title="data structure"></a>data structure</h4><p>set <code>batch size = 8</code>.</p>
 <hr>
 <ul>
 <li>line 84, 85, 86: </li>
