@@ -295,7 +295,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-13T17:53:04+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-13T21:01:16+08:00">
                 2018-08-13
               </time>
             
@@ -331,7 +331,10 @@
       
         
           
-          123RuntimeError: Error(s) in loading state_dict for ResNet:	size mismatch for fc.weight: copying a p
+          Tip 1
+Modify the baseline model you are using:
+num_ftrs = model_test.fc.in_features
+model_test.fc = 
           ...
           <!--noindex-->
           <div class="post-button text-center">
