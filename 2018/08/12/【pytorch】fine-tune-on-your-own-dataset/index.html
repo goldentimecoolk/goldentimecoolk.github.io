@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-08-13T04:02:27.035Z">
+<meta property="og:updated_time" content="2018-08-13T04:07:19.618Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【pytorch】fine tune on your own dataset">
 <meta name="twitter:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
@@ -296,7 +296,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-08-13T12:02:27+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-08-13T12:07:19+08:00">
                 2018-08-13
               </time>
             
@@ -364,21 +364,21 @@
 </blockquote>
 </li>
 <li><p>line 88,89: <code>optimizer.zero_grad()</code>:<br>At every batch cycle, we should </p>
-</li>
-</ul>
 <blockquote>
 <p>Clears the gradients of all optimized <code>torch.Tensor</code> s.</p>
 </blockquote>
+</li>
+</ul>
 <p>Because we will update network’s params every batch cycle. When new batch is put into net, it should base on previous updated params and have a new start on it own (generate a new <code>delta</code>, where <code>new_params = pre_params+delta</code> simply).</p>
 <ul>
 <li><p>line 93: <code>with torch.set_grad_enabled(phase == &#39;train&#39;):</code><br>This is a context manager, where we can control whether to enable or disable grads based on its argument <code>mode</code>. If we are sure not to call <code>Tensor.backward()</code>, i.e. in reference process, we choose to disable gradient calculation, (This is like a gate to control the whole graph.), so that it will reduce memory consumption for computations. </p>
 </li>
 <li><p>line 95: <code>_, preds = torch.max(outputs, 1)</code></p>
-</li>
-</ul>
 <blockquote>
 <p>Returns the maximum value of each row of the input tensor in the given dimension dim. The second return value is the index location of each maximum value found (argmax). <a href="https://pytorch.org/docs/stabl/torch.html#torch.max]" target="_blank" rel="noopener">From here</a></p>
 </blockquote>
+</li>
+</ul>
 <h4 id="data-structure"><a href="#data-structure" class="headerlink" title="data structure"></a>data structure</h4><p>set <code>batch size = 8</code>:</p>
 <hr>
 <ul>
